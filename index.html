@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0e0e10" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="EN Coach" />
+<meta name="description" content="Học tiếng Anh: dùng được từ, không chỉ nhớ nghĩa." />
+<link rel="manifest" href="data:application/manifest+json;base64,eyJuYW1lIjogIkVuZ2xpc2ggQ29hY2giLCAic2hvcnRfbmFtZSI6ICJFTiBDb2FjaCIsICJkZXNjcmlwdGlvbiI6ICJI4buNYyB0aeG6v25nIEFuaDogZMO5bmcgxJHGsOG7o2MgdOG7qywga2jDtG5nIGNo4buJIG5o4bubIG5naMSpYS4iLCAic3RhcnRfdXJsIjogIi4vIiwgInNjb3BlIjogIi4vIiwgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZTBlMTAiLCAidGhlbWVfY29sb3IiOiAiIzBlMGUxMCIsICJpY29ucyI6IFt7InNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSTFNVElpSUdobGFXZG9kRDBpTlRFeUlpQjJhV1YzUW05NFBTSXdJREFnTlRFeUlEVXhNaUkrQ2p4a1pXWnpQanhzYVc1bFlYSkhjbUZrYVdWdWRDQnBaRDBpWnlJZ2VERTlJakFpSUhreFBTSXdJaUI0TWowaU1TSWdlVEk5SWpFaVBnbzhjM1J2Y0NCdlptWnpaWFE5SWpBaUlITjBiM0F0WTI5c2IzSTlJaU16WkRoaVptUWlMejQ4YzNSdmNDQnZabVp6WlhROUlqRWlJSE4wYjNBdFkyOXNiM0k5SWlNM1l6TmhaV1FpTHo0OEwyeHBibVZoY2tkeVlXUnBaVzUwUGp3dlpHVm1jejRLUEhKbFkzUWdkMmxrZEdnOUlqVXhNaUlnYUdWcFoyaDBQU0kxTVRJaUlISjRQU0l4TVRJaUlHWnBiR3c5SW5WeWJDZ2paeWtpTHo0S1BHTnBjbU5zWlNCamVEMGlNVGsySWlCamVUMGlNakExSWlCeVBTSXlOaUlnWm1sc2JEMGlJMlptWmlJdlBqeGphWEpqYkdVZ1kzZzlJak14TmlJZ1kzazlJakl3TlNJZ2NqMGlNallpSUdacGJHdzlJaU5tWm1ZaUx6NEtQR05wY21Oc1pTQmplRDBpTVRrMklpQmplVDBpTWpBMUlpQnlQU0l4TWlJZ1ptbHNiRDBpSXpFd01UQXhOQ0l2UGp4amFYSmpiR1VnWTNnOUlqTXhOaUlnWTNrOUlqSXdOU0lnY2owaU1USWlJR1pwYkd3OUlpTXhNREV3TVRRaUx6NEtQSEJoZEdnZ1pEMGlUVEUzTmlBek1EQWdVVEkxTmlBek5qQWdNek0ySURNd01DSWdjM1J5YjJ0bFBTSWpabVptSWlCemRISnZhMlV0ZDJsa2RHZzlJakl3SWlCbWFXeHNQU0p1YjI1bElpQnpkSEp2YTJVdGJHbHVaV05oY0QwaWNtOTFibVFpTHo0S1BIUmxlSFFnZUQwaU1qVTJJaUI1UFNJeE16QWlJR1p2Ym5RdFptRnRhV3g1UFNKQmNtbGhiQ3h6WVc1ekxYTmxjbWxtSWlCbWIyNTBMWE5wZW1VOUlqa3dJaUJtYjI1MExYZGxhV2RvZEQwaU9EQXdJaUJtYVd4c1BTSWpabVptSWlCMFpYaDBMV0Z1WTJodmNqMGliV2xrWkd4bElqNUZUand2ZEdWNGRENEtQQzl6ZG1jKyIsICJzaXplcyI6ICIxOTJ4MTkyIiwgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSJ9LCB7InNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSTFNVElpSUdobGFXZG9kRDBpTlRFeUlpQjJhV1YzUW05NFBTSXdJREFnTlRFeUlEVXhNaUkrQ2p4a1pXWnpQanhzYVc1bFlYSkhjbUZrYVdWdWRDQnBaRDBpWnlJZ2VERTlJakFpSUhreFBTSXdJaUI0TWowaU1TSWdlVEk5SWpFaVBnbzhjM1J2Y0NCdlptWnpaWFE5SWpBaUlITjBiM0F0WTI5c2IzSTlJaU16WkRoaVptUWlMejQ4YzNSdmNDQnZabVp6WlhROUlqRWlJSE4wYjNBdFkyOXNiM0k5SWlNM1l6TmhaV1FpTHo0OEwyeHBibVZoY2tkeVlXUnBaVzUwUGp3dlpHVm1jejRLUEhKbFkzUWdkMmxrZEdnOUlqVXhNaUlnYUdWcFoyaDBQU0kxTVRJaUlISjRQU0l4TVRJaUlHWnBiR3c5SW5WeWJDZ2paeWtpTHo0S1BHTnBjbU5zWlNCamVEMGlNVGsySWlCamVUMGlNakExSWlCeVBTSXlOaUlnWm1sc2JEMGlJMlptWmlJdlBqeGphWEpqYkdVZ1kzZzlJak14TmlJZ1kzazlJakl3TlNJZ2NqMGlNallpSUdacGJHdzlJaU5tWm1ZaUx6NEtQR05wY21Oc1pTQmplRDBpTVRrMklpQmplVDBpTWpBMUlpQnlQU0l4TWlJZ1ptbHNiRDBpSXpFd01UQXhOQ0l2UGp4amFYSmpiR1VnWTNnOUlqTXhOaUlnWTNrOUlqSXdOU0lnY2owaU1USWlJR1pwYkd3OUlpTXhNREV3TVRRaUx6NEtQSEJoZEdnZ1pEMGlUVEUzTmlBek1EQWdVVEkxTmlBek5qQWdNek0ySURNd01DSWdjM1J5YjJ0bFBTSWpabVptSWlCemRISnZhMlV0ZDJsa2RHZzlJakl3SWlCbWFXeHNQU0p1YjI1bElpQnpkSEp2YTJVdGJHbHVaV05oY0QwaWNtOTFibVFpTHo0S1BIUmxlSFFnZUQwaU1qVTJJaUI1UFNJeE16QWlJR1p2Ym5RdFptRnRhV3g1UFNKQmNtbGhiQ3h6WVc1ekxYTmxjbWxtSWlCbWIyNTBMWE5wZW1VOUlqa3dJaUJtYjI1MExYZGxhV2RvZEQwaU9EQXdJaUJtYVd4c1BTSWpabVptSWlCMFpYaDBMV0Z1WTJodmNqMGliV2xrWkd4bElqNUZUand2ZEdWNGRENEtQQzl6ZG1jKyIsICJzaXplcyI6ICI1MTJ4NTEyIiwgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSJ9XX0=" />
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzZDhiZmQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3YzNhZWQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTIiIGZpbGw9InVybCgjZykiLz4KPGNpcmNsZSBjeD0iMTk2IiBjeT0iMjA1IiByPSIyNiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjMxNiIgY3k9IjIwNSIgcj0iMjYiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iMTk2IiBjeT0iMjA1IiByPSIxMiIgZmlsbD0iIzEwMTAxNCIvPjxjaXJjbGUgY3g9IjMxNiIgY3k9IjIwNSIgcj0iMTIiIGZpbGw9IiMxMDEwMTQiLz4KPHBhdGggZD0iTTE3NiAzMDAgUTI1NiAzNjAgMzM2IDMwMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHRleHQgeD0iMjU2IiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FTjwvdGV4dD4KPC9zdmc+" />
+<link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+CjxkZWZzPjxsaW5lYXJHcmFkaWVudCBpZD0iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgo8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMzZDhiZmQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3YzNhZWQiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz4KPHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTIiIGZpbGw9InVybCgjZykiLz4KPGNpcmNsZSBjeD0iMTk2IiBjeT0iMjA1IiByPSIyNiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjMxNiIgY3k9IjIwNSIgcj0iMjYiIGZpbGw9IiNmZmYiLz4KPGNpcmNsZSBjeD0iMTk2IiBjeT0iMjA1IiByPSIxMiIgZmlsbD0iIzEwMTAxNCIvPjxjaXJjbGUgY3g9IjMxNiIgY3k9IjIwNSIgcj0iMTIiIGZpbGw9IiMxMDEwMTQiLz4KPHBhdGggZD0iTTE3NiAzMDAgUTI1NiAzNjAgMzM2IDMwMCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIwIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHRleHQgeD0iMjU2IiB5PSIxMzAiIGZvbnQtZmFtaWx5PSJBcmlhbCxzYW5zLXNlcmlmIiBmb250LXNpemU9IjkwIiBmb250LXdlaWdodD0iODAwIiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FTjwvdGV4dD4KPC9zdmc+" />
+<title>English Coach — Use it, don't just memorize</title>
+<style>
+/* =================================================================
+   TOKENS — Design DNA (dark premium, 1 brand color)
+================================================================= */
+:root{
+  --bg:#0e0e10;--surface:#1a1a22;--surface-2:#232330;
+  --border:rgba(255,255,255,.06);--border-strong:rgba(255,255,255,.14);
+  --ink:#fff;--muted:#a1a1aa;
+  --brand:#3d8bfd;--brand-light:rgba(61,139,253,.16);--brand-glow:rgba(61,139,253,.35);
+  --success:#34d399;--success-bg:rgba(52,211,153,.14);
+  --danger:#ff5c5c;--danger-bg:rgba(255,92,92,.14);
+  --warn:#ffab3d;--warn-bg:rgba(255,171,61,.14);
+  --glass-bg:rgba(26,26,34,.72);--glass-border:rgba(255,255,255,.08);
+  --r-card:1.5rem;--r-btn:1rem;
+  --sh-card:0 8px 24px -8px rgba(0,0,0,.35),0 2px 8px -2px rgba(0,0,0,.25);
+  --sh-float:0 12px 40px -8px rgba(0,0,0,.5);
+  --sh-glow:0 8px 28px -4px var(--brand-glow);
+  color-scheme:dark;
+}
+html.light{
+  --bg:#f4f5f7;--surface:#fff;--surface-2:#eceef2;
+  --border:rgba(15,15,20,.07);--border-strong:rgba(15,15,20,.14);
+  --ink:#101014;--muted:#6b6b76;
+  --brand:#2f6fe4;--brand-light:rgba(47,111,228,.1);--brand-glow:rgba(47,111,228,.25);
+  --success:#0f9d6b;--success-bg:rgba(15,157,107,.1);
+  --danger:#d63b3b;--danger-bg:rgba(214,59,59,.1);
+  --warn:#c67608;--warn-bg:rgba(198,118,8,.1);
+  --glass-bg:rgba(255,255,255,.82);--glass-border:rgba(15,15,20,.06);
+  color-scheme:light;
+}
+*{box-sizing:border-box;border-color:var(--border);-webkit-tap-highlight-color:transparent}
+html,body{margin:0;overscroll-behavior-y:none}
+body{
+  background:#050506;color:var(--ink);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  display:flex;justify-content:center;align-items:flex-start;min-height:100vh;
+}
+h1,h2,h3{letter-spacing:-.02em;margin:0}
+.tabular{font-variant-numeric:tabular-nums}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+
+/* App shell */
+.app{position:relative;width:100%;max-width:430px;min-height:100vh;background:var(--bg)}
+@media(min-width:470px){
+  .app{min-height:calc(100vh - 48px);margin:24px 0;border-radius:2.75rem;overflow:hidden;
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 0 0 10px rgba(255,255,255,.02),0 40px 80px -20px rgba(0,0,0,.7)}
+}
+.main{min-height:100vh;overflow-y:auto;padding:22px 16px 132px}
+
+/* Header */
+.phead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px}
+.phead .desc{font-size:13px;color:var(--muted);margin:0 0 3px}
+.phead h1{font-size:25px;font-weight:700}
+.icon-btn{width:40px;height:40px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--border);font-size:17px;flex:none}
+.icon-btn:active{transform:scale(.94)}
+
+/* Card */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);
+  box-shadow:var(--sh-card);padding:18px;margin-bottom:14px}
+.card-title{font-size:15px;font-weight:600}
+.card-sub{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 18px;
+  border-radius:var(--r-btn);font-size:14px;font-weight:600;transition:filter .15s,transform .1s;width:100%}
+.btn:active{transform:scale(.97)}
+.btn-brand{background:var(--brand);color:#fff;box-shadow:var(--sh-glow)}
+.btn-brand:hover{filter:brightness(1.1)}
+.btn-outline{border:1px solid var(--border-strong);background:transparent;color:var(--ink)}
+.btn-ghost{background:var(--surface-2);color:var(--ink)}
+.btn-sm{min-height:38px;font-size:13px;padding:0 14px;border-radius:.75rem}
+
+/* Chips / badges */
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:999px;font-size:12px;
+  font-weight:600;background:var(--brand-light);color:var(--brand);white-space:nowrap}
+.chip-muted{background:var(--surface-2);color:var(--muted)}
+.chip-lvl{background:var(--warn-bg);color:var(--warn)}
+
+/* Stats */
+.stat-row{display:flex;gap:10px;margin-bottom:14px}
+.stat{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:1.1rem;padding:13px 12px}
+.stat .n{font-size:21px;font-weight:700;line-height:1}
+.stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:6px}
+
+/* Progress */
+.progress{height:8px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+.progress>i{display:block;height:100%;background:var(--brand);border-radius:999px;transition:width .5s cubic-bezier(.16,1,.3,1)}
+
+/* Search */
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-btn);padding:0 14px;height:46px;margin-bottom:16px}
+.search input{flex:1;background:none;border:none;outline:none;color:var(--ink);font-size:14px}
+.search input::placeholder{color:var(--muted)}
+
+/* Topic row */
+.topic{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r-card);box-shadow:var(--sh-card);padding:16px;margin-bottom:12px;width:100%;text-align:left}
+.topic:active{transform:scale(.98)}
+.topic .emo{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:23px;background:var(--brand-light);flex:none}
+.topic .body{flex:1;min-width:0}
+.topic .t{font-size:15px;font-weight:600}
+.topic .meta{font-size:12px;color:var(--muted);margin:3px 0 8px}
+.topic .arrow{color:var(--muted);font-size:18px;flex:none}
+
+/* Vocab list item */
+.vitem{display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--border);width:100%;text-align:left}
+.vitem:last-child{border-bottom:none}
+.vitem .w{font-size:15px;font-weight:600}
+.vitem .m{font-size:13px;color:var(--muted);margin-top:2px}
+.vitem .dot{width:9px;height:9px;border-radius:999px;flex:none;background:var(--surface-2)}
+.vitem .dot.learned{background:var(--success)}
+
+/* Flashcard */
+.flash{perspective:1400px;height:340px;margin-bottom:18px}
+.flash-inner{position:relative;width:100%;height:100%;transition:transform .55s cubic-bezier(.16,1,.3,1);
+  transform-style:preserve-3d;cursor:pointer}
+.flash.flipped .flash-inner{transform:rotateY(180deg)}
+.flash-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border-radius:var(--r-card);border:1px solid var(--border);background:var(--surface);box-shadow:var(--sh-card);
+  display:flex;flex-direction:column;padding:22px;overflow:hidden}
+.flash-front{align-items:center;justify-content:center;text-align:center;gap:6px}
+.flash-front .word{font-size:30px;font-weight:700;line-height:1.15}
+.flash-front .ipa{font-size:15px;color:var(--muted);margin-top:4px}
+.flash-front .tap{position:absolute;bottom:18px;font-size:12px;color:var(--muted);letter-spacing:.03em}
+.flash-back{transform:rotateY(180deg);gap:14px;overflow-y:auto}
+.flash-back .sec .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;margin-bottom:4px}
+.flash-back .sec .en{font-size:15px;line-height:1.5}
+.flash-back .sec .vi{font-size:16px;font-weight:600;color:var(--brand)}
+.flash-back .sec .ex{font-size:14px;line-height:1.5;font-style:italic}
+.coll{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+
+.deck-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.deck-count{font-size:13px;color:var(--muted);font-weight:600}
+
+/* Continue card special */
+.cont{background:linear-gradient(135deg,var(--brand),color-mix(in srgb,var(--brand) 55%,#7c3aed));
+  border:none;color:#fff;border-radius:var(--r-card);padding:20px;box-shadow:var(--sh-glow);margin-bottom:14px;
+  width:100%;text-align:left}
+.cont:active{transform:scale(.98)}
+.cont .k{font-size:12px;opacity:.85;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.cont .v{font-size:20px;font-weight:700;margin:6px 0 4px}
+.cont .p{font-size:12.5px;opacity:.9;margin-bottom:12px}
+.cont .bar{height:7px;background:rgba(255,255,255,.25);border-radius:999px;overflow:hidden}
+.cont .bar>i{display:block;height:100%;background:#fff;border-radius:999px}
+
+/* Quick actions */
+.qa{display:flex;gap:10px}
+.qa button{flex:1;flex-direction:column;gap:6px;background:var(--surface);border:1px solid var(--border);
+  border-radius:1.1rem;padding:14px 8px;font-size:12px;font-weight:600;box-shadow:var(--sh-card)}
+.qa button:active{transform:scale(.96)}
+.qa button .e{font-size:20px}
+
+/* Section label */
+.slabel{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;
+  margin:22px 4px 12px}
+
+/* Bottom nav */
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));
+  width:100%;max-width:430px;padding:0 16px;z-index:30}
+.nav-inner{display:flex;justify-content:space-around;align-items:center;border-radius:1.6rem;padding:8px;box-shadow:var(--sh-float)}
+.nav a{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;
+  font-size:10px;font-weight:500;color:var(--muted);border-radius:1rem;transition:color .2s}
+.nav a.active{color:var(--brand)}
+.nav a .ico{width:22px;height:22px}
+.nav a .hl{position:absolute;inset:2px 10px;border-radius:1rem;background:var(--brand-light);z-index:-1;opacity:0;transition:opacity .25s}
+.nav a.active .hl{opacity:1}
+
+/* FAB */
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom));
+  width:100%;max-width:430px;z-index:40;pointer-events:none}
+.fab-btn{position:absolute;right:16px;bottom:0;width:56px;height:56px;border-radius:999px;background:var(--brand);
+  color:#fff;box-shadow:var(--sh-glow);display:flex;align-items:center;justify-content:center;font-size:26px;
+  pointer-events:auto;transition:transform .3s cubic-bezier(.16,1,.3,1)}
+.fab-btn:active{transform:scale(.92)}
+.fab.open .fab-btn{transform:rotate(45deg)}
+.fab-menu{position:absolute;right:16px;bottom:70px;display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:none}
+.fab.open .fab-menu{pointer-events:auto}
+.fab-item{display:flex;align-items:center;gap:12px;opacity:0;transform:translateY(12px) scale(.9);
+  transition:all .25s cubic-bezier(.16,1,.3,1)}
+.fab.open .fab-item{opacity:1;transform:none}
+.fab.open .fab-item:nth-child(1){transition-delay:.02s}
+.fab.open .fab-item:nth-child(2){transition-delay:.05s}
+.fab.open .fab-item:nth-child(3){transition-delay:.08s}
+.fab-item .lbl{background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:7px 13px;
+  font-size:13px;font-weight:600;box-shadow:var(--sh-float)}
+.fab-item .dot{width:44px;height:44px;border-radius:999px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:18px;box-shadow:var(--sh-float)}
+
+/* Bottom sheet */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px);z-index:50;opacity:0;
+  pointer-events:none;transition:opacity .25s}
+.overlay.show{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;
+  max-height:88vh;overflow-y:auto;background:var(--surface);border-radius:2rem 2rem 0 0;border-top:1px solid var(--border);
+  box-shadow:var(--sh-float);z-index:51;padding:12px 20px calc(24px + env(safe-area-inset-bottom));
+  transition:transform .32s cubic-bezier(.16,1,.3,1)}
+.sheet.show{transform:translateX(-50%) translateY(0)}
+.sheet .handle{width:40px;height:5px;border-radius:999px;background:var(--border-strong);margin:0 auto 14px}
+.sheet h2{font-size:19px;font-weight:700;margin-bottom:4px}
+.sheet .sub{font-size:14px;color:var(--muted);margin-bottom:18px}
+
+/* Empty state */
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty .e{font-size:40px;margin-bottom:10px}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:calc(160px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);
+  background:var(--surface);border:1px solid var(--border-strong);border-radius:999px;padding:10px 18px;font-size:13px;
+  font-weight:600;box-shadow:var(--sh-float);z-index:60;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Practice */
+/* Phase 3 — AI */
+.ai-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;
+  font-weight:700;background:linear-gradient(135deg,var(--brand),#a855f7);color:#fff}
+.local-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-size:11px;
+  font-weight:600;background:var(--surface-2);color:var(--muted)}
+.spin{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:999px;
+  display:inline-block;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;color:var(--muted)}
+.loading-wrap .spin{width:34px;height:34px;border-color:var(--surface-2);border-top-color:var(--brand)}
+.banner{display:flex;align-items:center;gap:10px;background:var(--warn-bg);border:1px solid var(--warn);
+  border-radius:1rem;padding:11px 14px;font-size:13px;color:var(--ink);margin-bottom:14px;line-height:1.5}
+.err-card{background:var(--danger-bg);border:1px solid var(--danger);border-radius:var(--r-card);padding:18px;text-align:center}
+.err-card .e{font-size:34px;margin-bottom:8px}
+.key-input{width:100%;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:.75rem;
+  padding:11px 13px;color:var(--ink);font-size:13px;outline:none;font-family:monospace;margin-bottom:10px}
+.key-input:focus{border-color:var(--brand)}
+.link{color:var(--brand);text-decoration:underline;font-weight:600}
+
+.target-box{background:var(--brand-light);border:1px solid var(--brand);border-radius:var(--r-card);
+  padding:18px;text-align:center;margin-bottom:14px}
+.target-box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--brand);font-weight:600;margin-bottom:8px}
+.target-box .w{font-size:24px;font-weight:700;color:var(--ink);line-height:1.2}
+.prompt-vi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);
+  padding:16px;margin-bottom:14px;box-shadow:var(--sh-card)}
+.prompt-vi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;margin-bottom:8px}
+.prompt-vi .txt{font-size:16px;line-height:1.5;font-weight:500}
+.answer-area{width:100%;min-height:110px;background:var(--surface);border:1px solid var(--border-strong);
+  border-radius:var(--r-card);padding:16px;color:var(--ink);font-size:15px;line-height:1.6;resize:none;
+  outline:none;margin-bottom:14px;font-family:inherit}
+.answer-area:focus{border-color:var(--brand)}
+.answer-area::placeholder{color:var(--muted)}
+
+/* Result */
+.score-ring{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 0 4px}
+.score-ring .num{font-size:52px;font-weight:800;line-height:1}
+.score-ring .verdict{font-size:16px;font-weight:600;margin-top:6px}
+.breakdown{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+.bk{background:var(--surface-2);border-radius:1rem;padding:12px 14px}
+.bk .k{font-size:12px;color:var(--muted);margin-bottom:6px}
+.bk .v{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600}
+.bar-mini{height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:8px}
+html.light .bar-mini{background:rgba(0,0,0,.08)}
+.bar-mini>i{display:block;height:100%;border-radius:999px}
+.fix-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px}
+.fix-row .bad{color:var(--danger);text-decoration:line-through;opacity:.8}
+.fix-row .good{color:var(--success);font-weight:600}
+.natural{background:var(--success-bg);border:1px solid var(--success);border-radius:var(--r-card);padding:14px;margin-top:4px}
+.natural .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--success);font-weight:600;margin-bottom:6px}
+.natural .txt{font-size:15px;line-height:1.5}
+.struggle{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--border)}
+.struggle:last-child{border-bottom:none}
+.struggle .sig{font-size:16px}
+
+.fade{animation:fade .3s ease-out}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+::-webkit-scrollbar{width:0}
+</style>
+</head>
+<body>
+<div class="app">
+  <main class="main" id="main"></main>
+
+  <div class="fab" id="fab">
+    <div class="fab-menu">
+      <button class="fab-item" onclick="go('learn')">
+        <span class="lbl">Học từ mới</span><span class="dot" style="background:var(--brand)">＋</span></button>
+      <button class="fab-item" onclick="startReview()">
+        <span class="lbl">Ôn tập nhanh</span><span class="dot" style="background:var(--success)">↻</span></button>
+      <button class="fab-item" onclick="startPractice()">
+        <span class="lbl">Luyện đặt câu</span><span class="dot" style="background:var(--warn)">✎</span></button>
+    </div>
+    <button class="fab-btn" onclick="toggleFab()" aria-label="Mở menu hành động">＋</button>
+  </div>
+
+  <nav class="nav"><div class="nav-inner glass" id="nav" style="background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(20px)"></div></nav>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeSheet()"></div>
+<div class="sheet" id="sheet"><div class="handle"></div><div id="sheetBody"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =================================================================
+   DATA LAYER — topics + vocabulary (dễ mở rộng lên hàng ngàn item)
+   Nội dung tự biên soạn, không copy từ điển có bản quyền.
+================================================================= */
+const TOPICS = [
+  { id:'travel',     name:'Travel',      emoji:'✈️', level:'B1–B2', desc:'Du lịch & khám phá' },
+  { id:'business',   name:'Business',    emoji:'💼', level:'B2',    desc:'Kinh doanh & bán hàng' },
+  { id:'environment',name:'Environment', emoji:'🌱', level:'B2',    desc:'Môi trường & quan trắc' },
+  { id:'technology', name:'Technology',  emoji:'💡', level:'B1–B2', desc:'Công nghệ & thiết bị' },
+  { id:'work',       name:'Work',        emoji:'🧑‍💻',level:'B1',    desc:'Công việc hằng ngày' },
+  { id:'daily',      name:'Daily Life',  emoji:'☕', level:'A2–B1', desc:'Giao tiếp thường ngày' },
+];
+
+/* Mỗi item đủ trường theo spec: word,type,level,meaningVi,definitionEn,pronunciation,
+   exampleEn,exampleVi,collocations,targetExercise */
+const VOCAB = [
+  // TRAVEL
+  { id:'trv-001', topic:'travel', word:'sustainable tourism', type:'noun phrase', level:'B2',
+    meaningVi:'du lịch bền vững',
+    definitionEn:'Tourism that protects the environment and supports local people over the long term.',
+    pronunciation:'/səˈsteɪnəbl ˈtʊərɪzəm/',
+    exampleEn:'Sustainable tourism helps protect local communities and nature.',
+    exampleVi:'Du lịch bền vững giúp bảo vệ cộng đồng địa phương và thiên nhiên.',
+    collocations:['sustainable development','promote sustainable tourism','eco-friendly travel'],
+    targetExercise:{ promptVi:'Du lịch bền vững mang lại lợi ích lâu dài cho địa phương mà không phá hủy tài nguyên.', targetPhrase:'sustainable tourism' } },
+  { id:'trv-002', topic:'travel', word:'off the beaten track', type:'idiom', level:'B2',
+    meaningVi:'nơi ít người biết, tránh xa lối mòn du lịch',
+    definitionEn:'A place that is far from where most tourists usually go.',
+    pronunciation:'/ˌɒf ðə ˈbiːtn træk/',
+    exampleEn:'We prefer villages that are off the beaten track.',
+    exampleVi:'Chúng tôi thích những ngôi làng ít người biết đến.',
+    collocations:['explore off the beaten track','hidden gem'],
+    targetExercise:{ promptVi:'Tôi thích khám phá những nơi ít người biết đến hơn là các điểm du lịch đông đúc.', targetPhrase:'off the beaten track' } },
+  { id:'trv-003', topic:'travel', word:'itinerary', type:'noun', level:'B1',
+    meaningVi:'lịch trình chuyến đi',
+    definitionEn:'A detailed plan of a journey, listing places and times.',
+    pronunciation:'/aɪˈtɪnərəri/',
+    exampleEn:'Our itinerary includes three cities in five days.',
+    exampleVi:'Lịch trình của chúng tôi gồm ba thành phố trong năm ngày.',
+    collocations:['plan an itinerary','a packed itinerary'],
+    targetExercise:{ promptVi:'Hãy gửi cho tôi lịch trình chi tiết trước chuyến đi.', targetPhrase:'itinerary' } },
+
+  // BUSINESS
+  { id:'biz-001', topic:'business', word:'follow up', type:'phrasal verb', level:'B1',
+    meaningVi:'theo dõi, liên hệ lại sau đó',
+    definitionEn:'To contact someone again to check progress or continue a discussion.',
+    pronunciation:'/ˈfɒləʊ ʌp/',
+    exampleEn:'I will follow up with the client next week.',
+    exampleVi:'Tôi sẽ liên hệ lại với khách hàng vào tuần sau.',
+    collocations:['follow up on an email','follow-up meeting'],
+    targetExercise:{ promptVi:'Tôi sẽ liên hệ lại với khách hàng sau khi gửi báo giá.', targetPhrase:'follow up' } },
+  { id:'biz-002', topic:'business', word:'competitive advantage', type:'noun phrase', level:'B2',
+    meaningVi:'lợi thế cạnh tranh',
+    definitionEn:'Something that makes a company or product better than its rivals.',
+    pronunciation:'/kəmˈpetətɪv ədˈvɑːntɪdʒ/',
+    exampleEn:'Fast service is our main competitive advantage.',
+    exampleVi:'Dịch vụ nhanh là lợi thế cạnh tranh chính của chúng tôi.',
+    collocations:['gain a competitive advantage','clear advantage'],
+    targetExercise:{ promptVi:'Độ chính xác cao của thiết bị là lợi thế cạnh tranh của chúng tôi.', targetPhrase:'competitive advantage' } },
+  { id:'biz-003', topic:'business', word:'meet a deadline', type:'collocation', level:'B1',
+    meaningVi:'kịp thời hạn',
+    definitionEn:'To finish work at or before the required time.',
+    pronunciation:'/miːt ə ˈdedlaɪn/',
+    exampleEn:'The team worked hard to meet the deadline.',
+    exampleVi:'Cả nhóm đã làm việc chăm chỉ để kịp thời hạn.',
+    collocations:['tight deadline','miss a deadline','meet a deadline'],
+    targetExercise:{ promptVi:'Chúng tôi cần lắp đặt xong thiết bị để kịp thời hạn của dự án.', targetPhrase:'meet the deadline' } },
+
+  // ENVIRONMENT (ngành của bạn)
+  { id:'env-001', topic:'environment', word:'calibration', type:'noun', level:'B2',
+    meaningVi:'sự hiệu chuẩn (thiết bị đo)',
+    definitionEn:'The process of checking and adjusting a device so its readings are accurate.',
+    pronunciation:'/ˌkælɪˈbreɪʃn/',
+    exampleEn:'The gas analyzer needs calibration every month.',
+    exampleVi:'Máy phân tích khí cần được hiệu chuẩn hằng tháng.',
+    collocations:['perform calibration','calibration certificate','routine calibration'],
+    targetExercise:{ promptVi:'Cảm biến này cần được hiệu chuẩn trước khi đưa vào sử dụng.', targetPhrase:'calibration' } },
+  { id:'env-002', topic:'environment', word:'emission', type:'noun', level:'B2',
+    meaningVi:'sự phát thải (khí/chất thải)',
+    definitionEn:'A gas or substance sent out into the air, often from factories.',
+    pronunciation:'/ɪˈmɪʃn/',
+    exampleEn:'The system monitors factory emission levels in real time.',
+    exampleVi:'Hệ thống giám sát mức phát thải của nhà máy theo thời gian thực.',
+    collocations:['reduce emissions','emission standards','carbon emissions'],
+    targetExercise:{ promptVi:'Thiết bị của chúng tôi giúp nhà máy giám sát mức phát thải theo thời gian thực.', targetPhrase:'emission' } },
+  { id:'env-003', topic:'environment', word:'threshold', type:'noun', level:'B2',
+    meaningVi:'ngưỡng giới hạn',
+    definitionEn:'A level or point at which something starts to happen or is allowed.',
+    pronunciation:'/ˈθreʃhəʊld/',
+    exampleEn:'The alarm goes off when pollution passes the safe threshold.',
+    exampleVi:'Chuông báo kêu khi mức ô nhiễm vượt ngưỡng an toàn.',
+    collocations:['exceed a threshold','safe threshold','set a threshold'],
+    targetExercise:{ promptVi:'Cảm biến sẽ cảnh báo khi nồng độ khí vượt ngưỡng cho phép.', targetPhrase:'threshold' } },
+  { id:'env-004', topic:'environment', word:'real-time monitoring', type:'noun phrase', level:'B2',
+    meaningVi:'giám sát theo thời gian thực',
+    definitionEn:'Watching data continuously as it is produced, with no delay.',
+    pronunciation:'/ˈriːl taɪm ˈmɒnɪtərɪŋ/',
+    exampleEn:'Real-time monitoring lets us react to problems immediately.',
+    exampleVi:'Giám sát thời gian thực giúp chúng tôi xử lý sự cố ngay lập tức.',
+    collocations:['continuous monitoring','remote monitoring','monitoring station'],
+    targetExercise:{ promptVi:'Giải pháp này cho phép giám sát chất lượng nước theo thời gian thực.', targetPhrase:'real-time monitoring' } },
+
+  // TECHNOLOGY
+  { id:'tec-001', topic:'technology', word:'user-friendly', type:'adjective', level:'B1',
+    meaningVi:'dễ sử dụng',
+    definitionEn:'Easy to use, even for people without technical skills.',
+    pronunciation:'/ˌjuːzə ˈfrendli/',
+    exampleEn:'The new dashboard is very user-friendly.',
+    exampleVi:'Bảng điều khiển mới rất dễ sử dụng.',
+    collocations:['user-friendly interface','easy to use'],
+    targetExercise:{ promptVi:'Phần mềm được thiết kế đơn giản và dễ sử dụng cho mọi người.', targetPhrase:'user-friendly' } },
+  { id:'tec-002', topic:'technology', word:'troubleshoot', type:'verb', level:'B2',
+    meaningVi:'khắc phục sự cố, dò lỗi',
+    definitionEn:'To find and fix problems in a system or device.',
+    pronunciation:'/ˈtrʌblʃuːt/',
+    exampleEn:'Our team can troubleshoot the device remotely.',
+    exampleVi:'Đội của chúng tôi có thể khắc phục sự cố thiết bị từ xa.',
+    collocations:['troubleshoot an issue','troubleshooting guide'],
+    targetExercise:{ promptVi:'Kỹ thuật viên sẽ giúp bạn khắc phục sự cố qua điện thoại.', targetPhrase:'troubleshoot' } },
+
+  // WORK
+  { id:'wrk-001', topic:'work', word:'be responsible for', type:'phrase', level:'B1',
+    meaningVi:'chịu trách nhiệm về việc gì',
+    definitionEn:'To be in charge of a task or duty.',
+    pronunciation:'/bi rɪˈspɒnsəbl fɔː/',
+    exampleEn:'I am responsible for after-sales support.',
+    exampleVi:'Tôi chịu trách nhiệm về hỗ trợ sau bán hàng.',
+    collocations:['take responsibility for','responsible for a team'],
+    targetExercise:{ promptVi:'Tôi chịu trách nhiệm về việc tư vấn kỹ thuật cho khách hàng.', targetPhrase:'responsible for' } },
+  { id:'wrk-002', topic:'work', word:'get in touch', type:'idiom', level:'A2',
+    meaningVi:'liên lạc, giữ liên hệ',
+    definitionEn:'To contact someone by phone, email or message.',
+    pronunciation:'/ɡet ɪn tʌtʃ/',
+    exampleEn:'Please get in touch if you have any questions.',
+    exampleVi:'Hãy liên hệ với tôi nếu bạn có bất kỳ câu hỏi nào.',
+    collocations:['get in touch with','stay in touch'],
+    targetExercise:{ promptVi:'Vui lòng liên hệ với tôi nếu bạn cần thêm thông tin.', targetPhrase:'get in touch' } },
+
+  // DAILY
+  { id:'day-001', topic:'daily', word:'run out of', type:'phrasal verb', level:'A2',
+    meaningVi:'hết, dùng cạn thứ gì',
+    definitionEn:'To have no more of something left.',
+    pronunciation:'/rʌn aʊt ɒv/',
+    exampleEn:'We have run out of coffee this morning.',
+    exampleVi:'Sáng nay chúng ta đã hết cà phê rồi.',
+    collocations:['run out of time','run out of money'],
+    targetExercise:{ promptVi:'Tôi sắp hết thời gian để hoàn thành báo cáo.', targetPhrase:'run out of' } },
+  { id:'day-002', topic:'daily', word:'look forward to', type:'phrase', level:'B1',
+    meaningVi:'mong chờ điều gì',
+    definitionEn:'To feel happy and excited about something that will happen.',
+    pronunciation:'/lʊk ˈfɔːwəd tuː/',
+    exampleEn:'I look forward to meeting you next week.',
+    exampleVi:'Tôi rất mong được gặp bạn vào tuần tới.',
+    collocations:['look forward to hearing from you'],
+    targetExercise:{ promptVi:'Tôi rất mong được hợp tác với công ty của bạn.', targetPhrase:'look forward to' } },
+];
+
+/* =================================================================
+   STORAGE LAYER — localStorage, đơn giản, có default an toàn
+================================================================= */
+const KEY = 'english-coach-v1';
+const todayStr = () => new Date().toISOString().slice(0,10);
+const defaultData = () => ({
+  learned:{},            // { vocabId: {ts, box} }
+  reviewQueue:{},        // { vocabId: nextReviewDate }
+  dailyGoal:5,
+  progressToday:{ date:todayStr(), count:0 },
+  streak:{ count:0, lastDay:null },
+  sentencesPracticed:0,
+  practiceScores:[],      // [{ts, score}] để tính điểm luyện trung bình
+  mistakes:{},            // { vocabId: count } — "Words I struggle with"
+  theme:'dark',
+  geminiKey:'',
+});
+let DATA = load();
+function load(){
+  try{ const raw=localStorage.getItem(KEY); if(!raw) return defaultData();
+    return { ...defaultData(), ...JSON.parse(raw) }; }
+  catch(e){ return defaultData(); }
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(DATA)); }catch(e){} }
+
+function markLearned(id){
+  const first = !DATA.learned[id];
+  DATA.learned[id] = { ts:Date.now(), box:(DATA.learned[id]?.box||0)+1 };
+  if(first){ bumpDaily(); }
+  bumpStreak();
+  save();
+}
+function bumpDaily(){
+  if(DATA.progressToday.date!==todayStr()) DATA.progressToday={date:todayStr(),count:0};
+  DATA.progressToday.count++;
+}
+function bumpStreak(){
+  const t=todayStr();
+  if(DATA.streak.lastDay===t) return;
+  const yest=new Date(Date.now()-864e5).toISOString().slice(0,10);
+  DATA.streak.count = (DATA.streak.lastDay===yest)? DATA.streak.count+1 : 1;
+  DATA.streak.lastDay=t;
+}
+const learnedCount = () => Object.keys(DATA.learned).length;
+const topicLearned = tid => VOCAB.filter(v=>v.topic===tid && DATA.learned[v.id]).length;
+const topicTotal   = tid => VOCAB.filter(v=>v.topic===tid).length;
+
+function recordPractice(vocabId, score, passed){
+  DATA.sentencesPracticed = (DATA.sentencesPracticed||0)+1;
+  DATA.practiceScores = (DATA.practiceScores||[]).concat({ ts:Date.now(), score }).slice(-100);
+  if(!passed){ DATA.mistakes[vocabId] = (DATA.mistakes[vocabId]||0)+1; }
+  else if(DATA.mistakes[vocabId]){ DATA.mistakes[vocabId] = Math.max(0, DATA.mistakes[vocabId]-1); if(!DATA.mistakes[vocabId]) delete DATA.mistakes[vocabId]; }
+  bumpStreak();
+  save();
+}
+const avgPracticeScore = () => {
+  const s=(DATA.practiceScores||[]); if(!s.length) return 0;
+  return Math.round(s.reduce((a,b)=>a+b.score,0)/s.length);
+};
+const struggleList = () => Object.entries(DATA.mistakes||{})
+  .map(([id,c])=>({ v:VOCAB.find(x=>x.id===id), count:c })).filter(x=>x.v)
+  .sort((a,b)=>b.count-a.count);
+
+/* =================================================================
+   SPEECH LAYER — Web Speech API, fail gracefully
+================================================================= */
+function speak(text){
+  if(!('speechSynthesis' in window)){ toast('Trình duyệt không hỗ trợ đọc'); return; }
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US'; u.rate=.92;
+    speechSynthesis.speak(u);
+  }catch(e){ toast('Không phát được âm thanh'); }
+}
+
+/* =================================================================
+   AI LAYER — Gemini free tier (gemini-2.0-flash).
+   Key lưu localStorage (app cá nhân). Ép model trả JSON đúng format.
+   Nếu lỗi/offline/không key → ném lỗi để caller fallback về chấm cục bộ.
+================================================================= */
+const GEMINI_MODEL = 'gemini-2.0-flash';
+function hasKey(){ return !!(DATA.geminiKey && DATA.geminiKey.trim()); }
+function isOnline(){ return navigator.onLine !== false; }
+
+function buildPrompt(sentence, vocab){
+  const ex = vocab.targetExercise;
+  return `Bạn là giáo viên tiếng Anh cho người Việt. Chấm câu tiếng Anh do học viên viết.
+
+TỪ/CỤM MỤC TIÊU (bắt buộc phải xuất hiện trong câu): "${ex.targetPhrase}"
+GỢI Ý NGHĨA (tiếng Việt) mà học viên cần diễn đạt: "${ex.promptVi}"
+CÂU HỌC VIÊN VIẾT: "${sentence}"
+
+Hãy chấm theo 5 tiêu chí, mỗi tiêu chí 0-100:
+- meaningScore: có truyền đạt đúng ý câu tiếng Việt không (chấp nhận cách diễn đạt khác, KHÔNG so khớp từng chữ).
+- grammarScore: ngữ pháp đúng không.
+- vocabularyScore: dùng từ phù hợp; nếu KHÔNG dùng cụm mục tiêu thì tối đa 30.
+- naturalnessScore: có tự nhiên như người bản ngữ không.
+- score: điểm tổng 0-100 (nếu thiếu cụm mục tiêu thì tối đa 55).
+
+Đặc biệt chú ý lỗi phổ biến của người Việt: thiếu a/an/the, sai số ít/nhiều, sai giới từ, sai thì, dịch word-by-word, sai word order, sai collocation, subject-verb agreement, nhầm affect/effect, advice/advise, say/tell.
+
+Feedback và giải thích PHẢI bằng tiếng Việt, rõ ràng, cụ thể (KHÔNG chỉ nói "sai", phải nói vì sao).
+
+CHỈ trả về JSON thuần (không markdown, không giải thích ngoài JSON) đúng cấu trúc:
+{
+  "score": <int>,
+  "meaningScore": <int>,
+  "grammarScore": <int>,
+  "vocabularyScore": <int>,
+  "naturalnessScore": <int>,
+  "targetWordUsed": <true|false>,
+  "isAcceptable": <true|false>,
+  "correctedSentence": "<câu học viên, giữ nguyên>",
+  "fixes": [ { "bad": "<phần sai>", "good": "<sửa đúng>" } ],
+  "feedback": [ "<gạch đầu dòng tiếng Việt>", "..." ],
+  "explanationVi": "<giải thích tổng quan bằng tiếng Việt>",
+  "moreNaturalVersion": "<một câu tiếng Anh tự nhiên hơn dùng cụm mục tiêu>"
+}`;
+}
+
+async function evaluateWithGemini(sentence, vocab){
+  if(!hasKey()) throw new Error('NO_KEY');
+  if(!isOnline()) throw new Error('OFFLINE');
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
+  const body = {
+    contents:[{ parts:[{ text: buildPrompt(sentence, vocab) }] }],
+    generationConfig:{ temperature:0.3, responseMimeType:'application/json' }
+  };
+  const ctrl = new AbortController();
+  const timer = setTimeout(()=>ctrl.abort(), 20000);
+  let res;
+  try{
+    res = await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(body), signal:ctrl.signal });
+  }catch(e){ clearTimeout(timer); throw new Error(e.name==='AbortError'?'TIMEOUT':'NETWORK'); }
+  clearTimeout(timer);
+  if(!res.ok){
+    if(res.status===400||res.status===403) throw new Error('BAD_KEY');
+    if(res.status===429) throw new Error('RATE_LIMIT');
+    throw new Error('HTTP_'+res.status);
+  }
+  const data = await res.json();
+  let text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  text = text.replace(/```json|```/g,'').trim();
+  let json;
+  try{ json = JSON.parse(text); }
+  catch(e){ const m=text.match(/\{[\s\S]*\}/); if(m){ try{ json=JSON.parse(m[0]); }catch(_){}} }
+  if(!json || typeof json.score!=='number') throw new Error('PARSE');
+  // chuẩn hoá + đảm bảo đủ trường
+  return {
+    score: clampInt(json.score), meaningScore: clampInt(json.meaningScore),
+    grammarScore: clampInt(json.grammarScore), vocabularyScore: clampInt(json.vocabularyScore),
+    naturalnessScore: clampInt(json.naturalnessScore),
+    targetWordUsed: !!json.targetWordUsed,
+    isAcceptable: json.isAcceptable!==undefined? !!json.isAcceptable : (json.score>=70 && !!json.targetWordUsed),
+    correctedSentence: json.correctedSentence || sentence,
+    fixes: Array.isArray(json.fixes)? json.fixes.filter(f=>f&&f.bad&&f.good).slice(0,8) : [],
+    feedback: Array.isArray(json.feedback)? json.feedback.filter(Boolean).slice(0,6) : [],
+    explanationVi: json.explanationVi || '',
+    moreNaturalVersion: json.moreNaturalVersion || '',
+    _local: false,
+  };
+}
+function clampInt(n){ n=Math.round(Number(n)||0); return Math.max(0,Math.min(100,n)); }
+function errMsgVi(code){
+  return ({
+    BAD_KEY:'API key không hợp lệ. Kiểm tra lại trong Cài đặt.',
+    RATE_LIMIT:'Đã dùng hết lượt miễn phí tạm thời. Thử lại sau ít phút.',
+    TIMEOUT:'AI phản hồi quá lâu. Kiểm tra mạng và thử lại.',
+    NETWORK:'Không kết nối được tới AI. Kiểm tra Internet.',
+    OFFLINE:'Bạn đang offline. AI cần Internet.',
+    PARSE:'AI trả về dữ liệu không đọc được. Thử lại nhé.',
+  })[code] || 'Không thể đánh giá lúc này. Hãy thử lại sau.';
+}
+
+const state = { tab:'home', topic:null, deck:[], deckIdx:0, flip:false, search:'',
+  practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null };
+
+const ICONS = {
+  home:'M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z',
+  learn:'M12 3l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5',
+  review:'M21 12a9 9 0 11-3.5-7.1M21 4v5h-5',
+  progress:'M4 20V10M10 20V4M16 20v-7M22 20H2',
+};
+function navHTML(){
+  const items=[['home','Trang chủ'],['learn','Học'],['review','Ôn tập'],['progress','Tiến độ']];
+  return items.map(([id,label])=>`
+    <a class="${state.tab===id?'active':''}" onclick="go('${id}')">
+      <span class="hl"></span>
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[id]}"/></svg>
+      ${label}
+    </a>`).join('');
+}
+
+function header(desc,title){
+  return `<div class="phead"><div><p class="desc">${desc}</p><h1>${title}</h1></div>
+    <button class="icon-btn" onclick="toggleTheme()" title="Sáng / Tối" aria-label="Đổi giao diện sáng/tối">🌓</button></div>`;
+}
+
+/* ---------- HOME ---------- */
+function viewHome(){
+  const g = new Date().getHours();
+  const greet = g<11?'Good morning 👋':g<18?'Good afternoon 👋':'Good evening 👋';
+  // continue = topic có tiến độ dở dang gần nhất, else topic đầu
+  let cont = TOPICS.find(t=>topicLearned(t.id)>0 && topicLearned(t.id)<topicTotal(t.id)) || TOPICS[0];
+  const cl=topicLearned(cont.id), ct=topicTotal(cont.id);
+  const goal=DATA.dailyGoal, done=DATA.progressToday.date===todayStr()?DATA.progressToday.count:0;
+  const activeToday = DATA.streak.lastDay===todayStr();
+  return header(greet,"Let's learn today")
+  + `<button class="cont" onclick="openTopic('${cont.id}')" aria-label="Tiếp tục học ${cont.name}">
+      <div class="k">Continue learning</div>
+      <div class="v">${cont.emoji} ${cont.name}</div>
+      <div class="p">${cl} / ${ct} từ đã học</div>
+      <div class="bar"><i style="width:${ct?cl/ct*100:0}%"></i></div>
+    </button>
+
+    <div class="card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span class="card-title">🔥 Mục tiêu hôm nay</span>
+        <span style="flex:1"></span>
+        <span class="chip">${done}/${goal} từ</span>
+      </div>
+      <div class="progress"><i style="width:${Math.min(100,goal?done/goal*100:0)}%"></i></div>
+      ${done>=goal
+        ?'<div class="card-sub" style="color:var(--success);margin-top:10px">✓ Hoàn thành mục tiêu hôm nay! Tuyệt vời 🎉</div>'
+        :`<div class="card-sub" style="margin-top:10px">${activeToday?'Bạn đã học hôm nay 👍 cố thêm '+(goal-done)+' từ để đạt mục tiêu.':'Chưa học hôm nay — học vài từ để giữ chuỗi 🔥'}</div>`}
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="n tabular">${learnedCount()}</div><div class="l">Từ đã học</div></div>
+      <div class="stat"><div class="n tabular">${DATA.streak.count}</div><div class="l">Streak 🔥</div></div>
+      <div class="stat"><div class="n tabular">${dueCount()}</div><div class="l">Cần ôn</div></div>
+    </div>
+
+    <div class="slabel">Quick actions</div>
+    <div class="qa">
+      <button onclick="go('learn')" aria-label="Học từ mới"><span class="e">📚</span>Học từ</button>
+      <button onclick="startReview()" aria-label="Ôn tập"><span class="e">↻</span>Ôn tập</button>
+      <button onclick="startPractice()" aria-label="Luyện đặt câu"><span class="e">✎</span>Luyện câu</button>
+    </div>`;
+}
+
+/* ---------- LEARN (topic list) ---------- */
+function viewLearn(){
+  const q=state.search.trim().toLowerCase();
+  if(q){
+    const hits=VOCAB.filter(v=>v.word.toLowerCase().includes(q)||v.meaningVi.toLowerCase().includes(q)||v.topic.includes(q));
+    return header('Choose a topic','Học từ vựng')
+    + searchBox()
+    + (hits.length? `<div class="card" style="padding:6px 16px">${hits.map(vitemHTML).join('')}</div>`
+       : `<div class="empty"><div class="e">🔍</div>Không tìm thấy "<b>${state.search}</b>"</div>`);
+  }
+  return header('Choose a topic','Học từ vựng')
+  + searchBox()
+  + TOPICS.map(t=>{
+      const l=topicLearned(t.id),tt=topicTotal(t.id);
+      return `<button class="topic" onclick="openTopic('${t.id}')">
+        <span class="emo">${t.emoji}</span>
+        <span class="body">
+          <span class="t">${t.name}</span>
+          <span class="meta">${l}/${tt} từ · ${t.desc}</span>
+          <span class="progress"><i style="width:${tt?l/tt*100:0}%"></i></span>
+        </span>
+        <span class="arrow">›</span>
+      </button>`;
+    }).join('');
+}
+function searchBox(){
+  return `<div class="search">
+    <span style="color:var(--muted)">🔍</span>
+    <input id="searchInput" placeholder="Tìm từ vựng, cụm từ..." value="${state.search}"
+      oninput="onSearch(this.value)" />
+    ${state.search?`<button onclick="onSearch('')" style="color:var(--muted)">✕</button>`:''}
+  </div>`;
+}
+function vitemHTML(v){
+  const learned=!!DATA.learned[v.id];
+  return `<button class="vitem" onclick="openTopicAt('${v.topic}','${v.id}')">
+    <span class="dot ${learned?'learned':''}"></span>
+    <span style="flex:1;min-width:0">
+      <span class="w">${v.word}</span>
+      <span class="m">${v.meaningVi} · <span style="opacity:.7">${v.type}</span></span>
+    </span>
+    <span class="chip chip-lvl">${v.level}</span>
+  </button>`;
+}
+
+/* ---------- TOPIC DETAIL (vocab list of a topic) ---------- */
+function viewTopic(){
+  const t=TOPICS.find(x=>x.id===state.topic);
+  const list=VOCAB.filter(v=>v.topic===t.id);
+  const l=topicLearned(t.id);
+  return `<div class="phead">
+      <div><p class="desc"><button onclick="go('learn')" style="color:var(--muted)">‹ Chủ đề</button></p>
+      <h1>${t.emoji} ${t.name}</h1></div>
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Đổi giao diện sáng/tối">🌓</button></div>
+    <div class="card" style="display:flex;align-items:center;gap:12px">
+      <div style="flex:1"><div class="card-title">${l}/${list.length} từ đã học</div>
+      <div class="progress" style="margin-top:8px"><i style="width:${l/list.length*100}%"></i></div></div>
+    </div>
+    <button class="btn btn-brand" onclick="startDeck('${t.id}')" style="margin-bottom:16px">
+      Bắt đầu học bằng Flashcard ▸</button>
+    <div class="card" style="padding:6px 16px">${list.map(vitemHTML).join('')}</div>`;
+}
+
+/* ---------- FLASHCARD ---------- */
+function viewFlash(){
+  const v=state.deck[state.deckIdx];
+  if(!v) return viewDeckDone();
+  const s=state.flip?'flipped':'';
+  const t=TOPICS.find(x=>x.id===v.topic);
+  return `<div class="deck-top">
+      <button class="icon-btn" onclick="exitDeck()">‹</button>
+      <span class="deck-count tabular">${state.deckIdx+1} / ${state.deck.length}</span>
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Đổi giao diện sáng/tối">🌓</button>
+    </div>
+    <div class="progress" style="margin-bottom:18px"><i style="width:${(state.deckIdx)/state.deck.length*100}%"></i></div>
+
+    <div class="flash ${s}" onclick="flip()"><div class="flash-inner">
+      <div class="flash-face flash-front">
+        <div style="display:flex;gap:6px;margin-bottom:6px">
+          <span class="chip chip-muted">${t?t.emoji+' '+t.name:''}</span>
+          <span class="chip chip-lvl">${v.level}</span>
+        </div>
+        <div class="word">${v.word}</div>
+        <div class="ipa">${v.pronunciation}</div>
+        <div class="card-sub" style="margin-top:2px">${v.type}</div>
+        <button class="btn btn-ghost btn-sm" style="width:auto;margin-top:14px"
+          onclick="event.stopPropagation();speak('${escq(v.word)}')">🔊 Nghe</button>
+        <div class="tap">Chạm để xem nghĩa</div>
+      </div>
+
+      <div class="flash-face flash-back">
+        <div class="sec"><div class="lbl">Definition</div><div class="en">${v.definitionEn}</div></div>
+        <div class="sec"><div class="lbl">Nghĩa tiếng Việt</div><div class="vi">${v.meaningVi}</div></div>
+        <div class="sec"><div class="lbl">Ví dụ</div>
+          <div class="ex">"${v.exampleEn}"</div>
+          <div class="card-sub" style="margin-top:4px">${v.exampleVi}</div>
+          <button class="btn btn-ghost btn-sm" style="width:auto;margin-top:8px"
+            onclick="event.stopPropagation();speak('${escq(v.exampleEn)}')">🔊 Nghe câu</button>
+        </div>
+        ${v.collocations?.length?`<div class="sec"><div class="lbl">Đi kèm (collocations)</div>
+          <div class="coll">${v.collocations.map(c=>`<span class="chip chip-muted">${c}</span>`).join('')}</div></div>`:''}
+      </div>
+    </div></div>
+
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline" style="color:var(--danger)" onclick="rate(false)">Chưa nhớ</button>
+      <button class="btn btn-brand" onclick="rate(true)">Đã nhớ ✓</button>
+    </div>`;
+}
+function viewDeckDone(){
+  return `<div class="deck-top"><button class="icon-btn" onclick="exitDeck()">‹</button>
+    <span class="deck-count">Hoàn thành</span><span style="width:40px"></span></div>
+    <div class="empty" style="padding-top:60px">
+      <div class="e">🎉</div>
+      <div style="font-size:19px;font-weight:700;color:var(--ink);margin-bottom:6px">Xong bộ từ này!</div>
+      <div style="margin-bottom:22px">Bạn đã ôn qua ${state.deck.length} từ. Giỏi lắm!</div>
+      <button class="btn btn-brand" onclick="exitDeck()">Về danh sách</button>
+    </div>`;
+}
+
+/* ---------- REVIEW placeholder (Phase 2 sẽ mở rộng) ---------- */
+function viewReview(){
+  const due=dueList();
+  const canPractice = VOCAB.some(v=>DATA.learned[v.id]);
+  const practiceCard = `<div class="card">
+      <div class="card-title">✎ Luyện đặt câu</div>
+      <div class="card-sub" style="margin-top:4px">Tự viết câu tiếng Anh dùng từ đã học — cách tốt nhất để nhớ lâu.</div>
+      <button class="btn btn-brand" style="margin-top:14px" onclick="startPractice()">Bắt đầu luyện ▸</button>
+    </div>`;
+  return header('Ôn tập & luyện tập','Ôn tập')
+  + (canPractice? practiceCard : '')
+  + (due.length
+    ? `<div class="card"><div class="card-title">🔁 ${due.length} từ cần ôn Flashcard hôm nay</div>
+        <div class="card-sub" style="margin-top:4px">Ôn đúng lúc giúp nhớ lâu hơn.</div>
+        <button class="btn btn-outline" style="margin-top:14px" onclick="startReview()">Ôn Flashcard ▸</button></div>
+       <div class="slabel">Danh sách cần ôn</div>
+       <div class="card" style="padding:6px 16px">${due.map(vitemHTML).join('')}</div>`
+    : (canPractice? '' : `<div class="empty"><div class="e">✅</div>
+        <div style="font-size:17px;font-weight:600;color:var(--ink);margin-bottom:6px">Chưa có gì để ôn</div>
+        Học thêm từ mới ở tab <b>Học</b> để mở khoá luyện tập nhé.
+        <div style="margin-top:20px"><button class="btn btn-brand" style="width:auto;margin:0 auto" onclick="go('learn')">Đi học từ mới</button></div>
+       </div>`));
+}
+
+/* ---------- PRACTICE (luyện đặt câu) ---------- */
+function pickPracticeVocab(){
+  // ưu tiên: từ đang "struggle" > từ đã học > bất kỳ từ nào
+  const struggles = struggleList().map(x=>x.v);
+  const learned = VOCAB.filter(v=>DATA.learned[v.id]);
+  const pool = struggles.length? struggles : (learned.length? learned : VOCAB);
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function viewPractice(){
+  const v = state.practiceVocab;
+  if(!v) return `<div class="empty"><div class="e">✎</div>Chưa chọn từ để luyện.</div>`;
+  if(state.practiceLoading) return `<div class="deck-top">
+      <span style="width:40px"></span><span class="deck-count">Đang chấm...</span><span style="width:40px"></span></div>
+    <div class="loading-wrap"><span class="spin"></span>
+      <div>AI đang phân tích câu của bạn...</div>
+      <div class="card-sub">Thường mất vài giây</div></div>`;
+  const ex = v.targetExercise;
+  const aiOn = hasKey();
+  return `<div class="deck-top">
+      <button class="icon-btn" onclick="exitPractice()">‹</button>
+      <span class="deck-count">Luyện đặt câu</span>
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Đổi giao diện sáng/tối">🌓</button>
+    </div>
+
+    ${!isOnline()?`<div class="banner">📴 Bạn đang offline — sẽ chấm tạm bằng máy. AI cần Internet.</div>`:''}
+    ${(isOnline()&&!aiOn)?`<div class="banner">💡 Bật <b>AI chấm thông minh</b> (miễn phí) trong Cài đặt để có nhận xét chi tiết. Giờ đang dùng chấm cơ bản.
+      <button class="link" style="background:none;border:none" onclick="openSettings()">Mở Cài đặt</button></div>`:''}
+
+    <div class="target-box">
+      <div class="lbl">Bắt buộc dùng từ / cụm từ</div>
+      <div class="w">${v.word}</div>
+      <button class="btn btn-ghost btn-sm" style="width:auto;margin:12px auto 0" onclick="speak('${escq(v.word)}')">🔊 Nghe</button>
+    </div>
+
+    <div class="prompt-vi">
+      <div class="lbl">Hãy dịch câu sau sang tiếng Anh</div>
+      <div class="txt">${ex.promptVi}</div>
+    </div>
+
+    <textarea class="answer-area" id="answerInput" placeholder="Nhập câu tiếng Anh của bạn..."
+      oninput="state.practiceInput=this.value">${state.practiceInput||''}</textarea>
+
+    <button class="btn btn-brand" onclick="evaluateAnswer()">
+      ${aiOn&&isOnline()?'✨ Đánh giá bằng AI ▸':'Đánh giá ▸'}</button>
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="nextPractice()">Bỏ qua, từ khác ↻</button>`;
+}
+
+/* Bộ chấm CỤC BỘ (Phase 2 — chưa AI). Trả về JSON cùng format Phase 3 sẽ dùng,
+   để khi cắm Gemini vào không phải sửa UI. */
+function gradeLocally(sentence, vocab){
+  const raw = sentence.trim();
+  const s = raw.toLowerCase();
+  const target = vocab.targetExercise.targetPhrase.toLowerCase();
+  const words = s.split(/\s+/).filter(Boolean);
+
+  // target dùng chưa? (khớp mềm: bỏ dấu câu, cho phép biến thể "-" / khoảng trắng)
+  const norm = x => x.replace(/[^a-z\s]/g,'').replace(/\s+/g,' ').trim();
+  const targetUsed = norm(s).includes(norm(target)) ||
+    norm(target).split(' ').every(t=>norm(s).split(' ').includes(t));
+
+  const fixes = [];        // { bad, good }
+  const feedback = [];     // string[] tiếng Việt
+
+  // Heuristic lỗi phổ biến người Việt (chỉ gợi ý, không phải chấm tuyệt đối)
+  if(words.length && !/[.!?]$/.test(raw)) feedback.push('Câu nên kết thúc bằng dấu chấm.');
+  if(/\bi\b/.test(s) && !/\bI\b/.test(raw)) { fixes.push({bad:'i', good:'I'}); feedback.push('Đại từ "I" luôn viết hoa.'); }
+  // "I am + V-nguyên thể" (lỗi hay gặp)
+  const amVerb = s.match(/\bi am (\w+)\b/);
+  if(amVerb && !/ing$|tired|happy|ready|sure|able|responsible|interested/.test(amVerb[1])){
+    feedback.push('Cẩn thận "I am + động từ": thường dùng "I " + động từ (vd: "I help"), hoặc "I am " + V-ing.');
+  }
+  // lặp từ liền nhau
+  for(let i=1;i<words.length;i++){ if(words[i]===words[i-1] && words[i].length>2){ fixes.push({bad:words[i]+' '+words[i], good:words[i]}); break; } }
+
+  // Điểm từng tiêu chí (ước lượng cục bộ)
+  const lenOk = words.length>=4 && words.length<=40;
+  let vocabularyScore = targetUsed?100:25;
+  let grammarScore = Math.max(40, 100 - fixes.length*18 - (lenOk?0:15));
+  let meaningScore = targetUsed? (lenOk?85:70) : 45;
+  let naturalnessScore = Math.max(45, grammarScore - 8 + (lenOk?5:0));
+  let score = Math.round(vocabularyScore*.3 + grammarScore*.3 + meaningScore*.25 + naturalnessScore*.15);
+  // Thiếu cụm mục tiêu là lỗi nặng nhất trong app này → trần điểm 55
+  if(!targetUsed) score = Math.min(score, 55);
+  const isAcceptable = targetUsed && score>=70;
+
+  if(!targetUsed) feedback.unshift(`Bạn chưa dùng cụm mục tiêu "${vocab.targetExercise.targetPhrase}". Hãy đưa nó vào câu.`);
+  if(targetUsed && !feedback.length) feedback.push('Câu ổn! Bạn đã dùng đúng cụm mục tiêu.');
+
+  return {
+    score, meaningScore, grammarScore, vocabularyScore, naturalnessScore,
+    targetWordUsed: targetUsed, isAcceptable,
+    correctedSentence: raw,
+    fixes,
+    feedback,
+    explanationVi: targetUsed
+      ? 'Đây là chấm cơ bản bằng máy. Bật AI trong Cài đặt để có phân tích ngữ pháp & độ tự nhiên chi tiết hơn.'
+      : 'Câu chưa đạt vì thiếu cụm mục tiêu. Hãy viết lại và chèn cụm đó vào.',
+    moreNaturalVersion: '',   // Phase 3 (AI) sẽ điền
+    _local: true,
+  };
+}
+async function evaluateAnswer(){
+  const v=state.practiceVocab; const sent=(state.practiceInput||'').trim();
+  if(!sent){ toast('Hãy nhập câu trước đã'); return; }
+  // Không key hoặc offline → chấm cục bộ luôn
+  if(!hasKey() || !isOnline()){
+    const r=gradeLocally(sent,v); finishEvaluation(v,r); return;
+  }
+  // Có key + online → gọi AI, có loading
+  state.practiceLoading=true; state.practiceError=null; render();
+  try{
+    const r = await evaluateWithGemini(sent, v);
+    state.practiceLoading=false;
+    finishEvaluation(v, r);
+  }catch(e){
+    state.practiceLoading=false;
+    // key sai → báo lỗi rõ, cho thử lại; lỗi khác → fallback cục bộ + thông báo nhẹ
+    if(e.message==='BAD_KEY'){ state.practiceError='BAD_KEY'; state.tab='result'; render(); return; }
+    toast('AI lỗi ('+errMsgVi(e.message).slice(0,30)+'…) — chấm tạm bằng máy');
+    const r=gradeLocally(sent,v); finishEvaluation(v,r);
+  }
+}
+function finishEvaluation(v, r){
+  state.practiceResult=r; state.practiceError=null;
+  recordPractice(v.id, r.score, r.isAcceptable);
+  state.tab='result'; render(); document.getElementById('main').scrollTop=0;
+}
+
+/* ---------- RESULT ---------- */
+function viewResult(){
+  const v=state.practiceVocab, r=state.practiceResult;
+  // Trường hợp lỗi AI cần người dùng xử lý (key sai)
+  if(state.practiceError==='BAD_KEY'){
+    return `<div class="deck-top"><button class="icon-btn" onclick="retryPractice()">‹</button>
+      <span class="deck-count">Lỗi</span><span style="width:40px"></span></div>
+      <div class="err-card">
+        <div class="e">🔑</div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px">API key không hợp lệ</div>
+        <div style="font-size:14px;line-height:1.6">Hãy kiểm tra lại Gemini API key trong Cài đặt, hoặc chấm tạm bằng máy.</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn btn-outline" onclick="openSettings()">Mở Cài đặt</button>
+        <button class="btn btn-brand" onclick="gradeNowLocal()">Chấm bằng máy</button>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:10px" onclick="retryPractice()">‹ Quay lại viết câu</button>`;
+  }
+  if(!r) return viewPractice();
+  const color = r.score>=90?'var(--success)':r.score>=70?'var(--brand)':'var(--warn)';
+  const verdict = r.score>=90?'Excellent! 🎉':r.score>=70?'Tốt lắm! 👍':'Cần luyện thêm 💪';
+  const badge = r._local
+    ? `<span class="local-badge">⚙️ Chấm bằng máy</span>`
+    : `<span class="ai-badge">✨ AI đánh giá</span>`;
+  const crit = [
+    ['Từ mục tiêu', r.vocabularyScore, r.targetWordUsed],
+    ['Ngữ pháp', r.grammarScore, r.grammarScore>=75],
+    ['Ý nghĩa', r.meaningScore, r.meaningScore>=75],
+    ['Tự nhiên', r.naturalnessScore, r.naturalnessScore>=75],
+  ];
+  return `<div class="deck-top">
+      <button class="icon-btn" onclick="exitPractice()">‹</button>
+      <span class="deck-count">Kết quả</span><span style="width:40px"></span></div>
+
+    <div style="text-align:center;margin-bottom:12px">${badge}</div>
+
+    <div class="card">
+      <div class="score-ring">
+        <div class="num" style="color:${color}">${r.score}<span style="font-size:22px;color:var(--muted)">/100</span></div>
+        <div class="verdict" style="color:${color}">${verdict}</div>
+      </div>
+      <div class="breakdown">
+        ${crit.map(([k,val,ok])=>`<div class="bk">
+          <div class="k">${k}</div>
+          <div class="v">${ok?'<span style="color:var(--success)">✓</span>':'<span style="color:var(--warn)">!</span>'} ${val}/100</div>
+          <div class="bar-mini"><i style="width:${val}%;background:${ok?'var(--success)':'var(--warn)'}"></i></div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title" style="margin-bottom:8px">Câu bạn viết</div>
+      <div style="font-size:15px;line-height:1.6;color:var(--muted)">"${escapeHtml(r.correctedSentence)}"</div>
+      ${r.fixes?.length?`<div class="card-title" style="margin:16px 0 4px">Cần sửa</div>
+        ${r.fixes.map(f=>`<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span></div>`).join('')}`:''}
+    </div>
+
+    ${r.feedback?.length?`<div class="card">
+      <div class="card-title" style="margin-bottom:8px">Nhận xét</div>
+      ${r.feedback.map(f=>`<div style="font-size:14px;line-height:1.6;margin-bottom:6px">• ${escapeHtml(f)}</div>`).join('')}
+      <div class="card-sub" style="margin-top:8px">${r.explanationVi}</div>
+    </div>`:''}
+
+    ${r.moreNaturalVersion?`<div class="natural"><div class="lbl">Câu tự nhiên hơn</div><div class="txt">${escapeHtml(r.moreNaturalVersion)}</div></div>`:''}
+
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button class="btn btn-outline" onclick="retryPractice()">Sửa lại</button>
+      <button class="btn btn-brand" onclick="nextPractice()">Từ tiếp theo ▸</button>
+    </div>`;
+}
+
+/* ---------- PROGRESS ---------- */
+function viewProgress(){
+  const week=last7Days();
+  const max=Math.max(1,...week.map(d=>d.count));
+  return header('7 ngày qua','Tiến độ học')
+  + `<div class="stat-row">
+      <div class="stat"><div class="n tabular">${learnedCount()}</div><div class="l">Từ đã học</div></div>
+      <div class="stat"><div class="n tabular">${DATA.streak.count}</div><div class="l">Streak 🔥</div></div>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="n tabular">${avgPracticeScore()}%</div><div class="l">Điểm luyện</div></div>
+      <div class="stat"><div class="n tabular">${DATA.sentencesPracticed||0}</div><div class="l">Câu đã luyện</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Từ mới học mỗi ngày</div>
+      ${week.map(d=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+        <span class="card-sub" style="width:26px">${d.label}</span>
+        <span class="progress" style="flex:1"><i style="width:${d.count/max*100}%;background:${d.count?'var(--brand)':'var(--surface-2)'}"></i></span>
+        <span class="tabular" style="width:22px;text-align:right;font-size:13px">${d.count}</span>
+      </div>`).join('')}
+    </div>
+    ${struggleView()}
+    <button class="btn btn-outline" onclick="openSettings()">⚙️ Cài đặt & Sao lưu dữ liệu</button>`;
+}
+function struggleView(){
+  const list = struggleList();
+  if(!list.length) return '';
+  const sig = c => c>=3?'🔴':c>=2?'🟡':'🟢';
+  return `<div class="slabel">Words to review — từ bạn hay sai</div>
+    <div class="card" style="padding:6px 16px">
+      ${list.slice(0,8).map(({v,count})=>`<div class="struggle">
+        <span class="sig">${sig(count)}</span>
+        <span style="flex:1;min-width:0"><span class="w" style="font-size:15px;font-weight:600">${v.word}</span>
+          <span class="m" style="display:block;font-size:12px;color:var(--muted)">${v.meaningVi}</span></span>
+        <span class="chip chip-muted">${count} lần sai</span>
+      </div>`).join('')}
+    </div>
+    <button class="btn btn-ghost" style="margin-bottom:14px" onclick="startPracticeStruggle()">Luyện lại các từ này ▸</button>`;
+}
+
+/* =================================================================
+   HELPERS — review scheduling (simple), dates
+================================================================= */
+function nextInterval(box){ return [1,2,4,7,14][Math.min(box,4)]; } // ngày
+function dueList(){
+  const t=todayStr();
+  return VOCAB.filter(v=>{ const nd=DATA.reviewQueue[v.id]; return nd && nd<=t; });
+}
+const dueCount = () => dueList().length;
+function last7Days(){
+  const out=[]; const names=['CN','T2','T3','T4','T5','T6','T7'];
+  const perDay = {};
+  Object.values(DATA.learned).forEach(x=>{ const d=new Date(x.ts).toISOString().slice(0,10); perDay[d]=(perDay[d]||0)+1; });
+  for(let i=6;i>=0;i--){ const dt=new Date(Date.now()-i*864e5); const key=dt.toISOString().slice(0,10);
+    out.push({ label:names[dt.getDay()], count:perDay[key]||0 }); }
+  return out;
+}
+
+/* =================================================================
+   ACTIONS / ROUTER
+================================================================= */
+const VIEWS = { home:viewHome, learn:viewLearn, topic:viewTopic, flash:viewFlash, review:viewReview, progress:viewProgress, practice:viewPractice, result:viewResult };
+const HIDE_FAB = new Set(['flash','practice','result']);
+function render(){
+  document.getElementById('main').innerHTML = `<div class="fade">${VIEWS[state.tab]()}</div>`;
+  document.getElementById('nav').innerHTML = navHTML();
+  const fab=document.getElementById('fab');
+  fab.style.display = HIDE_FAB.has(state.tab)? 'none':'block';
+  if(HIDE_FAB.has(state.tab)) fab.classList.remove('open');
+  applyTheme();
+  const si=document.getElementById('searchInput'); if(si){ si.focus(); si.setSelectionRange(si.value.length,si.value.length); }
+}
+function go(tab){ state.tab=tab; state.search=''; closeFab(); render(); document.getElementById('main').scrollTop=0; }
+function openTopic(id){ state.topic=id; state.tab='topic'; closeFab(); render(); document.getElementById('main').scrollTop=0; }
+function openTopicAt(topicId,vocabId){ startDeck(topicId,vocabId); }
+function onSearch(v){ state.search=v; render(); }
+
+function startDeck(topicId, startId){
+  let list=VOCAB.filter(v=>v.topic===topicId);
+  state.deck=list; state.deckIdx = startId? Math.max(0,list.findIndex(v=>v.id===startId)) : 0;
+  state.flip=false; state.tab='flash'; render(); document.getElementById('main').scrollTop=0;
+}
+function startReview(){
+  const due=dueList();
+  const deck = due.length? due : VOCAB.filter(v=>DATA.learned[v.id]).slice(0,10);
+  if(!deck.length){ toast('Chưa có từ nào để ôn — học từ mới trước nhé!'); go('learn'); return; }
+  state.deck=deck; state.deckIdx=0; state.flip=false; state.tab='flash'; closeFab(); render();
+}
+function exitDeck(){ state.tab = state.topic? 'topic':'learn'; render(); }
+
+/* Practice actions */
+function startPractice(){
+  const v=pickPracticeVocab();
+  if(!v){ toast('Học vài từ trước để luyện nhé!'); go('learn'); return; }
+  state.practiceVocab=v; state.practiceInput=''; state.practiceResult=null;
+  closeFab(); state.tab='practice'; render(); document.getElementById('main').scrollTop=0;
+}
+function startPracticeStruggle(){
+  const list=struggleList();
+  state.practiceVocab = list.length? list[0].v : pickPracticeVocab();
+  state.practiceInput=''; state.practiceResult=null;
+  state.tab='practice'; render(); document.getElementById('main').scrollTop=0;
+}
+function nextPractice(){
+  state.practiceVocab=pickPracticeVocab(); state.practiceInput=''; state.practiceResult=null;
+  state.tab='practice'; render(); document.getElementById('main').scrollTop=0;
+}
+function retryPractice(){ state.practiceResult=null; state.practiceError=null; state.tab='practice'; render(); }
+function gradeNowLocal(){
+  const v=state.practiceVocab, sent=(state.practiceInput||'').trim();
+  if(!sent){ retryPractice(); return; }
+  const r=gradeLocally(sent,v); finishEvaluation(v,r);
+}
+function exitPractice(){ state.practiceResult=null; go('review'); }
+function flip(){ state.flip=!state.flip; render(); }
+function rate(known){
+  const v=state.deck[state.deckIdx]; if(!v) return;
+  markLearned(v.id);
+  const box = known? (DATA.learned[v.id].box) : 0;
+  DATA.reviewQueue[v.id] = new Date(Date.now()+nextInterval(box)*864e5).toISOString().slice(0,10);
+  save();
+  state.flip=false;
+  if(state.deckIdx < state.deck.length-1){ state.deckIdx++; } else { state.deckIdx=state.deck.length; }
+  render();
+}
+
+/* Theme */
+function applyTheme(){
+  const light = DATA.theme==='light';
+  document.documentElement.classList.toggle('light', light);
+  document.querySelector('meta[name=theme-color]').setAttribute('content', light?'#f4f5f7':'#0e0e10');
+}
+function toggleTheme(){ DATA.theme = DATA.theme==='light'?'dark':'light'; save(); render(); }
+
+/* FAB */
+function toggleFab(){ document.getElementById('fab').classList.toggle('open'); }
+function closeFab(){ document.getElementById('fab').classList.remove('open'); }
+
+/* Sheet: Settings + Export/Import (đưa lên sớm vì dữ liệu ở local) */
+function openSettings(){
+  const keySet = hasKey();
+  const body=`<h2>⚙️ Cài đặt</h2><p class="sub">Ứng dụng cá nhân — dữ liệu lưu trên máy bạn.</p>
+
+    <div class="card" style="margin:0 0 12px;border-color:${keySet?'var(--success)':'var(--border)'}">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span class="card-title">✨ AI chấm câu (Gemini)</span>
+        <span style="flex:1"></span>
+        <span class="chip ${keySet?'':'chip-muted'}" style="${keySet?'background:var(--success-bg);color:var(--success)':''}">${keySet?'Đang bật':'Chưa bật'}</span>
+      </div>
+      <div class="card-sub" style="margin-bottom:12px">Miễn phí với Gemini free tier. Lấy key tại
+        <a class="link" href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a>,
+        dán vào đây. Key chỉ lưu trên máy bạn.</div>
+      <input class="key-input" id="geminiKeyInput" type="password" placeholder="Dán Gemini API key (AIza...)"
+        value="${escapeHtml(DATA.geminiKey||'')}" />
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-brand btn-sm" onclick="saveGeminiKey()">Lưu key</button>
+        ${keySet?`<button class="btn btn-outline btn-sm" onclick="clearGeminiKey()">Xoá</button>`:''}
+      </div>
+    </div>
+
+    <div class="card" style="margin:0 0 12px">
+      <div class="card-title" style="margin-bottom:10px">Mục tiêu mỗi ngày</div>
+      <div style="display:flex;gap:8px">
+        ${[5,10,15].map(n=>`<button class="btn ${DATA.dailyGoal===n?'btn-brand':'btn-ghost'} btn-sm" onclick="setGoal(${n})">${n} từ</button>`).join('')}
+      </div>
+    </div>
+
+    <div class="card" style="margin:0 0 12px">
+      <div class="card-title" style="margin-bottom:6px">Giao diện</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ${DATA.theme==='dark'?'btn-brand':'btn-ghost'} btn-sm" onclick="setTheme('dark')">🌙 Tối</button>
+        <button class="btn ${DATA.theme==='light'?'btn-brand':'btn-ghost'} btn-sm" onclick="setTheme('light')">☀️ Sáng</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin:0 0 12px">
+      <div class="card-title" style="margin-bottom:4px">Sao lưu & khôi phục</div>
+      <div class="card-sub" style="margin-bottom:12px">Xuất file .json để giữ dữ liệu khi đổi máy / xóa trình duyệt.</div>
+      <button class="btn btn-outline btn-sm" style="margin-bottom:8px" onclick="exportData()">⬇️ Xuất dữ liệu (backup)</button>
+      <button class="btn btn-outline btn-sm" onclick="document.getElementById('importFile').click()">⬆️ Nhập dữ liệu</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importData(event)" />
+    </div>
+
+    ${!isStandalone()?`<div class="card" style="margin:0 0 12px">
+      <div class="card-title" style="margin-bottom:4px">📲 Cài như ứng dụng</div>
+      <div class="card-sub" style="margin-bottom:12px">Thêm vào màn hình chính để mở nhanh như app thật, chạy được cả khi offline.</div>
+      <button class="btn btn-brand btn-sm" onclick="promptInstall()">Thêm vào màn hình chính</button>
+      <div class="card-sub" style="margin-top:8px">iPhone: bấm nút Chia sẻ ⬆️ trong Safari → "Thêm vào MH chính".</div>
+    </div>`:''}
+
+    <div class="card" style="margin:0 0 12px">
+      <div class="card-title" style="margin-bottom:8px">Về ứng dụng</div>
+      <div class="card-sub" style="line-height:1.6">English Coach · phiên bản MVP (1.0)<br>
+        Triết lý: <b style="color:var(--ink)">Biết từ chưa đủ — phải dùng được từ.</b><br>
+        Ứng dụng cá nhân, dữ liệu ở máy bạn, không tài khoản, không quảng cáo.</div>
+    </div>
+
+    <button class="btn btn-outline btn-sm" style="color:var(--danger)" onclick="resetAll()">🗑️ Xóa toàn bộ tiến độ</button>`;
+  showSheet(body);
+}
+function setGoal(n){ DATA.dailyGoal=n; save(); openSettings(); render(); }
+function setTheme(t){ DATA.theme=t; save(); openSettings(); render(); }
+function saveGeminiKey(){
+  const el=document.getElementById('geminiKeyInput'); const k=(el?.value||'').trim();
+  DATA.geminiKey=k; save(); openSettings(); render();
+  toast(k? 'Đã lưu key ✓ AI đã bật':'Đã xoá key');
+}
+function clearGeminiKey(){ DATA.geminiKey=''; save(); openSettings(); render(); toast('Đã xoá key'); }
+function exportData(){
+  const blob=new Blob([JSON.stringify(DATA,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='english-coach-backup.json'; a.click(); URL.revokeObjectURL(a.href);
+  toast('Đã xuất backup ✓');
+}
+function importData(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ DATA={...defaultData(),...JSON.parse(r.result)}; save(); closeSheet(); render(); toast('Đã khôi phục dữ liệu ✓'); }
+    catch(err){ toast('File không hợp lệ'); } };
+  r.readAsText(f);
+}
+function resetAll(){
+  if(confirm('Xóa toàn bộ tiến độ học? Không thể hoàn tác.')){ DATA=defaultData(); save(); closeSheet(); render(); toast('Đã reset'); }
+}
+
+function showSheet(html){ document.getElementById('sheetBody').innerHTML=html;
+  document.getElementById('overlay').classList.add('show'); document.getElementById('sheet').classList.add('show'); }
+function closeSheet(){ document.getElementById('overlay').classList.remove('show'); document.getElementById('sheet').classList.remove('show'); }
+
+/* Toast */
+let toastT;
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('show'),1900); }
+
+/* utils */
+function escq(s){ return String(s).replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* =================================================================
+   PWA — single-file build.
+   Manifest + apple meta + Add to Home Screen đủ để cài như app.
+   (Service worker cần file .js riêng cùng origin nên bỏ ở bản 1-file;
+   app vẫn chạy offline vì toàn bộ nằm trong 1 file đã tải, dữ liệu ở
+   localStorage. Chỉ AI cần Internet.)
+================================================================= */
+// Add to Home Screen (Android/Chrome)
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredPrompt=e; });
+async function promptInstall(){
+  if(!deferredPrompt){ toast('iPhone: bấm Chia sẻ ⬆️ → "Thêm vào MH chính"'); return; }
+  deferredPrompt.prompt();
+  try{ await deferredPrompt.userChoice; }catch(e){}
+  deferredPrompt=null; openSettings();
+}
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+
+/* boot */
+window.addEventListener('online',()=>{ if(state.tab==='practice') render(); });
+window.addEventListener('offline',()=>{ if(state.tab==='practice') render(); });
+render();
+</script>
+</body>
+</html>
