@@ -249,6 +249,38 @@ input{font-family:inherit}
 .key-input:focus{border-color:var(--brand)}
 .link{color:var(--brand);text-decoration:underline;font-weight:600}
 
+/* Practice inline dưới flashcard */
+.practice-inline{margin-top:8px}
+.practice-inline .head{display:flex;align-items:center;gap:8px;margin:22px 4px 12px}
+.practice-inline .head .t{font-size:15px;font-weight:700}
+.ex-tabs{display:flex;gap:8px;margin-bottom:12px}
+.ex-tab{flex:1;padding:9px 6px;border-radius:.75rem;background:var(--surface-2);color:var(--muted);
+  font-size:13px;font-weight:600;text-align:center;border:1px solid transparent;transition:all .2s}
+.ex-tab.active{background:var(--brand-light);color:var(--brand);border-color:var(--brand)}
+.ex-tab.done{color:var(--success)}
+.mini-result{border-radius:1rem;padding:14px;margin-top:12px;border:1px solid var(--border)}
+.mini-result .top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.mini-result .sc{font-size:26px;font-weight:800;line-height:1}
+.mini-result .fixes{margin-top:8px}
+.mini-fb{font-size:13px;line-height:1.6;margin-top:4px}
+
+/* Mức độ đề + gợi ý từ */
+.lvl-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700}
+.lvl-medium{background:var(--success-bg);color:var(--success)}
+.lvl-good{background:var(--warn-bg);color:var(--warn)}
+.lvl-hard{background:var(--danger-bg);color:var(--danger)}
+.hint-panel{background:var(--surface-2);border:1px solid var(--border);border-radius:1rem;padding:14px;margin:12px 0}
+.hint-panel .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;margin-bottom:10px}
+.hint-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.hint-item:last-child{border-bottom:none}
+.hint-item .en{font-weight:600;font-size:14px}
+.hint-item .vi{font-size:12px;color:var(--muted)}
+.hint-item .acts{display:flex;gap:6px;flex:none}
+.hint-btn{width:34px;height:34px;border-radius:.6rem;display:flex;align-items:center;justify-content:center;
+  background:var(--surface);border:1px solid var(--border-strong);font-size:15px}
+.hint-btn:active{transform:scale(.9)}
+.hint-btn.saved{background:var(--brand);color:#fff;border-color:var(--brand)}
+
 .target-box{background:var(--brand-light);border:1px solid var(--brand);border-radius:var(--r-card);
   padding:18px;text-align:center;margin-bottom:14px}
 .target-box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--brand);font-weight:600;margin-bottom:8px}
@@ -325,6 +357,7 @@ const TOPICS = [
   { id:'technology', name:'Technology',  emoji:'💡', level:'B1–B2', desc:'Công nghệ & thiết bị' },
   { id:'work',       name:'Work',        emoji:'🧑‍💻',level:'B1',    desc:'Công việc hằng ngày' },
   { id:'daily',      name:'Daily Life',  emoji:'☕', level:'A2–B1', desc:'Giao tiếp thường ngày' },
+  { id:'mywords',    name:'Từ của tôi',  emoji:'⭐', level:'—',     desc:'Từ bạn đã lưu khi luyện' },
 ];
 
 /* Mỗi item đủ trường theo spec: word,type,level,meaningVi,definitionEn,pronunciation,
@@ -338,7 +371,11 @@ const VOCAB = [
     exampleEn:'Sustainable tourism helps protect local communities and nature.',
     exampleVi:'Du lịch bền vững giúp bảo vệ cộng đồng địa phương và thiên nhiên.',
     collocations:['sustainable development','promote sustainable tourism','eco-friendly travel'],
-    targetExercise:{ promptVi:'Du lịch bền vững mang lại lợi ích lâu dài cho địa phương mà không phá hủy tài nguyên.', targetPhrase:'sustainable tourism' } },
+    targetExercises:[
+      { promptVi:'Du lịch bền vững mang lại lợi ích lâu dài cho địa phương mà không phá hủy tài nguyên.', targetPhrase:'sustainable tourism' },
+      { promptVi:'Nhiều công ty đang chuyển sang du lịch bền vững để bảo vệ môi trường.', targetPhrase:'sustainable tourism' },
+      { promptVi:'Du lịch bền vững không chỉ tốt cho thiên nhiên mà còn cho kinh tế địa phương.', targetPhrase:'sustainable tourism' }
+    ] },
   { id:'trv-002', topic:'travel', word:'off the beaten track', type:'idiom', level:'B2',
     meaningVi:'nơi ít người biết, tránh xa lối mòn du lịch',
     definitionEn:'A place that is far from where most tourists usually go.',
@@ -346,7 +383,11 @@ const VOCAB = [
     exampleEn:'We prefer villages that are off the beaten track.',
     exampleVi:'Chúng tôi thích những ngôi làng ít người biết đến.',
     collocations:['explore off the beaten track','hidden gem'],
-    targetExercise:{ promptVi:'Tôi thích khám phá những nơi ít người biết đến hơn là các điểm du lịch đông đúc.', targetPhrase:'off the beaten track' } },
+    targetExercises:[
+      { promptVi:'Tôi thích khám phá những nơi ít người biết đến hơn là các điểm du lịch đông đúc.', targetPhrase:'off the beaten track' },
+      { promptVi:'Nếu bạn muốn trải nghiệm thật sự, hãy đến những nơi ít người biết đến.', targetPhrase:'off the beaten track' },
+      { promptVi:'Ngôi làng đó nằm ở một nơi hẻo lánh, tránh xa các tuyến du lịch thông thường.', targetPhrase:'off the beaten track' }
+    ] },
   { id:'trv-003', topic:'travel', word:'itinerary', type:'noun', level:'B1',
     meaningVi:'lịch trình chuyến đi',
     definitionEn:'A detailed plan of a journey, listing places and times.',
@@ -354,7 +395,11 @@ const VOCAB = [
     exampleEn:'Our itinerary includes three cities in five days.',
     exampleVi:'Lịch trình của chúng tôi gồm ba thành phố trong năm ngày.',
     collocations:['plan an itinerary','a packed itinerary'],
-    targetExercise:{ promptVi:'Hãy gửi cho tôi lịch trình chi tiết trước chuyến đi.', targetPhrase:'itinerary' } },
+    targetExercises:[
+      { promptVi:'Hãy gửi cho tôi lịch trình chi tiết trước chuyến đi.', targetPhrase:'itinerary' },
+      { promptVi:'Chúng tôi đã lên lịch trình cho chuyến công tác tuần tới.', targetPhrase:'itinerary' },
+      { promptVi:'Bạn có thể thay đổi lịch trình nếu thời tiết xấu.', targetPhrase:'itinerary' }
+    ] },
 
   // BUSINESS
   { id:'biz-001', topic:'business', word:'follow up', type:'phrasal verb', level:'B1',
@@ -364,7 +409,11 @@ const VOCAB = [
     exampleEn:'I will follow up with the client next week.',
     exampleVi:'Tôi sẽ liên hệ lại với khách hàng vào tuần sau.',
     collocations:['follow up on an email','follow-up meeting'],
-    targetExercise:{ promptVi:'Tôi sẽ liên hệ lại với khách hàng sau khi gửi báo giá.', targetPhrase:'follow up' } },
+    targetExercises:[
+      { promptVi:'Tôi sẽ liên hệ lại với khách hàng sau khi gửi báo giá.', targetPhrase:'follow up' },
+      { promptVi:'Sau cuộc họp, tôi sẽ liên hệ lại để xác nhận đơn hàng.', targetPhrase:'follow up' },
+      { promptVi:'Đừng quên liên hệ lại với khách hàng tiềm năng đó nhé.', targetPhrase:'follow up' }
+    ] },
   { id:'biz-002', topic:'business', word:'competitive advantage', type:'noun phrase', level:'B2',
     meaningVi:'lợi thế cạnh tranh',
     definitionEn:'Something that makes a company or product better than its rivals.',
@@ -372,7 +421,11 @@ const VOCAB = [
     exampleEn:'Fast service is our main competitive advantage.',
     exampleVi:'Dịch vụ nhanh là lợi thế cạnh tranh chính của chúng tôi.',
     collocations:['gain a competitive advantage','clear advantage'],
-    targetExercise:{ promptVi:'Độ chính xác cao của thiết bị là lợi thế cạnh tranh của chúng tôi.', targetPhrase:'competitive advantage' } },
+    targetExercises:[
+      { promptVi:'Độ chính xác cao của thiết bị là lợi thế cạnh tranh của chúng tôi.', targetPhrase:'competitive advantage' },
+      { promptVi:'Chúng tôi cần tạo ra lợi thế cạnh tranh so với các đối thủ.', targetPhrase:'competitive advantage' },
+      { promptVi:'Công nghệ mới mang lại cho công ty một lợi thế cạnh tranh rõ rệt.', targetPhrase:'competitive advantage' }
+    ] },
   { id:'biz-003', topic:'business', word:'meet a deadline', type:'collocation', level:'B1',
     meaningVi:'kịp thời hạn',
     definitionEn:'To finish work at or before the required time.',
@@ -380,7 +433,11 @@ const VOCAB = [
     exampleEn:'The team worked hard to meet the deadline.',
     exampleVi:'Cả nhóm đã làm việc chăm chỉ để kịp thời hạn.',
     collocations:['tight deadline','miss a deadline','meet a deadline'],
-    targetExercise:{ promptVi:'Chúng tôi cần lắp đặt xong thiết bị để kịp thời hạn của dự án.', targetPhrase:'meet the deadline' } },
+    targetExercises:[
+      { promptVi:'Chúng tôi cần lắp đặt xong thiết bị để kịp thời hạn của dự án.', targetPhrase:'meet the deadline' },
+      { promptVi:'Nếu làm thêm giờ, chúng ta có thể kịp thời hạn.', targetPhrase:'meet the deadline' },
+      { promptVi:'Nhóm đã nỗ lực hết sức để kịp thời hạn giao hàng.', targetPhrase:'meet the deadline' }
+    ] },
 
   // ENVIRONMENT (ngành của bạn)
   { id:'env-001', topic:'environment', word:'calibration', type:'noun', level:'B2',
@@ -390,7 +447,11 @@ const VOCAB = [
     exampleEn:'The gas analyzer needs calibration every month.',
     exampleVi:'Máy phân tích khí cần được hiệu chuẩn hằng tháng.',
     collocations:['perform calibration','calibration certificate','routine calibration'],
-    targetExercise:{ promptVi:'Cảm biến này cần được hiệu chuẩn trước khi đưa vào sử dụng.', targetPhrase:'calibration' } },
+    targetExercises:[
+      { promptVi:'Cảm biến này cần được hiệu chuẩn trước khi đưa vào sử dụng.', targetPhrase:'calibration' },
+      { promptVi:'Việc hiệu chuẩn định kỳ giúp đảm bảo kết quả đo chính xác.', targetPhrase:'calibration' },
+      { promptVi:'Chúng tôi cung cấp dịch vụ hiệu chuẩn cho tất cả thiết bị đo.', targetPhrase:'calibration' }
+    ] },
   { id:'env-002', topic:'environment', word:'emission', type:'noun', level:'B2',
     meaningVi:'sự phát thải (khí/chất thải)',
     definitionEn:'A gas or substance sent out into the air, often from factories.',
@@ -398,7 +459,11 @@ const VOCAB = [
     exampleEn:'The system monitors factory emission levels in real time.',
     exampleVi:'Hệ thống giám sát mức phát thải của nhà máy theo thời gian thực.',
     collocations:['reduce emissions','emission standards','carbon emissions'],
-    targetExercise:{ promptVi:'Thiết bị của chúng tôi giúp nhà máy giám sát mức phát thải theo thời gian thực.', targetPhrase:'emission' } },
+    targetExercises:[
+      { promptVi:'Thiết bị của chúng tôi giúp nhà máy giám sát mức phát thải theo thời gian thực.', targetPhrase:'emission' },
+      { promptVi:'Nhà máy phải giảm lượng phát thải để đạt tiêu chuẩn môi trường.', targetPhrase:'emission' },
+      { promptVi:'Cảm biến này đo lượng phát thải khí trực tiếp tại ống khói.', targetPhrase:'emission' }
+    ] },
   { id:'env-003', topic:'environment', word:'threshold', type:'noun', level:'B2',
     meaningVi:'ngưỡng giới hạn',
     definitionEn:'A level or point at which something starts to happen or is allowed.',
@@ -406,7 +471,11 @@ const VOCAB = [
     exampleEn:'The alarm goes off when pollution passes the safe threshold.',
     exampleVi:'Chuông báo kêu khi mức ô nhiễm vượt ngưỡng an toàn.',
     collocations:['exceed a threshold','safe threshold','set a threshold'],
-    targetExercise:{ promptVi:'Cảm biến sẽ cảnh báo khi nồng độ khí vượt ngưỡng cho phép.', targetPhrase:'threshold' } },
+    targetExercises:[
+      { promptVi:'Cảm biến sẽ cảnh báo khi nồng độ khí vượt ngưỡng cho phép.', targetPhrase:'threshold' },
+      { promptVi:'Khi nhiệt độ vượt ngưỡng, hệ thống sẽ tự động dừng.', targetPhrase:'threshold' },
+      { promptVi:'Chúng ta cần đặt một ngưỡng an toàn cho nồng độ khí.', targetPhrase:'threshold' }
+    ] },
   { id:'env-004', topic:'environment', word:'real-time monitoring', type:'noun phrase', level:'B2',
     meaningVi:'giám sát theo thời gian thực',
     definitionEn:'Watching data continuously as it is produced, with no delay.',
@@ -414,7 +483,11 @@ const VOCAB = [
     exampleEn:'Real-time monitoring lets us react to problems immediately.',
     exampleVi:'Giám sát thời gian thực giúp chúng tôi xử lý sự cố ngay lập tức.',
     collocations:['continuous monitoring','remote monitoring','monitoring station'],
-    targetExercise:{ promptVi:'Giải pháp này cho phép giám sát chất lượng nước theo thời gian thực.', targetPhrase:'real-time monitoring' } },
+    targetExercises:[
+      { promptVi:'Giải pháp này cho phép giám sát chất lượng nước theo thời gian thực.', targetPhrase:'real-time monitoring' },
+      { promptVi:'Khách hàng có thể xem dữ liệu qua hệ thống giám sát thời gian thực.', targetPhrase:'real-time monitoring' },
+      { promptVi:'Giám sát thời gian thực giúp phát hiện sự cố ngay khi xảy ra.', targetPhrase:'real-time monitoring' }
+    ] },
 
   // TECHNOLOGY
   { id:'tec-001', topic:'technology', word:'user-friendly', type:'adjective', level:'B1',
@@ -424,7 +497,11 @@ const VOCAB = [
     exampleEn:'The new dashboard is very user-friendly.',
     exampleVi:'Bảng điều khiển mới rất dễ sử dụng.',
     collocations:['user-friendly interface','easy to use'],
-    targetExercise:{ promptVi:'Phần mềm được thiết kế đơn giản và dễ sử dụng cho mọi người.', targetPhrase:'user-friendly' } },
+    targetExercises:[
+      { promptVi:'Phần mềm được thiết kế đơn giản và dễ sử dụng cho mọi người.', targetPhrase:'user-friendly' },
+      { promptVi:'Chúng tôi thiết kế giao diện dễ sử dụng cho người không rành công nghệ.', targetPhrase:'user-friendly' },
+      { promptVi:'Ứng dụng này rất dễ sử dụng, ai cũng có thể dùng ngay.', targetPhrase:'user-friendly' }
+    ] },
   { id:'tec-002', topic:'technology', word:'troubleshoot', type:'verb', level:'B2',
     meaningVi:'khắc phục sự cố, dò lỗi',
     definitionEn:'To find and fix problems in a system or device.',
@@ -432,7 +509,11 @@ const VOCAB = [
     exampleEn:'Our team can troubleshoot the device remotely.',
     exampleVi:'Đội của chúng tôi có thể khắc phục sự cố thiết bị từ xa.',
     collocations:['troubleshoot an issue','troubleshooting guide'],
-    targetExercise:{ promptVi:'Kỹ thuật viên sẽ giúp bạn khắc phục sự cố qua điện thoại.', targetPhrase:'troubleshoot' } },
+    targetExercises:[
+      { promptVi:'Kỹ thuật viên sẽ giúp bạn khắc phục sự cố qua điện thoại.', targetPhrase:'troubleshoot' },
+      { promptVi:'Bạn có thể tự khắc phục sự cố bằng cách làm theo hướng dẫn.', targetPhrase:'troubleshoot' },
+      { promptVi:'Kỹ sư của chúng tôi sẽ khắc phục sự cố trong vòng 24 giờ.', targetPhrase:'troubleshoot' }
+    ] },
 
   // WORK
   { id:'wrk-001', topic:'work', word:'be responsible for', type:'phrase', level:'B1',
@@ -442,7 +523,11 @@ const VOCAB = [
     exampleEn:'I am responsible for after-sales support.',
     exampleVi:'Tôi chịu trách nhiệm về hỗ trợ sau bán hàng.',
     collocations:['take responsibility for','responsible for a team'],
-    targetExercise:{ promptVi:'Tôi chịu trách nhiệm về việc tư vấn kỹ thuật cho khách hàng.', targetPhrase:'responsible for' } },
+    targetExercises:[
+      { promptVi:'Tôi chịu trách nhiệm về việc tư vấn kỹ thuật cho khách hàng.', targetPhrase:'responsible for' },
+      { promptVi:'Ai là người chịu trách nhiệm về dự án này?', targetPhrase:'responsible for' },
+      { promptVi:'Cô ấy chịu trách nhiệm về việc quản lý kho hàng.', targetPhrase:'responsible for' }
+    ] },
   { id:'wrk-002', topic:'work', word:'get in touch', type:'idiom', level:'A2',
     meaningVi:'liên lạc, giữ liên hệ',
     definitionEn:'To contact someone by phone, email or message.',
@@ -450,7 +535,11 @@ const VOCAB = [
     exampleEn:'Please get in touch if you have any questions.',
     exampleVi:'Hãy liên hệ với tôi nếu bạn có bất kỳ câu hỏi nào.',
     collocations:['get in touch with','stay in touch'],
-    targetExercise:{ promptVi:'Vui lòng liên hệ với tôi nếu bạn cần thêm thông tin.', targetPhrase:'get in touch' } },
+    targetExercises:[
+      { promptVi:'Vui lòng liên hệ với tôi nếu bạn cần thêm thông tin.', targetPhrase:'get in touch' },
+      { promptVi:'Chúng ta nên giữ liên lạc sau hội thảo này.', targetPhrase:'get in touch' },
+      { promptVi:'Hãy liên hệ với bộ phận hỗ trợ nếu có vấn đề.', targetPhrase:'get in touch' }
+    ] },
 
   // DAILY
   { id:'day-001', topic:'daily', word:'run out of', type:'phrasal verb', level:'A2',
@@ -460,7 +549,11 @@ const VOCAB = [
     exampleEn:'We have run out of coffee this morning.',
     exampleVi:'Sáng nay chúng ta đã hết cà phê rồi.',
     collocations:['run out of time','run out of money'],
-    targetExercise:{ promptVi:'Tôi sắp hết thời gian để hoàn thành báo cáo.', targetPhrase:'run out of' } },
+    targetExercises:[
+      { promptVi:'Tôi sắp hết thời gian để hoàn thành báo cáo.', targetPhrase:'run out of' },
+      { promptVi:'Máy in lại hết mực rồi.', targetPhrase:'run out of' },
+      { promptVi:'Đừng để hết pin khi đang đo ngoài hiện trường.', targetPhrase:'run out of' }
+    ] },
   { id:'day-002', topic:'daily', word:'look forward to', type:'phrase', level:'B1',
     meaningVi:'mong chờ điều gì',
     definitionEn:'To feel happy and excited about something that will happen.',
@@ -468,7 +561,1211 @@ const VOCAB = [
     exampleEn:'I look forward to meeting you next week.',
     exampleVi:'Tôi rất mong được gặp bạn vào tuần tới.',
     collocations:['look forward to hearing from you'],
-    targetExercise:{ promptVi:'Tôi rất mong được hợp tác với công ty của bạn.', targetPhrase:'look forward to' } },
+    targetExercises:[
+      { promptVi:'Tôi rất mong được hợp tác với công ty của bạn.', targetPhrase:'look forward to' },
+      { promptVi:'Tôi rất mong nhận được phản hồi của bạn.', targetPhrase:'look forward to' },
+      { promptVi:'Chúng tôi rất mong được gặp bạn tại triển lãm sắp tới.', targetPhrase:'look forward to' }
+    ] },
+  { id:'trv-004', topic:'travel', word:'check in', type:'phrasal verb', level:'A1',
+    meaningVi:'làm thủ tục nhận phòng/lên máy bay',
+    definitionEn:'To register when you arrive at a hotel or airport.',
+    pronunciation:'/tʃek ɪn/',
+    exampleEn:'We need to check in two hours before the flight.',
+    exampleVi:'Chúng ta cần làm thủ tục hai giờ trước chuyến bay.',
+    collocations:['check in online', 'check-in counter'],
+    targetExercises:[
+      { promptVi:'Chúng tôi làm thủ tục nhận phòng khách sạn lúc 2 giờ chiều.', targetPhrase:'check in' },
+      { promptVi:'Bạn nên làm thủ tục trực tuyến để tiết kiệm thời gian.', targetPhrase:'check in' },
+      { promptVi:'Vì đến muộn nên chúng tôi không kịp làm thủ tục lên máy bay.', targetPhrase:'check in' }
+    ] },
+  { id:'trv-005', topic:'travel', word:'book a room', type:'collocation', level:'A2',
+    meaningVi:'đặt phòng',
+    definitionEn:'To arrange to have a hotel room.',
+    pronunciation:'/bʊk ə ruːm/',
+    exampleEn:'I booked a room for two nights.',
+    exampleVi:'Tôi đã đặt phòng cho hai đêm.',
+    collocations:['book a room online', 'book in advance'],
+    targetExercises:[
+      { promptVi:'Tôi muốn đặt một phòng đôi cho cuối tuần này.', targetPhrase:'book a room' },
+      { promptVi:'Bạn nên đặt phòng trước vì mùa lễ rất đông.', targetPhrase:'book a room' },
+      { promptVi:'Chúng tôi đã đặt một phòng nhìn ra biển.', targetPhrase:'book a room' }
+    ] },
+  { id:'trv-006', topic:'travel', word:'get around', type:'phrasal verb', level:'A1',
+    meaningVi:'đi lại, di chuyển (trong một khu vực)',
+    definitionEn:'To move from place to place in an area.',
+    pronunciation:'/ɡet əˈraʊnd/',
+    exampleEn:'It\'s easy to get around the city by bus.',
+    exampleVi:'Đi lại quanh thành phố bằng xe buýt rất dễ.',
+    collocations:['get around by bike', 'easy to get around'],
+    targetExercises:[
+      { promptVi:'Ở thành phố này, đi lại bằng tàu điện rất tiện.', targetPhrase:'get around' },
+      { promptVi:'Không có xe máy thì đi lại hơi khó khăn.', targetPhrase:'get around' },
+      { promptVi:'Du khách có thể di chuyển quanh đảo bằng xe đạp.', targetPhrase:'get around' }
+    ] },
+  { id:'trv-007', topic:'travel', word:'sightseeing', type:'noun', level:'A2',
+    meaningVi:'tham quan, ngắm cảnh',
+    definitionEn:'The activity of visiting interesting places as a tourist.',
+    pronunciation:'/ˈsaɪtsiːɪŋ/',
+    exampleEn:'We spent the whole day sightseeing.',
+    exampleVi:'Chúng tôi dành cả ngày để tham quan.',
+    collocations:['go sightseeing', 'sightseeing tour'],
+    targetExercises:[
+      { promptVi:'Ngày đầu tiên chúng tôi đi tham quan quanh phố cổ.', targetPhrase:'sightseeing' },
+      { promptVi:'Trời mưa nên kế hoạch tham quan bị hoãn.', targetPhrase:'sightseeing' },
+      { promptVi:'Tôi thích tham quan các ngôi đền cổ hơn là mua sắm.', targetPhrase:'sightseeing' }
+    ] },
+  { id:'trv-008', topic:'travel', word:'run late', type:'collocation', level:'B1',
+    meaningVi:'bị trễ, muộn giờ',
+    definitionEn:'To be later than planned.',
+    pronunciation:'/rʌn leɪt/',
+    exampleEn:'Sorry, I\'m running late for the tour.',
+    exampleVi:'Xin lỗi, tôi bị trễ giờ tour.',
+    collocations:['running late', 'a bit late'],
+    targetExercises:[
+      { promptVi:'Chuyến bay bị trễ nên chúng tôi lỡ chuyến nối.', targetPhrase:'run late' },
+      { promptVi:'Tôi đang bị muộn, hãy bắt đầu mà không cần đợi tôi.', targetPhrase:'run late' },
+      { promptVi:'Vì tắc đường, cả nhóm bị trễ giờ tập trung.', targetPhrase:'run late' }
+    ] },
+  { id:'trv-009', topic:'travel', word:'travel light', type:'collocation', level:'A1',
+    meaningVi:'đi du lịch gọn nhẹ (ít hành lý)',
+    definitionEn:'To travel with only a few things.',
+    pronunciation:'/ˈtrævl laɪt/',
+    exampleEn:'I always try to travel light.',
+    exampleVi:'Tôi luôn cố gắng đi du lịch gọn nhẹ.',
+    collocations:['prefer to travel light'],
+    targetExercises:[
+      { promptVi:'Khi đi công tác ngắn ngày, tôi thích đi gọn nhẹ.', targetPhrase:'travel light' },
+      { promptVi:'Đi gọn nhẹ giúp bạn di chuyển nhanh hơn nhiều.', targetPhrase:'travel light' },
+      { promptVi:'Cô ấy chỉ mang một balo và luôn đi du lịch gọn nhẹ.', targetPhrase:'travel light' }
+    ] },
+  { id:'trv-010', topic:'travel', word:'book in advance', type:'collocation', level:'B1',
+    meaningVi:'đặt trước',
+    definitionEn:'To arrange something before the time you need it.',
+    pronunciation:'/bʊk ɪn ədˈvɑːns/',
+    exampleEn:'Please book in advance to get a discount.',
+    exampleVi:'Vui lòng đặt trước để được giảm giá.',
+    collocations:['book well in advance'],
+    targetExercises:[
+      { promptVi:'Nên đặt vé trước để tránh hết chỗ.', targetPhrase:'book in advance' },
+      { promptVi:'Nếu đặt trước một tháng, bạn sẽ có giá tốt hơn.', targetPhrase:'book in advance' },
+      { promptVi:'Nhà hàng này rất đông nên phải đặt bàn trước.', targetPhrase:'book in advance' }
+    ] },
+  { id:'trv-011', topic:'travel', word:'a round trip', type:'noun phrase', level:'A2',
+    meaningVi:'chuyến đi khứ hồi',
+    definitionEn:'A journey to a place and back again.',
+    pronunciation:'/ə raʊnd trɪp/',
+    exampleEn:'A round trip ticket is cheaper.',
+    exampleVi:'Vé khứ hồi rẻ hơn.',
+    collocations:['round trip ticket', 'book a round trip'],
+    targetExercises:[
+      { promptVi:'Tôi muốn mua vé khứ hồi đi Đà Nẵng.', targetPhrase:'a round trip' },
+      { promptVi:'Một chuyến khứ hồi mất khoảng sáu tiếng.', targetPhrase:'a round trip' },
+      { promptVi:'Vé khứ hồi thường rẻ hơn hai vé một chiều.', targetPhrase:'a round trip' }
+    ] },
+  { id:'trv-012', topic:'travel', word:'local cuisine', type:'noun phrase', level:'B1',
+    meaningVi:'ẩm thực địa phương',
+    definitionEn:'The style of cooking of a particular area.',
+    pronunciation:'/ˈloʊkl kwɪˈziːn/',
+    exampleEn:'Try the local cuisine when you travel.',
+    exampleVi:'Hãy thử ẩm thực địa phương khi đi du lịch.',
+    collocations:['taste local cuisine', 'famous local cuisine'],
+    targetExercises:[
+      { promptVi:'Điều tôi thích nhất khi du lịch là thử ẩm thực địa phương.', targetPhrase:'local cuisine' },
+      { promptVi:'Ẩm thực địa phương ở đây nổi tiếng với hải sản tươi.', targetPhrase:'local cuisine' },
+      { promptVi:'Bạn không nên bỏ lỡ ẩm thực địa phương của vùng này.', targetPhrase:'local cuisine' }
+    ] },
+  { id:'trv-013', topic:'travel', word:'pack luggage', type:'collocation', level:'A2',
+    meaningVi:'xếp/soạn hành lý',
+    definitionEn:'To put your things into bags for travel.',
+    pronunciation:'/pæk ˈlʌɡɪdʒ/',
+    exampleEn:'I need to pack my luggage tonight.',
+    exampleVi:'Tôi cần soạn hành lý tối nay.',
+    collocations:['pack your luggage', 'light luggage'],
+    targetExercises:[
+      { promptVi:'Tôi phải soạn hành lý trước khi ra sân bay.', targetPhrase:'pack luggage' },
+      { promptVi:'Nhớ soạn hành lý cẩn thận để không quên đồ.', targetPhrase:'pack luggage' },
+      { promptVi:'Cô ấy soạn hành lý chỉ trong mười phút.', targetPhrase:'pack luggage' }
+    ] },
+  { id:'trv-014', topic:'travel', word:'set off', type:'phrasal verb', level:'B1',
+    meaningVi:'khởi hành, lên đường',
+    definitionEn:'To start a journey.',
+    pronunciation:'/set ɒf/',
+    exampleEn:'We set off early in the morning.',
+    exampleVi:'Chúng tôi khởi hành sớm vào buổi sáng.',
+    collocations:['set off on a trip', 'set off early'],
+    targetExercises:[
+      { promptVi:'Chúng tôi sẽ khởi hành lúc 5 giờ sáng để tránh nắng.', targetPhrase:'set off' },
+      { promptVi:'Cả đoàn lên đường ngay sau bữa sáng.', targetPhrase:'set off' },
+      { promptVi:'Vì bão nên chuyến đi phải khởi hành muộn hơn.', targetPhrase:'set off' }
+    ] },
+  { id:'trv-015', topic:'travel', word:'book a flight', type:'collocation', level:'A2',
+    meaningVi:'đặt vé máy bay',
+    definitionEn:'To arrange a plane ticket.',
+    pronunciation:'/bʊk ə flaɪt/',
+    exampleEn:'I booked a flight to Hanoi.',
+    exampleVi:'Tôi đã đặt vé máy bay đi Hà Nội.',
+    collocations:['book a cheap flight'],
+    targetExercises:[
+      { promptVi:'Tôi vừa đặt vé máy bay đi Singapore tuần sau.', targetPhrase:'book a flight' },
+      { promptVi:'Bạn nên đặt vé máy bay sớm để có giá rẻ.', targetPhrase:'book a flight' },
+      { promptVi:'Chúng tôi đặt vé máy bay khứ hồi cho cả gia đình.', targetPhrase:'book a flight' }
+    ] },
+  { id:'trv-016', topic:'travel', word:'a tourist attraction', type:'noun phrase', level:'B1',
+    meaningVi:'điểm thu hút khách du lịch',
+    definitionEn:'A place that many tourists visit.',
+    pronunciation:'/ə ˈtʊərɪst əˈtrækʃn/',
+    exampleEn:'This temple is a famous tourist attraction.',
+    exampleVi:'Ngôi đền này là điểm du lịch nổi tiếng.',
+    collocations:['popular tourist attraction'],
+    targetExercises:[
+      { promptVi:'Vịnh Hạ Long là một điểm thu hút khách du lịch nổi tiếng.', targetPhrase:'tourist attraction' },
+      { promptVi:'Điểm du lịch này luôn đông vào cuối tuần.', targetPhrase:'tourist attraction' },
+      { promptVi:'Chúng tôi đã ghé thăm nhiều điểm thu hút khách du lịch.', targetPhrase:'tourist attraction' }
+    ] },
+  { id:'trv-017', topic:'travel', word:'get lost', type:'collocation', level:'A2',
+    meaningVi:'bị lạc đường',
+    definitionEn:'To not know where you are.',
+    pronunciation:'/ɡet lɒst/',
+    exampleEn:'We got lost in the old town.',
+    exampleVi:'Chúng tôi bị lạc trong phố cổ.',
+    collocations:['easily get lost'],
+    targetExercises:[
+      { promptVi:'Không có bản đồ nên chúng tôi bị lạc.', targetPhrase:'get lost' },
+      { promptVi:'Rất dễ bị lạc trong những con hẻm nhỏ này.', targetPhrase:'get lost' },
+      { promptVi:'Tôi bị lạc đường nhưng một người dân đã chỉ giúp.', targetPhrase:'get lost' }
+    ] },
+  { id:'trv-018', topic:'travel', word:'go abroad', type:'collocation', level:'A2',
+    meaningVi:'ra nước ngoài',
+    definitionEn:'To travel to another country.',
+    pronunciation:'/ɡoʊ əˈbrɔːd/',
+    exampleEn:'She wants to go abroad next year.',
+    exampleVi:'Cô ấy muốn ra nước ngoài vào năm sau.',
+    collocations:['go abroad to study', 'travel abroad'],
+    targetExercises:[
+      { promptVi:'Tôi dự định ra nước ngoài để học tiếng Anh.', targetPhrase:'go abroad' },
+      { promptVi:'Lần đầu ra nước ngoài, tôi khá hồi hộp.', targetPhrase:'go abroad' },
+      { promptVi:'Nhiều bạn trẻ muốn ra nước ngoài làm việc.', targetPhrase:'go abroad' }
+    ] },
+  { id:'trv-019', topic:'travel', word:'a boarding pass', type:'noun phrase', level:'A2',
+    meaningVi:'thẻ lên máy bay',
+    definitionEn:'A card that lets you get on a plane.',
+    pronunciation:'/ə ˈbɔːdɪŋ pɑːs/',
+    exampleEn:'Show your boarding pass at the gate.',
+    exampleVi:'Xuất trình thẻ lên máy bay tại cửa.',
+    collocations:['print a boarding pass'],
+    targetExercises:[
+      { promptVi:'Đừng quên mang theo thẻ lên máy bay.', targetPhrase:'boarding pass' },
+      { promptVi:'Bạn có thể tải thẻ lên máy bay trên điện thoại.', targetPhrase:'boarding pass' },
+      { promptVi:'Nhân viên yêu cầu tôi xuất trình thẻ lên máy bay.', targetPhrase:'boarding pass' }
+    ] },
+  { id:'trv-020', topic:'travel', word:'worth visiting', type:'collocation', level:'B1',
+    meaningVi:'đáng để ghé thăm',
+    definitionEn:'Good enough to visit.',
+    pronunciation:'/wɜːθ ˈvɪzɪtɪŋ/',
+    exampleEn:'This museum is worth visiting.',
+    exampleVi:'Bảo tàng này đáng để ghé thăm.',
+    collocations:['well worth visiting'],
+    targetExercises:[
+      { promptVi:'Ngôi làng cổ này rất đáng để ghé thăm.', targetPhrase:'worth visiting' },
+      { promptVi:'Nếu có thời gian, thác nước đó đáng để ghé thăm.', targetPhrase:'worth visiting' },
+      { promptVi:'Theo tôi, thành phố này đáng để ghé thăm ít nhất một lần.', targetPhrase:'worth visiting' }
+    ] },
+  { id:'biz-004', topic:'business', word:'make a decision', type:'collocation', level:'A2',
+    meaningVi:'đưa ra quyết định',
+    definitionEn:'To choose what to do.',
+    pronunciation:'/meɪk ə dɪˈsɪʒn/',
+    exampleEn:'We need to make a decision today.',
+    exampleVi:'Chúng ta cần đưa ra quyết định hôm nay.',
+    collocations:['make a quick decision', 'make a final decision'],
+    targetExercises:[
+      { promptVi:'Tôi cần đưa ra quyết định trước cuối tuần.', targetPhrase:'make a decision' },
+      { promptVi:'Ban giám đốc sẽ đưa ra quyết định vào thứ Hai.', targetPhrase:'make a decision' },
+      { promptVi:'Đừng vội đưa ra quyết định khi chưa đủ thông tin.', targetPhrase:'make a decision' }
+    ] },
+  { id:'biz-005', topic:'business', word:'close a deal', type:'collocation', level:'B1',
+    meaningVi:'chốt một thương vụ',
+    definitionEn:'To successfully complete a business agreement.',
+    pronunciation:'/kloʊz ə diːl/',
+    exampleEn:'We finally closed the deal.',
+    exampleVi:'Cuối cùng chúng tôi đã chốt thương vụ.',
+    collocations:['close a big deal'],
+    targetExercises:[
+      { promptVi:'Sau nhiều tuần đàm phán, chúng tôi đã chốt thương vụ.', targetPhrase:'close a deal' },
+      { promptVi:'Anh ấy rất giỏi trong việc chốt các thương vụ lớn.', targetPhrase:'close a deal' },
+      { promptVi:'Chúng tôi hy vọng sẽ chốt thương vụ này trong tháng.', targetPhrase:'close a deal' }
+    ] },
+  { id:'biz-006', topic:'business', word:'set up a meeting', type:'collocation', level:'B1',
+    meaningVi:'sắp xếp một cuộc họp',
+    definitionEn:'To arrange a meeting.',
+    pronunciation:'/set ʌp ə ˈmiːtɪŋ/',
+    exampleEn:'Let\'s set up a meeting next week.',
+    exampleVi:'Hãy sắp xếp một cuộc họp tuần sau.',
+    collocations:['set up a quick meeting'],
+    targetExercises:[
+      { promptVi:'Tôi sẽ sắp xếp một cuộc họp với khách hàng vào thứ Tư.', targetPhrase:'set up a meeting' },
+      { promptVi:'Chúng ta cần sắp xếp một cuộc họp để bàn về dự án.', targetPhrase:'set up a meeting' },
+      { promptVi:'Cô ấy đã sắp xếp một cuộc họp trực tuyến cho cả nhóm.', targetPhrase:'set up a meeting' }
+    ] },
+  { id:'biz-007', topic:'business', word:'in charge of', type:'phrase', level:'B1',
+    meaningVi:'phụ trách, chịu trách nhiệm',
+    definitionEn:'Having control of or responsibility for something.',
+    pronunciation:'/ɪn tʃɑːdʒ ɒv/',
+    exampleEn:'She is in charge of marketing.',
+    exampleVi:'Cô ấy phụ trách mảng marketing.',
+    collocations:['be in charge of a team'],
+    targetExercises:[
+      { promptVi:'Tôi đang phụ trách bộ phận bán hàng khu vực miền Nam.', targetPhrase:'in charge of' },
+      { promptVi:'Ai là người phụ trách dự án này?', targetPhrase:'in charge of' },
+      { promptVi:'Anh ấy phụ trách toàn bộ khâu hậu cần.', targetPhrase:'in charge of' }
+    ] },
+  { id:'biz-008', topic:'business', word:'meet demand', type:'collocation', level:'B2',
+    meaningVi:'đáp ứng nhu cầu',
+    definitionEn:'To supply what people want.',
+    pronunciation:'/miːt dɪˈmɑːnd/',
+    exampleEn:'We increased production to meet demand.',
+    exampleVi:'Chúng tôi tăng sản xuất để đáp ứng nhu cầu.',
+    collocations:['meet growing demand'],
+    targetExercises:[
+      { promptVi:'Nhà máy phải tăng ca để đáp ứng nhu cầu thị trường.', targetPhrase:'meet demand' },
+      { promptVi:'Chúng tôi mở rộng kho để đáp ứng nhu cầu ngày càng tăng.', targetPhrase:'meet demand' },
+      { promptVi:'Sản phẩm mới giúp công ty đáp ứng nhu cầu khách hàng tốt hơn.', targetPhrase:'meet demand' }
+    ] },
+  { id:'biz-009', topic:'business', word:'launch a product', type:'collocation', level:'B1',
+    meaningVi:'ra mắt sản phẩm',
+    definitionEn:'To make a new product available.',
+    pronunciation:'/lɔːntʃ ə ˈprɒdʌkt/',
+    exampleEn:'We will launch a product in June.',
+    exampleVi:'Chúng tôi sẽ ra mắt sản phẩm vào tháng Sáu.',
+    collocations:['launch a new product'],
+    targetExercises:[
+      { promptVi:'Công ty sắp ra mắt một sản phẩm mới vào quý tới.', targetPhrase:'launch a product' },
+      { promptVi:'Chúng tôi ra mắt sản phẩm này để cạnh tranh tốt hơn.', targetPhrase:'launch a product' },
+      { promptVi:'Buổi ra mắt sản phẩm đã thu hút nhiều khách hàng.', targetPhrase:'launch a product' }
+    ] },
+  { id:'biz-010', topic:'business', word:'negotiate a price', type:'collocation', level:'B2',
+    meaningVi:'thương lượng giá',
+    definitionEn:'To discuss to agree on a price.',
+    pronunciation:'/nɪˈɡoʊʃieɪt ə praɪs/',
+    exampleEn:'We negotiated a better price.',
+    exampleVi:'Chúng tôi đã thương lượng được giá tốt hơn.',
+    collocations:['negotiate a lower price'],
+    targetExercises:[
+      { promptVi:'Tôi sẽ thương lượng giá với nhà cung cấp vào ngày mai.', targetPhrase:'negotiate a price' },
+      { promptVi:'Chúng tôi đã thương lượng giá để giảm chi phí.', targetPhrase:'negotiate a price' },
+      { promptVi:'Khách hàng muốn thương lượng giá trước khi ký hợp đồng.', targetPhrase:'negotiate a price' }
+    ] },
+  { id:'biz-011', topic:'business', word:'reach an agreement', type:'collocation', level:'B2',
+    meaningVi:'đạt được thỏa thuận',
+    definitionEn:'To make a deal that both sides accept.',
+    pronunciation:'/riːtʃ ən əˈɡriːmənt/',
+    exampleEn:'Both sides reached an agreement.',
+    exampleVi:'Hai bên đã đạt được thỏa thuận.',
+    collocations:['reach a final agreement'],
+    targetExercises:[
+      { promptVi:'Sau buổi họp, hai công ty đã đạt được thỏa thuận.', targetPhrase:'reach an agreement' },
+      { promptVi:'Chúng tôi hy vọng sẽ đạt được thỏa thuận trong tuần này.', targetPhrase:'reach an agreement' },
+      { promptVi:'Hai bên vẫn chưa đạt được thỏa thuận về giá.', targetPhrase:'reach an agreement' }
+    ] },
+  { id:'biz-012', topic:'business', word:'place an order', type:'collocation', level:'A2',
+    meaningVi:'đặt hàng',
+    definitionEn:'To ask a company to supply goods.',
+    pronunciation:'/pleɪs ən ˈɔːdə/',
+    exampleEn:'I want to place an order.',
+    exampleVi:'Tôi muốn đặt hàng.',
+    collocations:['place a large order'],
+    targetExercises:[
+      { promptVi:'Khách hàng muốn đặt hàng một trăm sản phẩm.', targetPhrase:'place an order' },
+      { promptVi:'Tôi đã đặt hàng và đang chờ giao.', targetPhrase:'place an order' },
+      { promptVi:'Vui lòng đặt hàng trước thứ Sáu để kịp giao.', targetPhrase:'place an order' }
+    ] },
+  { id:'biz-013', topic:'business', word:'follow up on', type:'phrasal verb', level:'B1',
+    meaningVi:'theo dõi tiếp về việc gì',
+    definitionEn:'To take further action about something.',
+    pronunciation:'/ˈfɒloʊ ʌp ɒn/',
+    exampleEn:'I\'ll follow up on your request.',
+    exampleVi:'Tôi sẽ theo dõi tiếp yêu cầu của bạn.',
+    collocations:['follow up on an email'],
+    targetExercises:[
+      { promptVi:'Tôi sẽ theo dõi tiếp về báo giá đã gửi hôm qua.', targetPhrase:'follow up on' },
+      { promptVi:'Bạn nhớ theo dõi tiếp về đơn hàng của khách nhé.', targetPhrase:'follow up on' },
+      { promptVi:'Cô ấy theo dõi tiếp về hợp đồng sau cuộc họp.', targetPhrase:'follow up on' }
+    ] },
+  { id:'biz-014', topic:'business', word:'on schedule', type:'phrase', level:'B1',
+    meaningVi:'đúng tiến độ',
+    definitionEn:'Happening at the planned time.',
+    pronunciation:'/ɒn ˈʃedjuːl/',
+    exampleEn:'The project is on schedule.',
+    exampleVi:'Dự án đang đúng tiến độ.',
+    collocations:['right on schedule', 'stay on schedule'],
+    targetExercises:[
+      { promptVi:'Dự án vẫn đang đúng tiến độ như kế hoạch.', targetPhrase:'on schedule' },
+      { promptVi:'Chúng tôi cố gắng giao hàng đúng tiến độ.', targetPhrase:'on schedule' },
+      { promptVi:'Nhờ cả nhóm làm việc chăm chỉ, mọi thứ đúng tiến độ.', targetPhrase:'on schedule' }
+    ] },
+  { id:'biz-015', topic:'business', word:'cut costs', type:'collocation', level:'B1',
+    meaningVi:'cắt giảm chi phí',
+    definitionEn:'To reduce the money a business spends.',
+    pronunciation:'/kʌt kɒsts/',
+    exampleEn:'We need to cut costs this year.',
+    exampleVi:'Chúng ta cần cắt giảm chi phí năm nay.',
+    collocations:['cut costs sharply'],
+    targetExercises:[
+      { promptVi:'Công ty đang tìm cách cắt giảm chi phí sản xuất.', targetPhrase:'cut costs' },
+      { promptVi:'Chúng tôi cắt giảm chi phí bằng cách dùng năng lượng tiết kiệm.', targetPhrase:'cut costs' },
+      { promptVi:'Để tồn tại, doanh nghiệp phải cắt giảm chi phí.', targetPhrase:'cut costs' }
+    ] },
+  { id:'biz-016', topic:'business', word:'target market', type:'noun phrase', level:'B2',
+    meaningVi:'thị trường mục tiêu',
+    definitionEn:'The group of customers a business wants to sell to.',
+    pronunciation:'/ˈtɑːɡɪt ˈmɑːkɪt/',
+    exampleEn:'Young people are our target market.',
+    exampleVi:'Người trẻ là thị trường mục tiêu của chúng tôi.',
+    collocations:['identify a target market'],
+    targetExercises:[
+      { promptVi:'Chúng tôi cần xác định rõ thị trường mục tiêu.', targetPhrase:'target market' },
+      { promptVi:'Sản phẩm này hướng đến thị trường mục tiêu là doanh nghiệp nhỏ.', targetPhrase:'target market' },
+      { promptVi:'Hiểu thị trường mục tiêu giúp bán hàng hiệu quả hơn.', targetPhrase:'target market' }
+    ] },
+  { id:'biz-017', topic:'business', word:'keep in mind', type:'phrase', level:'B1',
+    meaningVi:'ghi nhớ, lưu ý',
+    definitionEn:'To remember something important.',
+    pronunciation:'/kiːp ɪn maɪnd/',
+    exampleEn:'Keep in mind the deadline.',
+    exampleVi:'Hãy ghi nhớ thời hạn.',
+    collocations:['keep in mind that'],
+    targetExercises:[
+      { promptVi:'Hãy ghi nhớ rằng khách hàng luôn quan tâm đến giá.', targetPhrase:'keep in mind' },
+      { promptVi:'Bạn cần lưu ý ngân sách khi lập kế hoạch.', targetPhrase:'keep in mind' },
+      { promptVi:'Xin lưu ý rằng giao hàng có thể mất một tuần.', targetPhrase:'keep in mind' }
+    ] },
+  { id:'biz-018', topic:'business', word:'in the long run', type:'idiom', level:'B2',
+    meaningVi:'về lâu dài',
+    definitionEn:'Over a long period of time in the future.',
+    pronunciation:'/ɪn ðə lɒŋ rʌn/',
+    exampleEn:'It will save money in the long run.',
+    exampleVi:'Về lâu dài, nó sẽ tiết kiệm tiền.',
+    collocations:['cheaper in the long run'],
+    targetExercises:[
+      { promptVi:'Đầu tư vào chất lượng sẽ có lợi về lâu dài.', targetPhrase:'in the long run' },
+      { promptVi:'Về lâu dài, cách làm này giúp giảm chi phí.', targetPhrase:'in the long run' },
+      { promptVi:'Giải pháp này tuy đắt nhưng rẻ hơn về lâu dài.', targetPhrase:'in the long run' }
+    ] },
+  { id:'biz-019', topic:'business', word:'come up with', type:'phrasal verb', level:'B2',
+    meaningVi:'nghĩ ra, đưa ra (ý tưởng)',
+    definitionEn:'To think of an idea or plan.',
+    pronunciation:'/kʌm ʌp wɪð/',
+    exampleEn:'She came up with a great idea.',
+    exampleVi:'Cô ấy đã nghĩ ra một ý tưởng tuyệt vời.',
+    collocations:['come up with a plan'],
+    targetExercises:[
+      { promptVi:'Chúng ta cần nghĩ ra một chiến lược mới.', targetPhrase:'come up with' },
+      { promptVi:'Anh ấy đã nghĩ ra cách giải quyết vấn đề này.', targetPhrase:'come up with' },
+      { promptVi:'Nhóm marketing nghĩ ra một ý tưởng quảng cáo hay.', targetPhrase:'come up with' }
+    ] },
+  { id:'biz-020', topic:'business', word:'meet expectations', type:'collocation', level:'B2',
+    meaningVi:'đáp ứng kỳ vọng',
+    definitionEn:'To be as good as people hoped.',
+    pronunciation:'/miːt ˌekspekˈteɪʃnz/',
+    exampleEn:'The product met our expectations.',
+    exampleVi:'Sản phẩm đáp ứng kỳ vọng của chúng tôi.',
+    collocations:['meet high expectations'],
+    targetExercises:[
+      { promptVi:'Chúng tôi cố gắng đáp ứng kỳ vọng của khách hàng.', targetPhrase:'meet expectations' },
+      { promptVi:'Kết quả kinh doanh đã đáp ứng kỳ vọng của ban giám đốc.', targetPhrase:'meet expectations' },
+      { promptVi:'Dịch vụ mới phải đáp ứng kỳ vọng ngày càng cao.', targetPhrase:'meet expectations' }
+    ] },
+  { id:'env-005', topic:'environment', word:'air pollution', type:'noun phrase', level:'A2',
+    meaningVi:'ô nhiễm không khí',
+    definitionEn:'Harmful substances in the air.',
+    pronunciation:'/eə pəˈluːʃn/',
+    exampleEn:'Air pollution is a serious problem.',
+    exampleVi:'Ô nhiễm không khí là vấn đề nghiêm trọng.',
+    collocations:['reduce air pollution', 'cause air pollution'],
+    targetExercises:[
+      { promptVi:'Ô nhiễm không khí ở thành phố lớn ngày càng nặng.', targetPhrase:'air pollution' },
+      { promptVi:'Nhà máy này gây ra ô nhiễm không khí.', targetPhrase:'air pollution' },
+      { promptVi:'Chúng ta cần giảm ô nhiễm không khí bằng xe điện.', targetPhrase:'air pollution' }
+    ] },
+  { id:'env-006', topic:'environment', word:'climate change', type:'noun phrase', level:'B1',
+    meaningVi:'biến đổi khí hậu',
+    definitionEn:'Long-term changes in weather patterns.',
+    pronunciation:'/ˈklaɪmət tʃeɪndʒ/',
+    exampleEn:'Climate change affects everyone.',
+    exampleVi:'Biến đổi khí hậu ảnh hưởng đến mọi người.',
+    collocations:['fight climate change', 'cause of climate change'],
+    targetExercises:[
+      { promptVi:'Biến đổi khí hậu khiến thời tiết ngày càng khắc nghiệt.', targetPhrase:'climate change' },
+      { promptVi:'Nhiều nước đang chung tay chống biến đổi khí hậu.', targetPhrase:'climate change' },
+      { promptVi:'Biến đổi khí hậu là thách thức lớn của thế kỷ này.', targetPhrase:'climate change' }
+    ] },
+  { id:'env-007', topic:'environment', word:'save energy', type:'collocation', level:'A2',
+    meaningVi:'tiết kiệm năng lượng',
+    definitionEn:'To use less energy.',
+    pronunciation:'/seɪv ˈenədʒi/',
+    exampleEn:'Turn off lights to save energy.',
+    exampleVi:'Tắt đèn để tiết kiệm năng lượng.',
+    collocations:['save energy at home'],
+    targetExercises:[
+      { promptVi:'Chúng ta nên tiết kiệm năng lượng bằng cách tắt thiết bị.', targetPhrase:'save energy' },
+      { promptVi:'Đèn LED giúp tiết kiệm năng lượng đáng kể.', targetPhrase:'save energy' },
+      { promptVi:'Công ty áp dụng nhiều cách để tiết kiệm năng lượng.', targetPhrase:'save energy' }
+    ] },
+  { id:'env-008', topic:'environment', word:'renewable energy', type:'noun phrase', level:'B2',
+    meaningVi:'năng lượng tái tạo',
+    definitionEn:'Energy from sources that do not run out.',
+    pronunciation:'/rɪˈnjuːəbl ˈenədʒi/',
+    exampleEn:'Solar is a renewable energy.',
+    exampleVi:'Năng lượng mặt trời là năng lượng tái tạo.',
+    collocations:['use renewable energy'],
+    targetExercises:[
+      { promptVi:'Việt Nam đang đầu tư mạnh vào năng lượng tái tạo.', targetPhrase:'renewable energy' },
+      { promptVi:'Năng lượng tái tạo giúp giảm khí thải.', targetPhrase:'renewable energy' },
+      { promptVi:'Nhà máy này chạy hoàn toàn bằng năng lượng tái tạo.', targetPhrase:'renewable energy' }
+    ] },
+  { id:'env-009', topic:'environment', word:'cut down on', type:'phrasal verb', level:'B1',
+    meaningVi:'cắt giảm (lượng gì)',
+    definitionEn:'To reduce the amount of something.',
+    pronunciation:'/kʌt daʊn ɒn/',
+    exampleEn:'We should cut down on plastic.',
+    exampleVi:'Chúng ta nên cắt giảm nhựa.',
+    collocations:['cut down on waste'],
+    targetExercises:[
+      { promptVi:'Chúng ta nên cắt giảm việc dùng túi ni lông.', targetPhrase:'cut down on' },
+      { promptVi:'Nhà máy đang cắt giảm lượng nước thải.', targetPhrase:'cut down on' },
+      { promptVi:'Tôi cố gắng cắt giảm lượng rác mỗi ngày.', targetPhrase:'cut down on' }
+    ] },
+  { id:'env-010', topic:'environment', word:'global warming', type:'noun phrase', level:'B1',
+    meaningVi:'sự nóng lên toàn cầu',
+    definitionEn:'The gradual rise in Earth\'s temperature.',
+    pronunciation:'/ˈɡloʊbl ˈwɔːmɪŋ/',
+    exampleEn:'Global warming melts the ice.',
+    exampleVi:'Sự nóng lên toàn cầu làm tan băng.',
+    collocations:['cause global warming'],
+    targetExercises:[
+      { promptVi:'Khí thải nhà kính là nguyên nhân của sự nóng lên toàn cầu.', targetPhrase:'global warming' },
+      { promptVi:'Sự nóng lên toàn cầu làm mực nước biển dâng.', targetPhrase:'global warming' },
+      { promptVi:'Chúng ta phải hành động để ngăn sự nóng lên toàn cầu.', targetPhrase:'global warming' }
+    ] },
+  { id:'env-011', topic:'environment', word:'water quality', type:'noun phrase', level:'B1',
+    meaningVi:'chất lượng nước',
+    definitionEn:'How clean or safe water is.',
+    pronunciation:'/ˈwɔːtə ˈkwɒləti/',
+    exampleEn:'We test the water quality daily.',
+    exampleVi:'Chúng tôi kiểm tra chất lượng nước hằng ngày.',
+    collocations:['monitor water quality', 'poor water quality'],
+    targetExercises:[
+      { promptVi:'Thiết bị này đo chất lượng nước theo thời gian thực.', targetPhrase:'water quality' },
+      { promptVi:'Chất lượng nước ở khu vực này đang xấu đi.', targetPhrase:'water quality' },
+      { promptVi:'Chúng tôi giám sát chất lượng nước tại nhà máy.', targetPhrase:'water quality' }
+    ] },
+  { id:'env-012', topic:'environment', word:'throw away', type:'phrasal verb', level:'A2',
+    meaningVi:'vứt bỏ',
+    definitionEn:'To get rid of something you do not want.',
+    pronunciation:'/θroʊ əˈweɪ/',
+    exampleEn:'Don\'t throw away plastic bottles.',
+    exampleVi:'Đừng vứt bỏ chai nhựa.',
+    collocations:['throw away rubbish'],
+    targetExercises:[
+      { promptVi:'Đừng vứt bỏ đồ vẫn còn dùng được.', targetPhrase:'throw away' },
+      { promptVi:'Chúng ta vứt bỏ quá nhiều thức ăn mỗi ngày.', targetPhrase:'throw away' },
+      { promptVi:'Hãy phân loại rác trước khi vứt bỏ.', targetPhrase:'throw away' }
+    ] },
+  { id:'env-013', topic:'environment', word:'carbon footprint', type:'noun phrase', level:'B2',
+    meaningVi:'dấu chân các-bon (lượng khí thải)',
+    definitionEn:'The amount of carbon dioxide a person or activity produces.',
+    pronunciation:'/ˈkɑːbən ˈfʊtprɪnt/',
+    exampleEn:'We want to reduce our carbon footprint.',
+    exampleVi:'Chúng tôi muốn giảm dấu chân các-bon.',
+    collocations:['reduce carbon footprint'],
+    targetExercises:[
+      { promptVi:'Đi xe đạp giúp giảm dấu chân các-bon của bạn.', targetPhrase:'carbon footprint' },
+      { promptVi:'Công ty đặt mục tiêu giảm dấu chân các-bon.', targetPhrase:'carbon footprint' },
+      { promptVi:'Mỗi người có thể giảm dấu chân các-bon từ việc nhỏ.', targetPhrase:'carbon footprint' }
+    ] },
+  { id:'env-014', topic:'environment', word:'run out', type:'phrasal verb', level:'B1',
+    meaningVi:'cạn kiệt, hết',
+    definitionEn:'To have no more of something left.',
+    pronunciation:'/rʌn aʊt/',
+    exampleEn:'Natural resources may run out.',
+    exampleVi:'Tài nguyên thiên nhiên có thể cạn kiệt.',
+    collocations:['run out of water'],
+    targetExercises:[
+      { promptVi:'Nếu lãng phí, nguồn nước sạch sẽ cạn kiệt.', targetPhrase:'run out' },
+      { promptVi:'Nhiên liệu hóa thạch sẽ hết trong tương lai.', targetPhrase:'run out' },
+      { promptVi:'Chúng ta không nên để tài nguyên cạn kiệt.', targetPhrase:'run out' }
+    ] },
+  { id:'env-015', topic:'environment', word:'plant trees', type:'collocation', level:'A1',
+    meaningVi:'trồng cây',
+    definitionEn:'To put trees in the ground to grow.',
+    pronunciation:'/plɑːnt triːz/',
+    exampleEn:'Let\'s plant trees this weekend.',
+    exampleVi:'Hãy trồng cây vào cuối tuần này.',
+    collocations:['plant more trees'],
+    targetExercises:[
+      { promptVi:'Trường chúng tôi trồng cây mỗi mùa xuân.', targetPhrase:'plant trees' },
+      { promptVi:'Trồng cây giúp làm sạch không khí.', targetPhrase:'plant trees' },
+      { promptVi:'Chúng tôi trồng cây để bảo vệ môi trường.', targetPhrase:'plant trees' }
+    ] },
+  { id:'env-016', topic:'environment', word:'waste water', type:'noun phrase', level:'B2',
+    meaningVi:'nước thải',
+    definitionEn:'Water that has been used and is dirty.',
+    pronunciation:'/weɪst ˈwɔːtə/',
+    exampleEn:'The factory treats its waste water.',
+    exampleVi:'Nhà máy xử lý nước thải của mình.',
+    collocations:['treat waste water'],
+    targetExercises:[
+      { promptVi:'Nhà máy phải xử lý nước thải trước khi xả ra sông.', targetPhrase:'waste water' },
+      { promptVi:'Hệ thống này giám sát lượng nước thải.', targetPhrase:'waste water' },
+      { promptVi:'Xả nước thải chưa xử lý gây ô nhiễm nghiêm trọng.', targetPhrase:'waste water' }
+    ] },
+  { id:'env-017', topic:'environment', word:'environmentally friendly', type:'adjective', level:'B2',
+    meaningVi:'thân thiện với môi trường',
+    definitionEn:'Not harmful to the environment.',
+    pronunciation:'/ɪnˌvaɪrənˈmentəli ˈfrendli/',
+    exampleEn:'This bag is environmentally friendly.',
+    exampleVi:'Chiếc túi này thân thiện với môi trường.',
+    collocations:['environmentally friendly products'],
+    targetExercises:[
+      { promptVi:'Chúng tôi sản xuất bao bì thân thiện với môi trường.', targetPhrase:'environmentally friendly' },
+      { promptVi:'Sản phẩm thân thiện với môi trường ngày càng phổ biến.', targetPhrase:'environmentally friendly' },
+      { promptVi:'Công ty chuyển sang vật liệu thân thiện với môi trường.', targetPhrase:'environmentally friendly' }
+    ] },
+  { id:'env-018', topic:'environment', word:'pick up', type:'phrasal verb', level:'A2',
+    meaningVi:'nhặt lên, thu gom',
+    definitionEn:'To lift or collect something.',
+    pronunciation:'/pɪk ʌp/',
+    exampleEn:'Please pick up the trash.',
+    exampleVi:'Vui lòng nhặt rác lên.',
+    collocations:['pick up litter'],
+    targetExercises:[
+      { promptVi:'Chúng tôi cùng nhau nhặt rác trên bãi biển.', targetPhrase:'pick up' },
+      { promptVi:'Hãy nhặt rác và bỏ vào đúng nơi quy định.', targetPhrase:'pick up' },
+      { promptVi:'Tình nguyện viên nhặt rác quanh công viên mỗi cuối tuần.', targetPhrase:'pick up' }
+    ] },
+  { id:'env-019', topic:'environment', word:'natural resources', type:'noun phrase', level:'B1',
+    meaningVi:'tài nguyên thiên nhiên',
+    definitionEn:'Materials from nature such as water and wood.',
+    pronunciation:'/ˈnætʃrəl rɪˈsɔːsɪz/',
+    exampleEn:'We must protect natural resources.',
+    exampleVi:'Chúng ta phải bảo vệ tài nguyên thiên nhiên.',
+    collocations:['protect natural resources'],
+    targetExercises:[
+      { promptVi:'Chúng ta cần sử dụng tài nguyên thiên nhiên hợp lý.', targetPhrase:'natural resources' },
+      { promptVi:'Rừng là một tài nguyên thiên nhiên quý giá.', targetPhrase:'natural resources' },
+      { promptVi:'Việc khai thác quá mức làm cạn kiệt tài nguyên thiên nhiên.', targetPhrase:'natural resources' }
+    ] },
+  { id:'env-020', topic:'environment', word:'dispose of', type:'phrasal verb', level:'B2',
+    meaningVi:'xử lý, tiêu hủy (rác thải)',
+    definitionEn:'To get rid of waste properly.',
+    pronunciation:'/dɪˈspoʊz ɒv/',
+    exampleEn:'We must dispose of waste safely.',
+    exampleVi:'Chúng ta phải xử lý chất thải an toàn.',
+    collocations:['dispose of waste'],
+    targetExercises:[
+      { promptVi:'Nhà máy phải xử lý chất thải nguy hại đúng cách.', targetPhrase:'dispose of' },
+      { promptVi:'Không được xử lý rác thải bừa bãi.', targetPhrase:'dispose of' },
+      { promptVi:'Chúng tôi xử lý chất thải theo quy định môi trường.', targetPhrase:'dispose of' }
+    ] },
+  { id:'tec-003', topic:'technology', word:'turn on', type:'phrasal verb', level:'A1',
+    meaningVi:'bật (thiết bị)',
+    definitionEn:'To make a machine start working.',
+    pronunciation:'/tɜːn ɒn/',
+    exampleEn:'Turn on the computer, please.',
+    exampleVi:'Vui lòng bật máy tính.',
+    collocations:['turn on a device'],
+    targetExercises:[
+      { promptVi:'Hãy bật máy đo trước khi sử dụng.', targetPhrase:'turn on' },
+      { promptVi:'Tôi bật điện thoại lên và kiểm tra tin nhắn.', targetPhrase:'turn on' },
+      { promptVi:'Bạn nhớ bật đèn khi trời tối nhé.', targetPhrase:'turn on' }
+    ] },
+  { id:'tec-004', topic:'technology', word:'turn off', type:'phrasal verb', level:'A1',
+    meaningVi:'tắt (thiết bị)',
+    definitionEn:'To make a machine stop working.',
+    pronunciation:'/tɜːn ɒf/',
+    exampleEn:'Turn off the lights before you leave.',
+    exampleVi:'Tắt đèn trước khi bạn rời đi.',
+    collocations:['turn off a device'],
+    targetExercises:[
+      { promptVi:'Nhớ tắt máy tính khi hết giờ làm.', targetPhrase:'turn off' },
+      { promptVi:'Hãy tắt các thiết bị để tiết kiệm điện.', targetPhrase:'turn off' },
+      { promptVi:'Tôi quên tắt điều hòa trước khi ra ngoài.', targetPhrase:'turn off' }
+    ] },
+  { id:'tec-005', topic:'technology', word:'log in', type:'phrasal verb', level:'A2',
+    meaningVi:'đăng nhập',
+    definitionEn:'To enter a username and password to use a system.',
+    pronunciation:'/lɒɡ ɪn/',
+    exampleEn:'Log in with your email.',
+    exampleVi:'Đăng nhập bằng email của bạn.',
+    collocations:['log in to an account'],
+    targetExercises:[
+      { promptVi:'Bạn cần đăng nhập trước khi xem dữ liệu.', targetPhrase:'log in' },
+      { promptVi:'Tôi không thể đăng nhập vì quên mật khẩu.', targetPhrase:'log in' },
+      { promptVi:'Hãy đăng nhập vào hệ thống để bắt đầu.', targetPhrase:'log in' }
+    ] },
+  { id:'tec-006', topic:'technology', word:'back up', type:'phrasal verb', level:'B1',
+    meaningVi:'sao lưu (dữ liệu)',
+    definitionEn:'To make a copy of data for safety.',
+    pronunciation:'/bæk ʌp/',
+    exampleEn:'Back up your files regularly.',
+    exampleVi:'Sao lưu tập tin của bạn thường xuyên.',
+    collocations:['back up data'],
+    targetExercises:[
+      { promptVi:'Bạn nên sao lưu dữ liệu quan trọng mỗi tuần.', targetPhrase:'back up' },
+      { promptVi:'Tôi sao lưu ảnh lên đám mây để an toàn.', targetPhrase:'back up' },
+      { promptVi:'Hãy sao lưu tài liệu trước khi cập nhật phần mềm.', targetPhrase:'back up' }
+    ] },
+  { id:'tec-007', topic:'technology', word:'set up', type:'phrasal verb', level:'B1',
+    meaningVi:'thiết lập, cài đặt',
+    definitionEn:'To prepare equipment or software for use.',
+    pronunciation:'/set ʌp/',
+    exampleEn:'Let me set up the device.',
+    exampleVi:'Để tôi cài đặt thiết bị.',
+    collocations:['set up a system'],
+    targetExercises:[
+      { promptVi:'Kỹ thuật viên sẽ giúp bạn thiết lập thiết bị.', targetPhrase:'set up' },
+      { promptVi:'Tôi cần thiết lập tài khoản trước khi dùng.', targetPhrase:'set up' },
+      { promptVi:'Chúng tôi đã thiết lập hệ thống giám sát cho nhà máy.', targetPhrase:'set up' }
+    ] },
+  { id:'tec-008', topic:'technology', word:'update software', type:'collocation', level:'A2',
+    meaningVi:'cập nhật phần mềm',
+    definitionEn:'To install a newer version of a program.',
+    pronunciation:'/ˈʌpdeɪt ˈsɒftweə/',
+    exampleEn:'Remember to update your software.',
+    exampleVi:'Nhớ cập nhật phần mềm của bạn.',
+    collocations:['update the software regularly'],
+    targetExercises:[
+      { promptVi:'Bạn nên cập nhật phần mềm để có tính năng mới.', targetPhrase:'update software' },
+      { promptVi:'Chúng tôi cập nhật phần mềm cho thiết bị hằng tháng.', targetPhrase:'update software' },
+      { promptVi:'Việc cập nhật phần mềm giúp tăng bảo mật.', targetPhrase:'update software' }
+    ] },
+  { id:'tec-009', topic:'technology', word:'plug in', type:'phrasal verb', level:'A1',
+    meaningVi:'cắm điện, kết nối',
+    definitionEn:'To connect a device to power or another device.',
+    pronunciation:'/plʌɡ ɪn/',
+    exampleEn:'Plug in the charger.',
+    exampleVi:'Cắm sạc vào.',
+    collocations:['plug in a device'],
+    targetExercises:[
+      { promptVi:'Hãy cắm thiết bị vào nguồn điện trước khi bật.', targetPhrase:'plug in' },
+      { promptVi:'Tôi cắm cáp vào máy tính để truyền dữ liệu.', targetPhrase:'plug in' },
+      { promptVi:'Đừng quên cắm sạc điện thoại tối nay.', targetPhrase:'plug in' }
+    ] },
+  { id:'tec-010', topic:'technology', word:'wireless connection', type:'noun phrase', level:'B1',
+    meaningVi:'kết nối không dây',
+    definitionEn:'A link between devices without cables.',
+    pronunciation:'/ˈwaɪələs kəˈnekʃn/',
+    exampleEn:'The device uses a wireless connection.',
+    exampleVi:'Thiết bị dùng kết nối không dây.',
+    collocations:['stable wireless connection'],
+    targetExercises:[
+      { promptVi:'Cảm biến này truyền dữ liệu qua kết nối không dây.', targetPhrase:'wireless connection' },
+      { promptVi:'Kết nối không dây ở đây khá ổn định.', targetPhrase:'wireless connection' },
+      { promptVi:'Chúng tôi lắp đặt kết nối không dây cho toàn nhà máy.', targetPhrase:'wireless connection' }
+    ] },
+  { id:'tec-011', topic:'technology', word:'run a program', type:'collocation', level:'A1',
+    meaningVi:'chạy một chương trình',
+    definitionEn:'To make software work.',
+    pronunciation:'/rʌn ə ˈproʊɡræm/',
+    exampleEn:'Run the program to see results.',
+    exampleVi:'Chạy chương trình để xem kết quả.',
+    collocations:['run a test program'],
+    targetExercises:[
+      { promptVi:'Hãy chạy chương trình để kiểm tra dữ liệu.', targetPhrase:'run a program' },
+      { promptVi:'Máy tính này có thể chạy nhiều chương trình cùng lúc.', targetPhrase:'run a program' },
+      { promptVi:'Tôi chạy chương trình phân tích mỗi buổi sáng.', targetPhrase:'run a program' }
+    ] },
+  { id:'tec-012', topic:'technology', word:'smart device', type:'noun phrase', level:'B1',
+    meaningVi:'thiết bị thông minh',
+    definitionEn:'An electronic device that connects to the internet.',
+    pronunciation:'/smɑːt dɪˈvaɪs/',
+    exampleEn:'A smart device can be controlled remotely.',
+    exampleVi:'Thiết bị thông minh có thể điều khiển từ xa.',
+    collocations:['control a smart device'],
+    targetExercises:[
+      { promptVi:'Thiết bị thông minh giúp giám sát từ xa dễ dàng.', targetPhrase:'smart device' },
+      { promptVi:'Chúng tôi kết nối nhiều thiết bị thông minh trong nhà máy.', targetPhrase:'smart device' },
+      { promptVi:'Bạn có thể điều khiển thiết bị thông minh qua điện thoại.', targetPhrase:'smart device' }
+    ] },
+  { id:'tec-013', topic:'technology', word:'data storage', type:'noun phrase', level:'B2',
+    meaningVi:'lưu trữ dữ liệu',
+    definitionEn:'A place or way to keep data.',
+    pronunciation:'/ˈdeɪtə ˈstɔːrɪdʒ/',
+    exampleEn:'We need more data storage.',
+    exampleVi:'Chúng tôi cần thêm dung lượng lưu trữ dữ liệu.',
+    collocations:['cloud data storage'],
+    targetExercises:[
+      { promptVi:'Hệ thống này có dung lượng lưu trữ dữ liệu lớn.', targetPhrase:'data storage' },
+      { promptVi:'Chúng tôi dùng đám mây để lưu trữ dữ liệu.', targetPhrase:'data storage' },
+      { promptVi:'Lưu trữ dữ liệu an toàn là ưu tiên của công ty.', targetPhrase:'data storage' }
+    ] },
+  { id:'tec-014', topic:'technology', word:'shut down', type:'phrasal verb', level:'A2',
+    meaningVi:'tắt máy hoàn toàn',
+    definitionEn:'To turn off a computer completely.',
+    pronunciation:'/ʃʌt daʊn/',
+    exampleEn:'Shut down the computer at night.',
+    exampleVi:'Tắt máy tính vào ban đêm.',
+    collocations:['shut down the system'],
+    targetExercises:[
+      { promptVi:'Hãy tắt máy hoàn toàn trước khi rời văn phòng.', targetPhrase:'shut down' },
+      { promptVi:'Hệ thống tự động tắt khi quá nóng.', targetPhrase:'shut down' },
+      { promptVi:'Tôi tắt máy tính để cập nhật phần mềm.', targetPhrase:'shut down' }
+    ] },
+  { id:'tec-015', topic:'technology', word:'user interface', type:'noun phrase', level:'B2',
+    meaningVi:'giao diện người dùng',
+    definitionEn:'The part of a device that a person interacts with.',
+    pronunciation:'/ˈjuːzə ˈɪntəfeɪs/',
+    exampleEn:'The user interface is very simple.',
+    exampleVi:'Giao diện người dùng rất đơn giản.',
+    collocations:['clean user interface'],
+    targetExercises:[
+      { promptVi:'Phần mềm này có giao diện người dùng dễ dùng.', targetPhrase:'user interface' },
+      { promptVi:'Chúng tôi thiết kế giao diện người dùng thân thiện.', targetPhrase:'user interface' },
+      { promptVi:'Một giao diện người dùng tốt giúp thao tác nhanh hơn.', targetPhrase:'user interface' }
+    ] },
+  { id:'tec-016', topic:'technology', word:'connect to', type:'phrasal verb', level:'A2',
+    meaningVi:'kết nối với',
+    definitionEn:'To join one device or network to another.',
+    pronunciation:'/kəˈnekt tuː/',
+    exampleEn:'Connect to the wifi first.',
+    exampleVi:'Kết nối với wifi trước.',
+    collocations:['connect to the internet'],
+    targetExercises:[
+      { promptVi:'Hãy kết nối thiết bị với máy tính qua cáp.', targetPhrase:'connect to' },
+      { promptVi:'Cảm biến sẽ kết nối với hệ thống trung tâm.', targetPhrase:'connect to' },
+      { promptVi:'Tôi không thể kết nối với mạng ở đây.', targetPhrase:'connect to' }
+    ] },
+  { id:'tec-017', topic:'technology', word:'high-tech', type:'adjective', level:'B1',
+    meaningVi:'công nghệ cao',
+    definitionEn:'Using the most advanced technology.',
+    pronunciation:'/ˌhaɪ ˈtek/',
+    exampleEn:'They use high-tech equipment.',
+    exampleVi:'Họ dùng thiết bị công nghệ cao.',
+    collocations:['high-tech equipment'],
+    targetExercises:[
+      { promptVi:'Nhà máy này được trang bị máy móc công nghệ cao.', targetPhrase:'high-tech' },
+      { promptVi:'Chúng tôi đầu tư vào thiết bị công nghệ cao.', targetPhrase:'high-tech' },
+      { promptVi:'Sản phẩm công nghệ cao thường có giá cao hơn.', targetPhrase:'high-tech' }
+    ] },
+  { id:'tec-018', topic:'technology', word:'fix a problem', type:'collocation', level:'A1',
+    meaningVi:'sửa một vấn đề, khắc phục lỗi',
+    definitionEn:'To solve something that is wrong.',
+    pronunciation:'/fɪks ə ˈprɒbləm/',
+    exampleEn:'Can you fix this problem?',
+    exampleVi:'Bạn có thể sửa vấn đề này không?',
+    collocations:['quickly fix a problem'],
+    targetExercises:[
+      { promptVi:'Kỹ thuật viên sẽ giúp bạn sửa vấn đề này.', targetPhrase:'fix a problem' },
+      { promptVi:'Chúng tôi cần khắc phục lỗi trước khi giao hàng.', targetPhrase:'fix a problem' },
+      { promptVi:'Anh ấy đã sửa vấn đề chỉ trong vài phút.', targetPhrase:'fix a problem' }
+    ] },
+  { id:'tec-019', topic:'technology', word:'switch to', type:'phrasal verb', level:'A1',
+    meaningVi:'chuyển sang',
+    definitionEn:'To change from one thing to another.',
+    pronunciation:'/swɪtʃ tuː/',
+    exampleEn:'We switched to a new system.',
+    exampleVi:'Chúng tôi đã chuyển sang hệ thống mới.',
+    collocations:['switch to a new device'],
+    targetExercises:[
+      { promptVi:'Chúng tôi quyết định chuyển sang phần mềm mới.', targetPhrase:'switch to' },
+      { promptVi:'Nhiều công ty đang chuyển sang năng lượng sạch.', targetPhrase:'switch to' },
+      { promptVi:'Bạn nên chuyển sang thiết bị tiết kiệm điện hơn.', targetPhrase:'switch to' }
+    ] },
+  { id:'wrk-003', topic:'work', word:'take a break', type:'collocation', level:'A1',
+    meaningVi:'nghỉ giải lao',
+    definitionEn:'To stop working for a short time.',
+    pronunciation:'/teɪk ə breɪk/',
+    exampleEn:'Let\'s take a break for ten minutes.',
+    exampleVi:'Hãy nghỉ giải lao mười phút.',
+    collocations:['take a short break'],
+    targetExercises:[
+      { promptVi:'Chúng ta hãy nghỉ giải lao một chút rồi làm tiếp.', targetPhrase:'take a break' },
+      { promptVi:'Sau hai giờ làm việc, tôi cần nghỉ giải lao.', targetPhrase:'take a break' },
+      { promptVi:'Bạn nên nghỉ giải lao để đỡ mỏi mắt.', targetPhrase:'take a break' }
+    ] },
+  { id:'wrk-004', topic:'work', word:'hand in', type:'phrasal verb', level:'A2',
+    meaningVi:'nộp (bài, báo cáo)',
+    definitionEn:'To give something to a person in authority.',
+    pronunciation:'/hænd ɪn/',
+    exampleEn:'Hand in your report by Friday.',
+    exampleVi:'Nộp báo cáo trước thứ Sáu.',
+    collocations:['hand in a report'],
+    targetExercises:[
+      { promptVi:'Bạn phải nộp báo cáo trước cuối tuần.', targetPhrase:'hand in' },
+      { promptVi:'Tôi đã nộp đơn xin nghỉ phép hôm qua.', targetPhrase:'hand in' },
+      { promptVi:'Nhớ nộp tài liệu cho quản lý đúng hạn.', targetPhrase:'hand in' }
+    ] },
+  { id:'wrk-005', topic:'work', word:'deal with', type:'phrasal verb', level:'B2',
+    meaningVi:'xử lý, giải quyết',
+    definitionEn:'To take action to solve a problem.',
+    pronunciation:'/diːl wɪð/',
+    exampleEn:'I have to deal with this issue.',
+    exampleVi:'Tôi phải giải quyết vấn đề này.',
+    collocations:['deal with a problem'],
+    targetExercises:[
+      { promptVi:'Tôi phải xử lý khiếu nại của khách hàng hôm nay.', targetPhrase:'deal with' },
+      { promptVi:'Cô ấy giỏi giải quyết những tình huống khó.', targetPhrase:'deal with' },
+      { promptVi:'Chúng ta cần giải quyết vấn đề này ngay lập tức.', targetPhrase:'deal with' }
+    ] },
+  { id:'wrk-006', topic:'work', word:'work overtime', type:'collocation', level:'B1',
+    meaningVi:'làm thêm giờ',
+    definitionEn:'To work more than the usual hours.',
+    pronunciation:'/wɜːk ˈoʊvətaɪm/',
+    exampleEn:'We worked overtime last night.',
+    exampleVi:'Chúng tôi đã làm thêm giờ tối qua.',
+    collocations:['work overtime often'],
+    targetExercises:[
+      { promptVi:'Chúng tôi phải làm thêm giờ để kịp tiến độ.', targetPhrase:'work overtime' },
+      { promptVi:'Anh ấy thường làm thêm giờ vào cuối tháng.', targetPhrase:'work overtime' },
+      { promptVi:'Làm thêm giờ nhiều khiến tôi khá mệt.', targetPhrase:'work overtime' }
+    ] },
+  { id:'wrk-007', topic:'work', word:'get promoted', type:'collocation', level:'A2',
+    meaningVi:'được thăng chức',
+    definitionEn:'To move to a higher position at work.',
+    pronunciation:'/ɡet prəˈmoʊtɪd/',
+    exampleEn:'She got promoted last month.',
+    exampleVi:'Cô ấy được thăng chức tháng trước.',
+    collocations:['get promoted quickly'],
+    targetExercises:[
+      { promptVi:'Anh ấy được thăng chức nhờ làm việc chăm chỉ.', targetPhrase:'get promoted' },
+      { promptVi:'Tôi hy vọng sẽ được thăng chức năm nay.', targetPhrase:'get promoted' },
+      { promptVi:'Cô ấy được thăng chức lên vị trí quản lý.', targetPhrase:'get promoted' }
+    ] },
+  { id:'wrk-008', topic:'work', word:'carry out', type:'phrasal verb', level:'B2',
+    meaningVi:'thực hiện, tiến hành',
+    definitionEn:'To do a task or plan.',
+    pronunciation:'/ˈkæri aʊt/',
+    exampleEn:'We will carry out the plan.',
+    exampleVi:'Chúng tôi sẽ thực hiện kế hoạch.',
+    collocations:['carry out a task'],
+    targetExercises:[
+      { promptVi:'Nhóm kỹ thuật sẽ thực hiện việc kiểm tra thiết bị.', targetPhrase:'carry out' },
+      { promptVi:'Chúng tôi tiến hành khảo sát khách hàng mỗi quý.', targetPhrase:'carry out' },
+      { promptVi:'Kế hoạch này sẽ được thực hiện vào tháng tới.', targetPhrase:'carry out' }
+    ] },
+  { id:'wrk-009', topic:'work', word:'meeting agenda', type:'noun phrase', level:'B1',
+    meaningVi:'chương trình cuộc họp',
+    definitionEn:'A list of things to discuss in a meeting.',
+    pronunciation:'/ˈmiːtɪŋ əˈdʒendə/',
+    exampleEn:'Please check the meeting agenda.',
+    exampleVi:'Vui lòng kiểm tra chương trình cuộc họp.',
+    collocations:['prepare a meeting agenda'],
+    targetExercises:[
+      { promptVi:'Tôi đã gửi chương trình cuộc họp cho mọi người.', targetPhrase:'meeting agenda' },
+      { promptVi:'Chương trình cuộc họp gồm ba mục chính.', targetPhrase:'meeting agenda' },
+      { promptVi:'Hãy chuẩn bị chương trình cuộc họp trước một ngày.', targetPhrase:'meeting agenda' }
+    ] },
+  { id:'wrk-010', topic:'work', word:'take notes', type:'collocation', level:'A2',
+    meaningVi:'ghi chú',
+    definitionEn:'To write down important information.',
+    pronunciation:'/teɪk noʊts/',
+    exampleEn:'Take notes during the meeting.',
+    exampleVi:'Ghi chú trong cuộc họp.',
+    collocations:['take detailed notes'],
+    targetExercises:[
+      { promptVi:'Hãy ghi chú lại những điểm quan trọng.', targetPhrase:'take notes' },
+      { promptVi:'Tôi luôn ghi chú khi họp với khách hàng.', targetPhrase:'take notes' },
+      { promptVi:'Cô ấy ghi chú cẩn thận mọi yêu cầu.', targetPhrase:'take notes' }
+    ] },
+  { id:'wrk-011', topic:'work', word:'meet a target', type:'collocation', level:'B2',
+    meaningVi:'đạt chỉ tiêu',
+    definitionEn:'To reach a goal that was set.',
+    pronunciation:'/miːt ə ˈtɑːɡɪt/',
+    exampleEn:'We met our sales target.',
+    exampleVi:'Chúng tôi đã đạt chỉ tiêu doanh số.',
+    collocations:['meet a monthly target'],
+    targetExercises:[
+      { promptVi:'Cả nhóm đã nỗ lực để đạt chỉ tiêu tháng này.', targetPhrase:'meet a target' },
+      { promptVi:'Chúng tôi cần bán thêm để đạt chỉ tiêu.', targetPhrase:'meet a target' },
+      { promptVi:'Anh ấy luôn đạt chỉ tiêu được giao.', targetPhrase:'meet a target' }
+    ] },
+  { id:'wrk-012', topic:'work', word:'sort out', type:'phrasal verb', level:'B2',
+    meaningVi:'sắp xếp, giải quyết ổn thỏa',
+    definitionEn:'To organize or solve something.',
+    pronunciation:'/sɔːt aʊt/',
+    exampleEn:'I need to sort out these files.',
+    exampleVi:'Tôi cần sắp xếp mấy tập tin này.',
+    collocations:['sort out a problem'],
+    targetExercises:[
+      { promptVi:'Tôi sẽ sắp xếp lại lịch làm việc cho tuần sau.', targetPhrase:'sort out' },
+      { promptVi:'Chúng ta cần giải quyết ổn thỏa vấn đề này.', targetPhrase:'sort out' },
+      { promptVi:'Cô ấy đã sắp xếp mọi giấy tờ gọn gàng.', targetPhrase:'sort out' }
+    ] },
+  { id:'wrk-013', topic:'work', word:'day off', type:'noun phrase', level:'A2',
+    meaningVi:'ngày nghỉ',
+    definitionEn:'A day when you do not work.',
+    pronunciation:'/deɪ ɒf/',
+    exampleEn:'I have a day off tomorrow.',
+    exampleVi:'Ngày mai tôi được nghỉ.',
+    collocations:['take a day off'],
+    targetExercises:[
+      { promptVi:'Tôi xin một ngày nghỉ để đi khám bệnh.', targetPhrase:'day off' },
+      { promptVi:'Cô ấy dành ngày nghỉ để ở bên gia đình.', targetPhrase:'day off' },
+      { promptVi:'Sau dự án lớn, cả nhóm được một ngày nghỉ.', targetPhrase:'day off' }
+    ] },
+  { id:'wrk-014', topic:'work', word:'in advance', type:'phrase', level:'B1',
+    meaningVi:'trước, sẵn',
+    definitionEn:'Before a particular time.',
+    pronunciation:'/ɪn ədˈvɑːns/',
+    exampleEn:'Please let me know in advance.',
+    exampleVi:'Vui lòng báo cho tôi trước.',
+    collocations:['pay in advance'],
+    targetExercises:[
+      { promptVi:'Hãy thông báo cho tôi trước nếu bạn đến muộn.', targetPhrase:'in advance' },
+      { promptVi:'Chúng tôi chuẩn bị tài liệu trước cuộc họp.', targetPhrase:'in advance' },
+      { promptVi:'Bạn nên đăng ký trước để giữ chỗ.', targetPhrase:'in advance' }
+    ] },
+  { id:'wrk-015', topic:'work', word:'workload', type:'noun', level:'B1',
+    meaningVi:'khối lượng công việc',
+    definitionEn:'The amount of work a person has.',
+    pronunciation:'/ˈwɜːkloʊd/',
+    exampleEn:'My workload is heavy this week.',
+    exampleVi:'Khối lượng công việc của tôi tuần này nặng.',
+    collocations:['heavy workload', 'reduce workload'],
+    targetExercises:[
+      { promptVi:'Khối lượng công việc tăng mạnh vào cuối năm.', targetPhrase:'workload' },
+      { promptVi:'Chúng tôi thuê thêm người để giảm khối lượng công việc.', targetPhrase:'workload' },
+      { promptVi:'Cô ấy xử lý khối lượng công việc lớn rất tốt.', targetPhrase:'workload' }
+    ] },
+  { id:'wrk-016', topic:'work', word:'keep track of', type:'phrase', level:'B2',
+    meaningVi:'theo dõi, nắm được',
+    definitionEn:'To continue to know about something.',
+    pronunciation:'/kiːp træk ɒv/',
+    exampleEn:'I keep track of my expenses.',
+    exampleVi:'Tôi theo dõi chi tiêu của mình.',
+    collocations:['keep track of progress'],
+    targetExercises:[
+      { promptVi:'Chúng tôi theo dõi tiến độ dự án hằng ngày.', targetPhrase:'keep track of' },
+      { promptVi:'Phần mềm này giúp bạn theo dõi đơn hàng.', targetPhrase:'keep track of' },
+      { promptVi:'Hãy theo dõi số liệu bán hàng mỗi tuần.', targetPhrase:'keep track of' }
+    ] },
+  { id:'wrk-017', topic:'work', word:'go over', type:'phrasal verb', level:'A1',
+    meaningVi:'xem lại, rà soát',
+    definitionEn:'To examine or check something carefully.',
+    pronunciation:'/ɡoʊ ˈoʊvə/',
+    exampleEn:'Let\'s go over the report together.',
+    exampleVi:'Hãy cùng xem lại báo cáo.',
+    collocations:['go over the details'],
+    targetExercises:[
+      { promptVi:'Chúng ta cần xem lại hợp đồng trước khi ký.', targetPhrase:'go over' },
+      { promptVi:'Tôi sẽ rà soát lại số liệu một lần nữa.', targetPhrase:'go over' },
+      { promptVi:'Hãy xem lại kế hoạch trước cuộc họp.', targetPhrase:'go over' }
+    ] },
+  { id:'wrk-018', topic:'work', word:'call off', type:'phrasal verb', level:'B2',
+    meaningVi:'hủy bỏ (sự kiện, cuộc họp)',
+    definitionEn:'To cancel something.',
+    pronunciation:'/kɔːl ɒf/',
+    exampleEn:'They called off the meeting.',
+    exampleVi:'Họ đã hủy cuộc họp.',
+    collocations:['call off an event'],
+    targetExercises:[
+      { promptVi:'Chúng tôi phải hủy cuộc họp vì khách bận.', targetPhrase:'call off' },
+      { promptVi:'Sự kiện bị hủy do thời tiết xấu.', targetPhrase:'call off' },
+      { promptVi:'Họ hủy chuyến công tác vào phút chót.', targetPhrase:'call off' }
+    ] },
+  { id:'day-003', topic:'daily', word:'wake up', type:'phrasal verb', level:'A1',
+    meaningVi:'thức dậy',
+    definitionEn:'To stop sleeping.',
+    pronunciation:'/weɪk ʌp/',
+    exampleEn:'I wake up at six every day.',
+    exampleVi:'Tôi thức dậy lúc sáu giờ mỗi ngày.',
+    collocations:['wake up early'],
+    targetExercises:[
+      { promptVi:'Tôi thức dậy sớm để tập thể dục.', targetPhrase:'wake up' },
+      { promptVi:'Cô ấy thức dậy muộn vào cuối tuần.', targetPhrase:'wake up' },
+      { promptVi:'Chúng tôi thức dậy lúc năm giờ để bắt chuyến bay.', targetPhrase:'wake up' }
+    ] },
+  { id:'day-004', topic:'daily', word:'get up', type:'phrasal verb', level:'A1',
+    meaningVi:'ra khỏi giường, dậy',
+    definitionEn:'To get out of bed.',
+    pronunciation:'/ɡet ʌp/',
+    exampleEn:'I get up early on weekdays.',
+    exampleVi:'Tôi dậy sớm vào ngày thường.',
+    collocations:['get up late'],
+    targetExercises:[
+      { promptVi:'Tôi thường dậy lúc sáu giờ sáng.', targetPhrase:'get up' },
+      { promptVi:'Cuối tuần tôi hay dậy muộn.', targetPhrase:'get up' },
+      { promptVi:'Anh ấy dậy sớm để chuẩn bị bữa sáng.', targetPhrase:'get up' }
+    ] },
+  { id:'day-005', topic:'daily', word:'have breakfast', type:'collocation', level:'A1',
+    meaningVi:'ăn sáng',
+    definitionEn:'To eat the first meal of the day.',
+    pronunciation:'/hæv ˈbrekfəst/',
+    exampleEn:'I have breakfast at seven.',
+    exampleVi:'Tôi ăn sáng lúc bảy giờ.',
+    collocations:['have a big breakfast'],
+    targetExercises:[
+      { promptVi:'Tôi thường ăn sáng với bánh mì và cà phê.', targetPhrase:'have breakfast' },
+      { promptVi:'Chúng tôi ăn sáng cùng nhau vào cuối tuần.', targetPhrase:'have breakfast' },
+      { promptVi:'Đừng bỏ ăn sáng vì nó rất quan trọng.', targetPhrase:'have breakfast' }
+    ] },
+  { id:'day-006', topic:'daily', word:'go to bed', type:'collocation', level:'A1',
+    meaningVi:'đi ngủ',
+    definitionEn:'To get into bed to sleep.',
+    pronunciation:'/ɡoʊ tə bed/',
+    exampleEn:'I go to bed at eleven.',
+    exampleVi:'Tôi đi ngủ lúc mười một giờ.',
+    collocations:['go to bed early'],
+    targetExercises:[
+      { promptVi:'Tôi cố gắng đi ngủ sớm để dậy sớm.', targetPhrase:'go to bed' },
+      { promptVi:'Trẻ em nên đi ngủ trước chín giờ.', targetPhrase:'go to bed' },
+      { promptVi:'Tối qua tôi đi ngủ rất muộn.', targetPhrase:'go to bed' }
+    ] },
+  { id:'day-007', topic:'daily', word:'get dressed', type:'collocation', level:'A1',
+    meaningVi:'mặc quần áo',
+    definitionEn:'To put on your clothes.',
+    pronunciation:'/ɡet drest/',
+    exampleEn:'I get dressed after breakfast.',
+    exampleVi:'Tôi mặc quần áo sau khi ăn sáng.',
+    collocations:['get dressed quickly'],
+    targetExercises:[
+      { promptVi:'Tôi mặc quần áo nhanh để kịp giờ làm.', targetPhrase:'get dressed' },
+      { promptVi:'Cô ấy mặc quần áo đẹp để đi phỏng vấn.', targetPhrase:'get dressed' },
+      { promptVi:'Hãy mặc quần áo ấm vì trời lạnh.', targetPhrase:'get dressed' }
+    ] },
+  { id:'day-008', topic:'daily', word:'do the housework', type:'collocation', level:'A2',
+    meaningVi:'làm việc nhà',
+    definitionEn:'To do jobs like cleaning at home.',
+    pronunciation:'/duː ðə ˈhaʊswɜːk/',
+    exampleEn:'I do the housework on Sunday.',
+    exampleVi:'Tôi làm việc nhà vào Chủ nhật.',
+    collocations:['do the housework together'],
+    targetExercises:[
+      { promptVi:'Cuối tuần cả nhà cùng làm việc nhà.', targetPhrase:'do the housework' },
+      { promptVi:'Tôi làm việc nhà sau khi đi làm về.', targetPhrase:'do the housework' },
+      { promptVi:'Chúng tôi chia nhau làm việc nhà mỗi ngày.', targetPhrase:'do the housework' }
+    ] },
+  { id:'day-009', topic:'daily', word:'go shopping', type:'collocation', level:'A1',
+    meaningVi:'đi mua sắm',
+    definitionEn:'To go to buy things.',
+    pronunciation:'/ɡoʊ ˈʃɒpɪŋ/',
+    exampleEn:'We go shopping on weekends.',
+    exampleVi:'Chúng tôi đi mua sắm vào cuối tuần.',
+    collocations:['go shopping for food'],
+    targetExercises:[
+      { promptVi:'Tôi đi mua sắm ở siêu thị mỗi thứ Bảy.', targetPhrase:'go shopping' },
+      { promptVi:'Chúng tôi đi mua sắm quần áo cho mùa đông.', targetPhrase:'go shopping' },
+      { promptVi:'Cô ấy thích đi mua sắm cùng bạn bè.', targetPhrase:'go shopping' }
+    ] },
+  { id:'day-010', topic:'daily', word:'catch the bus', type:'collocation', level:'A1',
+    meaningVi:'bắt xe buýt',
+    definitionEn:'To get on a bus in time.',
+    pronunciation:'/kætʃ ðə bʌs/',
+    exampleEn:'I catch the bus at eight.',
+    exampleVi:'Tôi bắt xe buýt lúc tám giờ.',
+    collocations:['catch the last bus'],
+    targetExercises:[
+      { promptVi:'Tôi phải chạy nhanh để bắt xe buýt.', targetPhrase:'catch the bus' },
+      { promptVi:'Cô ấy bắt xe buýt đi làm mỗi sáng.', targetPhrase:'catch the bus' },
+      { promptVi:'Chúng tôi suýt lỡ chuyến, may mà bắt được xe buýt.', targetPhrase:'catch the bus' }
+    ] },
+  { id:'day-011', topic:'daily', word:'run errands', type:'collocation', level:'A2',
+    meaningVi:'chạy việc vặt',
+    definitionEn:'To do small jobs outside like shopping or paying bills.',
+    pronunciation:'/rʌn ˈerəndz/',
+    exampleEn:'I have to run errands today.',
+    exampleVi:'Hôm nay tôi phải chạy việc vặt.',
+    collocations:['run a few errands'],
+    targetExercises:[
+      { promptVi:'Sáng nay tôi chạy vài việc vặt rồi mới đi làm.', targetPhrase:'run errands' },
+      { promptVi:'Cô ấy dành buổi chiều để chạy việc vặt.', targetPhrase:'run errands' },
+      { promptVi:'Tôi chạy việc vặt như đi bưu điện và ngân hàng.', targetPhrase:'run errands' }
+    ] },
+  { id:'day-012', topic:'daily', word:'take care of', type:'phrase', level:'A2',
+    meaningVi:'chăm sóc, trông nom',
+    definitionEn:'To look after someone or something.',
+    pronunciation:'/teɪk keə ɒv/',
+    exampleEn:'I take care of my parents.',
+    exampleVi:'Tôi chăm sóc bố mẹ mình.',
+    collocations:['take good care of'],
+    targetExercises:[
+      { promptVi:'Tôi phải chăm sóc em nhỏ vào buổi tối.', targetPhrase:'take care of' },
+      { promptVi:'Cô ấy chăm sóc khu vườn rất kỹ.', targetPhrase:'take care of' },
+      { promptVi:'Hãy chăm sóc sức khỏe của bạn nhé.', targetPhrase:'take care of' }
+    ] },
+  { id:'day-013', topic:'daily', word:'hang out', type:'phrasal verb', level:'A2',
+    meaningVi:'đi chơi, tụ tập',
+    definitionEn:'To spend time relaxing with people.',
+    pronunciation:'/hæŋ aʊt/',
+    exampleEn:'We hang out on Fridays.',
+    exampleVi:'Chúng tôi đi chơi vào thứ Sáu.',
+    collocations:['hang out with friends'],
+    targetExercises:[
+      { promptVi:'Cuối tuần tôi thường đi chơi với bạn bè.', targetPhrase:'hang out' },
+      { promptVi:'Chúng tôi hay tụ tập ở quán cà phê gần nhà.', targetPhrase:'hang out' },
+      { promptVi:'Anh ấy thích đi chơi ngoài trời hơn ở nhà.', targetPhrase:'hang out' }
+    ] },
+  { id:'day-014', topic:'daily', word:'get along with', type:'phrasal verb', level:'B1',
+    meaningVi:'hòa hợp với ai',
+    definitionEn:'To have a good relationship with someone.',
+    pronunciation:'/ɡet əˈlɒŋ wɪð/',
+    exampleEn:'I get along with my coworkers.',
+    exampleVi:'Tôi hòa hợp với đồng nghiệp.',
+    collocations:['get along well with'],
+    targetExercises:[
+      { promptVi:'Tôi hòa hợp với hầu hết đồng nghiệp của mình.', targetPhrase:'get along with' },
+      { promptVi:'Cô ấy hòa hợp với mọi người trong nhóm.', targetPhrase:'get along with' },
+      { promptVi:'Hai anh em họ rất hòa hợp với nhau.', targetPhrase:'get along with' }
+    ] },
+  { id:'day-015', topic:'daily', word:'look after', type:'phrasal verb', level:'A2',
+    meaningVi:'trông nom, chăm sóc',
+    definitionEn:'To take care of someone or something.',
+    pronunciation:'/lʊk ˈɑːftə/',
+    exampleEn:'Can you look after my dog?',
+    exampleVi:'Bạn trông giúp con chó của tôi được không?',
+    collocations:['look after children'],
+    targetExercises:[
+      { promptVi:'Bà tôi trông nom bọn trẻ khi bố mẹ đi làm.', targetPhrase:'look after' },
+      { promptVi:'Bạn có thể trông giúp nhà tôi vài ngày không?', targetPhrase:'look after' },
+      { promptVi:'Cô ấy chăm sóc mẹ già rất chu đáo.', targetPhrase:'look after' }
+    ] },
+  { id:'day-016', topic:'daily', word:'give up', type:'phrasal verb', level:'A2',
+    meaningVi:'từ bỏ',
+    definitionEn:'To stop trying to do something.',
+    pronunciation:'/ɡɪv ʌp/',
+    exampleEn:'Don\'t give up so easily.',
+    exampleVi:'Đừng từ bỏ dễ dàng như vậy.',
+    collocations:['give up trying'],
+    targetExercises:[
+      { promptVi:'Dù khó khăn, tôi sẽ không từ bỏ mục tiêu.', targetPhrase:'give up' },
+      { promptVi:'Anh ấy đã từ bỏ thói quen hút thuốc.', targetPhrase:'give up' },
+      { promptVi:'Đừng từ bỏ việc học tiếng Anh giữa chừng.', targetPhrase:'give up' }
+    ] },
+  { id:'day-017', topic:'daily', word:'in a hurry', type:'phrase', level:'A2',
+    meaningVi:'đang vội',
+    definitionEn:'Doing something quickly because of little time.',
+    pronunciation:'/ɪn ə ˈhʌri/',
+    exampleEn:'I\'m in a hurry this morning.',
+    exampleVi:'Sáng nay tôi đang vội.',
+    collocations:['always in a hurry'],
+    targetExercises:[
+      { promptVi:'Tôi đang vội nên không thể nói chuyện lâu.', targetPhrase:'in a hurry' },
+      { promptVi:'Cô ấy luôn vội vàng vào buổi sáng.', targetPhrase:'in a hurry' },
+      { promptVi:'Đừng làm khi đang vội, dễ sai lắm.', targetPhrase:'in a hurry' }
+    ] },
+  { id:'day-018', topic:'daily', word:'brush teeth', type:'collocation', level:'A1',
+    meaningVi:'đánh răng',
+    definitionEn:'To clean your teeth with a brush.',
+    pronunciation:'/brʌʃ tiːθ/',
+    exampleEn:'I brush my teeth twice a day.',
+    exampleVi:'Tôi đánh răng hai lần một ngày.',
+    collocations:['brush teeth every day'],
+    targetExercises:[
+      { promptVi:'Tôi đánh răng mỗi sáng sau khi ăn.', targetPhrase:'brush teeth' },
+      { promptVi:'Trẻ em nên đánh răng trước khi đi ngủ.', targetPhrase:'brush teeth' },
+      { promptVi:'Nhớ đánh răng ít nhất hai lần một ngày.', targetPhrase:'brush teeth' }
+    ] },
+  { id:'day-019', topic:'daily', word:'used to', type:'phrase', level:'A2',
+    meaningVi:'đã từng (trong quá khứ)',
+    definitionEn:'Describes a past habit that stopped.',
+    pronunciation:'/juːst tuː/',
+    exampleEn:'I used to live in Hue.',
+    exampleVi:'Tôi đã từng sống ở Huế.',
+    collocations:['used to do something'],
+    targetExercises:[
+      { promptVi:'Tôi đã từng đi làm bằng xe đạp mỗi ngày.', targetPhrase:'used to' },
+      { promptVi:'Cô ấy đã từng chơi piano khi còn nhỏ.', targetPhrase:'used to' },
+      { promptVi:'Chúng tôi đã từng sống ở nước ngoài vài năm.', targetPhrase:'used to' }
+    ] },
 ];
 
 /* =================================================================
@@ -485,6 +1782,7 @@ const defaultData = () => ({
   sentencesPracticed:0,
   practiceScores:[],      // [{ts, score}] để tính điểm luyện trung bình
   mistakes:{},            // { vocabId: count } — "Words I struggle with"
+  myWords:[],             // [{id, word, meaningVi, ts}] — từ tự lưu khi luyện
   theme:'dark',
   geminiKey:'',
 });
@@ -515,8 +1813,21 @@ function bumpStreak(){
   DATA.streak.lastDay=t;
 }
 const learnedCount = () => Object.keys(DATA.learned).length;
-const topicLearned = tid => VOCAB.filter(v=>v.topic===tid && DATA.learned[v.id]).length;
-const topicTotal   = tid => VOCAB.filter(v=>v.topic===tid).length;
+// Kho từ đầy đủ = VOCAB cố định + "Từ của tôi" (động, do người dùng lưu)
+function myWordsAsVocab(){
+  return (DATA.myWords||[]).map(w=>({
+    id:w.id, topic:'mywords', word:w.word, type:w.type||'', level:w.level||'',
+    meaningVi:w.meaningVi||'', definitionEn:w.definitionEn||'',
+    pronunciation:w.pronunciation||'', exampleEn:w.exampleEn||'', exampleVi:w.exampleVi||'',
+    collocations:w.collocations||[],
+    targetExercises:[{ promptVi:'Hãy tự đặt một câu tiếng Anh có dùng "'+w.word+'".', targetPhrase:w.word }],
+    _mine:true,
+  }));
+}
+function allVocab(){ return VOCAB.concat(myWordsAsVocab()); }
+const findVocab = id => allVocab().find(v=>v.id===id);
+const topicLearned = tid => allVocab().filter(v=>v.topic===tid && DATA.learned[v.id]).length;
+const topicTotal   = tid => allVocab().filter(v=>v.topic===tid).length;
 
 function recordPractice(vocabId, score, passed){
   DATA.sentencesPracticed = (DATA.sentencesPracticed||0)+1;
@@ -531,7 +1842,7 @@ const avgPracticeScore = () => {
   return Math.round(s.reduce((a,b)=>a+b.score,0)/s.length);
 };
 const struggleList = () => Object.entries(DATA.mistakes||{})
-  .map(([id,c])=>({ v:VOCAB.find(x=>x.id===id), count:c })).filter(x=>x.v)
+  .map(([id,c])=>({ v:findVocab(id), count:c })).filter(x=>x.v)
   .sort((a,b)=>b.count-a.count);
 
 /* =================================================================
@@ -555,9 +1866,17 @@ function speak(text){
 const GEMINI_MODEL = 'gemini-2.0-flash';
 function hasKey(){ return !!(DATA.geminiKey && DATA.geminiKey.trim()); }
 function isOnline(){ return navigator.onLine !== false; }
+// Tương thích ngược + tự gán mức độ theo vị trí đề (1=medium,2=good,3=hard)
+const EX_LEVELS = ['medium','good','hard'];
+const LEVEL_VI = { medium:'Trung bình', good:'Khá', hard:'Khó' };
+function getExercises(v){
+  let list = Array.isArray(v.targetExercises)? v.targetExercises
+           : (v.targetExercise? [v.targetExercise] : []);
+  return list.map((ex,i)=>({ ...ex, level: ex.level || EX_LEVELS[Math.min(i,2)] }));
+}
 
-function buildPrompt(sentence, vocab){
-  const ex = vocab.targetExercise;
+function buildPrompt(sentence, vocab, ex){
+  ex = ex || getExercises(vocab)[0] || {targetPhrase:vocab.word, promptVi:''};
   return `Bạn là giáo viên tiếng Anh cho người Việt. Chấm câu tiếng Anh do học viên viết.
 
 TỪ/CỤM MỤC TIÊU (bắt buộc phải xuất hiện trong câu): "${ex.targetPhrase}"
@@ -592,12 +1911,12 @@ CHỈ trả về JSON thuần (không markdown, không giải thích ngoài JSON
 }`;
 }
 
-async function evaluateWithGemini(sentence, vocab){
+async function evaluateWithGemini(sentence, vocab, ex){
   if(!hasKey()) throw new Error('NO_KEY');
   if(!isOnline()) throw new Error('OFFLINE');
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
   const body = {
-    contents:[{ parts:[{ text: buildPrompt(sentence, vocab) }] }],
+    contents:[{ parts:[{ text: buildPrompt(sentence, vocab, ex) }] }],
     generationConfig:{ temperature:0.3, responseMimeType:'application/json' }
   };
   const ctrl = new AbortController();
@@ -636,6 +1955,50 @@ async function evaluateWithGemini(sentence, vocab){
   };
 }
 function clampInt(n){ n=Math.round(Number(n)||0); return Math.max(0,Math.min(100,n)); }
+
+/* Gợi ý từ/cụm tiếng Anh giúp đặt câu (kèm nghĩa VN). AI nếu có key, else cục bộ. */
+async function suggestWordsAI(vocab, ex){
+  if(!hasKey() || !isOnline()) throw new Error('NO_AI');
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
+  const prompt=`Học viên người Việt cần viết câu tiếng Anh sau: "${ex.promptVi}" (bắt buộc dùng "${ex.targetPhrase}").
+Gợi ý 5-6 từ hoặc cụm từ tiếng Anh HỮU ÍCH để viết câu này (động từ, danh từ, cụm collocation phù hợp ngữ cảnh, KHÔNG lặp lại chính "${ex.targetPhrase}").
+CHỈ trả JSON thuần: {"words":[{"en":"<từ/cụm tiếng Anh>","vi":"<nghĩa tiếng Việt ngắn>"}]}`;
+  const ctrl=new AbortController(); const timer=setTimeout(()=>ctrl.abort(),15000);
+  let res;
+  try{ res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.4,responseMimeType:'application/json'}}),
+    signal:ctrl.signal}); }
+  catch(e){ clearTimeout(timer); throw new Error('NET'); }
+  clearTimeout(timer);
+  if(!res.ok){ if(res.status===400||res.status===403) throw new Error('BAD_KEY'); throw new Error('HTTP'); }
+  const data=await res.json();
+  let text=(data?.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json|```/g,'').trim();
+  let json; try{ json=JSON.parse(text); }catch(e){ const m=text.match(/\{[\s\S]*\}/); if(m) json=JSON.parse(m[0]); }
+  const arr=(json&&json.words)||[];
+  return arr.filter(w=>w&&w.en).map(w=>({en:String(w.en).trim(), vi:String(w.vi||'').trim()})).slice(0,6);
+}
+// Gợi ý cục bộ: collocations + từ trong ví dụ + bộ từ nối hữu ích chung (không cần mạng)
+const GENERIC_HINTS = [
+  {en:'in order to', vi:'để mà, nhằm'},
+  {en:'as well as', vi:'cũng như'},
+  {en:'make sure', vi:'đảm bảo'},
+  {en:'provide', vi:'cung cấp'},
+  {en:'improve', vi:'cải thiện'},
+  {en:'reduce', vi:'giảm'},
+  {en:'according to', vi:'theo như'},
+  {en:'be able to', vi:'có thể'},
+];
+function suggestWordsLocal(vocab, ex){
+  const out=[]; const seen=new Set([ (ex.targetPhrase||'').toLowerCase() ]);
+  (vocab.collocations||[]).forEach(c=>{ const k=c.toLowerCase(); if(!seen.has(k)){ seen.add(k); out.push({en:c, vi:''}); } });
+  const stop=new Set('the a an to of in on for and or with is are be we our you your it that this needs need every will can may as at by from'.split(' '));
+  (vocab.exampleEn||'').replace(/[^a-zA-Z\s-]/g,'').split(/\s+/).forEach(w=>{
+    const k=w.toLowerCase(); if(w.length>3 && !stop.has(k) && !seen.has(k)){ seen.add(k); out.push({en:w.toLowerCase(), vi:''}); }
+  });
+  // luôn bổ sung vài từ nối chung để đủ gợi ý
+  for(const g of GENERIC_HINTS){ if(out.length>=6) break; if(!seen.has(g.en.toLowerCase())){ seen.add(g.en.toLowerCase()); out.push(g); } }
+  return out.slice(0,6);
+}
 function errMsgVi(code){
   return ({
     BAD_KEY:'API key không hợp lệ. Kiểm tra lại trong Cài đặt.',
@@ -648,7 +2011,14 @@ function errMsgVi(code){
 }
 
 const state = { tab:'home', topic:null, deck:[], deckIdx:0, flip:false, search:'',
-  practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null };
+  practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null,
+  fx:{}, fxTab:0 };
+// fx[vocabId] = { [exIdx]: { input, result, loading, error } }  — luyện câu inline trong flashcard
+function fxGet(vid, idx){ return (state.fx[vid] && state.fx[vid][idx]) || { input:'', result:null, loading:false, error:null }; }
+function fxSet(vid, idx, patch){
+  if(!state.fx[vid]) state.fx[vid]={};
+  state.fx[vid][idx] = { ...fxGet(vid,idx), ...patch };
+}
 
 const ICONS = {
   home:'M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z',
@@ -718,7 +2088,7 @@ function viewHome(){
 function viewLearn(){
   const q=state.search.trim().toLowerCase();
   if(q){
-    const hits=VOCAB.filter(v=>v.word.toLowerCase().includes(q)||v.meaningVi.toLowerCase().includes(q)||v.topic.includes(q));
+    const hits=allVocab().filter(v=>v.word.toLowerCase().includes(q)||v.meaningVi.toLowerCase().includes(q)||v.topic.includes(q));
     return header('Choose a topic','Học từ vựng')
     + searchBox()
     + (hits.length? `<div class="card" style="padding:6px 16px">${hits.map(vitemHTML).join('')}</div>`
@@ -726,12 +2096,13 @@ function viewLearn(){
   }
   return header('Choose a topic','Học từ vựng')
   + searchBox()
-  + TOPICS.map(t=>{
+  + TOPICS.filter(t=> t.id!=='mywords' || topicTotal('mywords')>0).map(t=>{
       const l=topicLearned(t.id),tt=topicTotal(t.id);
-      return `<button class="topic" onclick="openTopic('${t.id}')">
+      const mine = t.id==='mywords';
+      return `<button class="topic" onclick="openTopic('${t.id}')" style="${mine?'border-color:var(--brand)':''}">
         <span class="emo">${t.emoji}</span>
         <span class="body">
-          <span class="t">${t.name}</span>
+          <span class="t">${t.name}${mine?` <span class="chip" style="font-size:10px;padding:2px 8px">${tt}</span>`:''}</span>
           <span class="meta">${l}/${tt} từ · ${t.desc}</span>
           <span class="progress"><i style="width:${tt?l/tt*100:0}%"></i></span>
         </span>
@@ -762,7 +2133,7 @@ function vitemHTML(v){
 /* ---------- TOPIC DETAIL (vocab list of a topic) ---------- */
 function viewTopic(){
   const t=TOPICS.find(x=>x.id===state.topic);
-  const list=VOCAB.filter(v=>v.topic===t.id);
+  const list=allVocab().filter(v=>v.topic===t.id);
   const l=topicLearned(t.id);
   return `<div class="phead">
       <div><p class="desc"><button onclick="go('learn')" style="color:var(--muted)">‹ Chủ đề</button></p>
@@ -805,23 +2176,125 @@ function viewFlash(){
       </div>
 
       <div class="flash-face flash-back">
-        <div class="sec"><div class="lbl">Definition</div><div class="en">${v.definitionEn}</div></div>
-        <div class="sec"><div class="lbl">Nghĩa tiếng Việt</div><div class="vi">${v.meaningVi}</div></div>
-        <div class="sec"><div class="lbl">Ví dụ</div>
+        ${v.definitionEn?`<div class="sec"><div class="lbl">Definition</div><div class="en">${v.definitionEn}</div></div>`:''}
+        <div class="sec"><div class="lbl">Nghĩa tiếng Việt</div><div class="vi">${v.meaningVi||'<span style="color:var(--muted);font-weight:400">(từ tự lưu — chưa có nghĩa)</span>'}</div></div>
+        ${v.exampleEn?`<div class="sec"><div class="lbl">Ví dụ</div>
           <div class="ex">"${v.exampleEn}"</div>
-          <div class="card-sub" style="margin-top:4px">${v.exampleVi}</div>
+          ${v.exampleVi?`<div class="card-sub" style="margin-top:4px">${v.exampleVi}</div>`:''}
           <button class="btn btn-ghost btn-sm" style="width:auto;margin-top:8px"
             onclick="event.stopPropagation();speak('${escq(v.exampleEn)}')">🔊 Nghe câu</button>
-        </div>
+        </div>`:''}
         ${v.collocations?.length?`<div class="sec"><div class="lbl">Đi kèm (collocations)</div>
           <div class="coll">${v.collocations.map(c=>`<span class="chip chip-muted">${c}</span>`).join('')}</div></div>`:''}
+        ${v._mine?`<div class="sec"><div class="card-sub">⭐ Từ bạn tự lưu. Luyện đặt câu bên dưới để nhớ nó.</div></div>`:''}
       </div>
     </div></div>
 
     <div style="display:flex;gap:10px">
       <button class="btn btn-outline" style="color:var(--danger)" onclick="rate(false)">Chưa nhớ</button>
       <button class="btn btn-brand" onclick="rate(true)">Đã nhớ ✓</button>
+    </div>
+
+    ${state.flip ? practiceInlineHTML(v) : `<div class="card-sub" style="text-align:center;margin-top:18px">👆 Chạm thẻ để xem nghĩa, rồi kéo xuống luyện đặt câu ⬇️</div>`}`;
+}
+
+/* Khối luyện câu ngay dưới flashcard — dùng đúng từ đang xem, 2–3 đề */
+function practiceInlineHTML(v){
+  const exs = getExercises(v);
+  if(!exs.length) return '';
+  let idx = state.fxTab; if(idx>=exs.length) idx=0;
+  const ex = exs[idx];
+  const st = fxGet(v.id, idx);
+  const aiOn = hasKey();
+  const doneCount = exs.filter((_,i)=>fxGet(v.id,i).result).length;
+
+  const tabs = exs.map((e,i)=>{
+    const done = !!fxGet(v.id,i).result;
+    const lv = getExercises(v)[i].level;
+    return `<div class="ex-tab ${i===idx?'active':''} ${done?'done':''}" onclick="fxTabTo(${i})">
+      ${done?'✓ ':''}Câu ${i+1}<br><span style="font-size:10px;opacity:.85">${LEVEL_VI[lv]}</span></div>`;
+  }).join('');
+
+  let resultHTML='';
+  if(st.loading){
+    resultHTML=`<div class="loading-wrap" style="padding:24px"><span class="spin"></span><div>AI đang chấm...</div></div>`;
+  } else if(st.error==='BAD_KEY'){
+    resultHTML=`<div class="mini-result" style="border-color:var(--danger)">
+      <div class="mini-fb">🔑 API key không hợp lệ. Kiểm tra trong Cài đặt, hoặc
+      <button class="link" style="background:none;border:none" onclick="fxGradeLocalNow('${v.id}',${idx})">chấm bằng máy</button>.</div></div>`;
+  } else if(st.result){
+    resultHTML=miniResultHTML(st.result);
+  }
+
+  // Panel gợi ý từ
+  let hintHTML='';
+  if(st.hintsLoading){
+    hintHTML=`<div class="hint-panel"><div class="loading-wrap" style="padding:16px"><span class="spin"></span><div>Đang tìm từ gợi ý...</div></div></div>`;
+  } else if(st.hints){
+    hintHTML=`<div class="hint-panel">
+      <div class="lbl">💡 Từ/cụm gợi ý để đặt câu</div>
+      ${st.hints.length? st.hints.map((h,hi)=>{
+        const saved = isSaved(h.en);
+        return `<div class="hint-item">
+          <span style="flex:1;min-width:0"><span class="en">${escapeHtml(h.en)}</span>
+            <span class="vi" style="display:block">${escapeHtml(h.vi||'')}</span></span>
+          <span class="acts">
+            <button class="hint-btn" title="Nghe" onclick="speak('${escq(h.en)}')">🔊</button>
+            <button class="hint-btn" title="Chèn vào câu" onclick="fxInsertWord('${v.id}',${idx},'${escq(h.en)}')">➕</button>
+            <button class="hint-btn ${saved?'saved':''}" title="${saved?'Đã lưu':'Lưu vào Từ của tôi'}"
+              onclick="fxSaveWord('${escq(h.en)}','${escq(h.vi||'')}')">${saved?'✓':'⭐'}</button>
+          </span>
+        </div>`;
+      }).join('') : `<div class="card-sub">Không có gợi ý cho câu này.</div>`}
     </div>`;
+  }
+
+  return `<div class="practice-inline">
+    <div class="head"><span class="t">✎ Luyện đặt câu với "${v.word}"</span>
+      <span style="flex:1"></span><span class="chip chip-muted">${doneCount}/${exs.length}</span></div>
+
+    ${(isOnline()&&!aiOn)?`<div class="banner">💡 Bật AI trong Cài đặt để chấm chi tiết. Giờ dùng chấm cơ bản.
+      <button class="link" style="background:none;border:none" onclick="openSettings()">Mở</button></div>`:''}
+    ${!isOnline()?`<div class="banner">📴 Offline — chấm tạm bằng máy.</div>`:''}
+
+    ${exs.length>1?`<div class="ex-tabs">${tabs}</div>`:''}
+
+    <div class="prompt-vi" style="box-shadow:none">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span class="lvl-badge lvl-${ex.level}">${ex.level==='medium'?'🟢':ex.level==='good'?'🟡':'🔴'} ${LEVEL_VI[ex.level]}</span>
+        <span class="lbl" style="margin:0">phải dùng "${ex.targetPhrase}"</span>
+      </div>
+      <div class="txt">${ex.promptVi}</div>
+    </div>
+
+    <textarea class="answer-area" id="fxInput" placeholder="Nhập câu tiếng Anh của bạn..."
+      oninput="fxOnInput('${v.id}',${idx},this.value)">${escapeHtml(st.input||'')}</textarea>
+
+    <div style="display:flex;gap:10px;margin-bottom:${hintHTML?'0':'10px'}">
+      <button class="btn btn-outline btn-sm" style="flex:none;width:auto" onclick="fxToggleHints('${v.id}',${idx})">
+        ${st.hints||st.hintsLoading?'Ẩn gợi ý':'💡 Gợi ý từ'}</button>
+      <button class="btn btn-brand" onclick="fxEvaluate('${v.id}',${idx})">
+        ${aiOn&&isOnline()?'✨ Đánh giá bằng AI':'Đánh giá'}${st.result?' lại':''}</button>
+    </div>
+
+    ${hintHTML}
+    ${resultHTML}
+  </div>`;
+}
+function miniResultHTML(r){
+  const color = r.score>=90?'var(--success)':r.score>=70?'var(--brand)':'var(--warn)';
+  const verdict = r.score>=90?'Excellent! 🎉':r.score>=70?'Tốt lắm 👍':'Cần luyện thêm 💪';
+  const badge = r._local?`<span class="local-badge">⚙️ Máy</span>`:`<span class="ai-badge">✨ AI</span>`;
+  return `<div class="mini-result" style="border-color:${color}">
+    <div class="top">
+      <span class="sc" style="color:${color}">${r.score}<span style="font-size:15px;color:var(--muted)">/100</span></span>
+      <span style="font-weight:600;color:${color};font-size:14px">${verdict}</span>
+      <span style="flex:1"></span>${badge}
+    </div>
+    ${r.fixes?.length?`<div class="fixes">${r.fixes.map(f=>`<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span></div>`).join('')}</div>`:''}
+    ${r.feedback?.length?`<div class="mini-fb">${r.feedback.map(f=>'• '+escapeHtml(f)).join('<br>')}</div>`:''}
+    ${r.moreNaturalVersion?`<div class="natural" style="margin-top:10px"><div class="lbl">Câu tự nhiên hơn</div><div class="txt">${escapeHtml(r.moreNaturalVersion)}</div></div>`:''}
+  </div>`;
 }
 function viewDeckDone(){
   return `<div class="deck-top"><button class="icon-btn" onclick="exitDeck()">‹</button>
@@ -837,7 +2310,7 @@ function viewDeckDone(){
 /* ---------- REVIEW placeholder (Phase 2 sẽ mở rộng) ---------- */
 function viewReview(){
   const due=dueList();
-  const canPractice = VOCAB.some(v=>DATA.learned[v.id]);
+  const canPractice = allVocab().some(v=>DATA.learned[v.id]);
   const practiceCard = `<div class="card">
       <div class="card-title">✎ Luyện đặt câu</div>
       <div class="card-sub" style="margin-top:4px">Tự viết câu tiếng Anh dùng từ đã học — cách tốt nhất để nhớ lâu.</div>
@@ -862,8 +2335,8 @@ function viewReview(){
 function pickPracticeVocab(){
   // ưu tiên: từ đang "struggle" > từ đã học > bất kỳ từ nào
   const struggles = struggleList().map(x=>x.v);
-  const learned = VOCAB.filter(v=>DATA.learned[v.id]);
-  const pool = struggles.length? struggles : (learned.length? learned : VOCAB);
+  const learned = allVocab().filter(v=>DATA.learned[v.id]);
+  const pool = struggles.length? struggles : (learned.length? learned : allVocab());
   return pool[Math.floor(Math.random()*pool.length)];
 }
 function viewPractice(){
@@ -874,7 +2347,7 @@ function viewPractice(){
     <div class="loading-wrap"><span class="spin"></span>
       <div>AI đang phân tích câu của bạn...</div>
       <div class="card-sub">Thường mất vài giây</div></div>`;
-  const ex = v.targetExercise;
+  const ex = getExercises(v)[0] || {promptVi:'', targetPhrase:v.word};
   const aiOn = hasKey();
   return `<div class="deck-top">
       <button class="icon-btn" onclick="exitPractice()">‹</button>
@@ -907,10 +2380,11 @@ function viewPractice(){
 
 /* Bộ chấm CỤC BỘ (Phase 2 — chưa AI). Trả về JSON cùng format Phase 3 sẽ dùng,
    để khi cắm Gemini vào không phải sửa UI. */
-function gradeLocally(sentence, vocab){
+function gradeLocally(sentence, vocab, ex){
+  ex = ex || getExercises(vocab)[0] || {targetPhrase:vocab.word};
   const raw = sentence.trim();
   const s = raw.toLowerCase();
-  const target = vocab.targetExercise.targetPhrase.toLowerCase();
+  const target = ex.targetPhrase.toLowerCase();
   const words = s.split(/\s+/).filter(Boolean);
 
   // target dùng chưa? (khớp mềm: bỏ dấu câu, cho phép biến thể "-" / khoảng trắng)
@@ -943,7 +2417,7 @@ function gradeLocally(sentence, vocab){
   if(!targetUsed) score = Math.min(score, 55);
   const isAcceptable = targetUsed && score>=70;
 
-  if(!targetUsed) feedback.unshift(`Bạn chưa dùng cụm mục tiêu "${vocab.targetExercise.targetPhrase}". Hãy đưa nó vào câu.`);
+  if(!targetUsed) feedback.unshift(`Bạn chưa dùng cụm mục tiêu "${ex.targetPhrase}". Hãy đưa nó vào câu.`);
   if(targetUsed && !feedback.length) feedback.push('Câu ổn! Bạn đã dùng đúng cụm mục tiêu.');
 
   return {
@@ -1103,7 +2577,7 @@ function struggleView(){
 function nextInterval(box){ return [1,2,4,7,14][Math.min(box,4)]; } // ngày
 function dueList(){
   const t=todayStr();
-  return VOCAB.filter(v=>{ const nd=DATA.reviewQueue[v.id]; return nd && nd<=t; });
+  return allVocab().filter(v=>{ const nd=DATA.reviewQueue[v.id]; return nd && nd<=t; });
 }
 const dueCount = () => dueList().length;
 function last7Days(){
@@ -1135,13 +2609,13 @@ function openTopicAt(topicId,vocabId){ startDeck(topicId,vocabId); }
 function onSearch(v){ state.search=v; render(); }
 
 function startDeck(topicId, startId){
-  let list=VOCAB.filter(v=>v.topic===topicId);
+  let list=allVocab().filter(v=>v.topic===topicId);
   state.deck=list; state.deckIdx = startId? Math.max(0,list.findIndex(v=>v.id===startId)) : 0;
   state.flip=false; state.tab='flash'; render(); document.getElementById('main').scrollTop=0;
 }
 function startReview(){
   const due=dueList();
-  const deck = due.length? due : VOCAB.filter(v=>DATA.learned[v.id]).slice(0,10);
+  const deck = due.length? due : allVocab().filter(v=>DATA.learned[v.id]).slice(0,10);
   if(!deck.length){ toast('Chưa có từ nào để ôn — học từ mới trước nhé!'); go('learn'); return; }
   state.deck=deck; state.deckIdx=0; state.flip=false; state.tab='flash'; closeFab(); render();
 }
@@ -1171,16 +2645,80 @@ function gradeNowLocal(){
   const r=gradeLocally(sent,v); finishEvaluation(v,r);
 }
 function exitPractice(){ state.practiceResult=null; go('review'); }
-function flip(){ state.flip=!state.flip; render(); }
+function flip(){ state.flip=!state.flip; state.fxTab=0; render(); }
 function rate(known){
   const v=state.deck[state.deckIdx]; if(!v) return;
   markLearned(v.id);
   const box = known? (DATA.learned[v.id].box) : 0;
   DATA.reviewQueue[v.id] = new Date(Date.now()+nextInterval(box)*864e5).toISOString().slice(0,10);
   save();
-  state.flip=false;
+  state.flip=false; state.fxTab=0;
   if(state.deckIdx < state.deck.length-1){ state.deckIdx++; } else { state.deckIdx=state.deck.length; }
   render();
+}
+
+/* ---- Luyện câu inline trong flashcard ---- */
+function fxOnInput(vid, idx, val){ fxSet(vid, idx, {input:val}); } // không render để không mất focus
+function fxTabTo(i){ state.fxTab=i; render(); scrollToPractice(); }
+function scrollToPractice(){ setTimeout(()=>{ const el=document.querySelector('.practice-inline'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },60); }
+async function fxEvaluate(vid, idx){
+  const v=findVocab(vid); const ex=getExercises(v)[idx];
+  const sent=(fxGet(vid,idx).input||'').trim();
+  if(!sent){ toast('Hãy nhập câu trước đã'); return; }
+  if(!hasKey() || !isOnline()){
+    const r=gradeLocally(sent,v,ex); fxFinish(vid,idx,v,r); return;
+  }
+  fxSet(vid,idx,{loading:true,error:null}); render(); scrollToPractice();
+  try{
+    const r=await evaluateWithGemini(sent,v,ex);
+    fxSet(vid,idx,{loading:false}); fxFinish(vid,idx,v,r);
+  }catch(e){
+    fxSet(vid,idx,{loading:false});
+    if(e.message==='BAD_KEY'){ fxSet(vid,idx,{error:'BAD_KEY'}); render(); scrollToPractice(); return; }
+    toast('AI lỗi — chấm tạm bằng máy');
+    const r=gradeLocally(sent,v,ex); fxFinish(vid,idx,v,r);
+  }
+}
+function fxGradeLocalNow(vid, idx){
+  const v=findVocab(vid); const ex=getExercises(v)[idx];
+  const sent=(fxGet(vid,idx).input||'').trim(); if(!sent) return;
+  const r=gradeLocally(sent,v,ex); fxSet(vid,idx,{error:null}); fxFinish(vid,idx,v,r);
+}
+function fxFinish(vid, idx, v, r){
+  fxSet(vid,idx,{result:r,error:null});
+  recordPractice(v.id, r.score, r.isAcceptable);
+  render(); scrollToPractice();
+}
+
+/* ---- Gợi ý từ ---- */
+async function fxToggleHints(vid, idx){
+  const st=fxGet(vid,idx);
+  if(st.hints || st.hintsLoading){ fxSet(vid,idx,{hints:null,hintsLoading:false}); render(); scrollToPractice(); return; }
+  const v=findVocab(vid); const ex=getExercises(v)[idx];
+  fxSet(vid,idx,{hintsLoading:true}); render(); scrollToPractice();
+  let words;
+  try{ words=await suggestWordsAI(v,ex); }
+  catch(e){ words=suggestWordsLocal(v,ex); if(e.message==='BAD_KEY') toast('Key AI lỗi — gợi ý cơ bản'); }
+  if(!words || !words.length) words=suggestWordsLocal(v,ex);
+  fxSet(vid,idx,{hints:words,hintsLoading:false}); render(); scrollToPractice();
+}
+function fxInsertWord(vid, idx, word){
+  const st=fxGet(vid,idx);
+  const cur=(st.input||'').trim();
+  const next=(cur? cur+' ' : '')+word;
+  fxSet(vid,idx,{input:next});
+  const ta=document.getElementById('fxInput'); if(ta){ ta.value=next; ta.focus(); }
+  toast('Đã chèn "'+word+'"');
+}
+const savedKey = en => 'my-'+en.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+function isSaved(en){ return (DATA.myWords||[]).some(w=>w.id===savedKey(en)); }
+function fxSaveWord(en, vi){
+  if(!DATA.myWords) DATA.myWords=[];
+  const id=savedKey(en);
+  const exist=DATA.myWords.findIndex(w=>w.id===id);
+  if(exist>=0){ DATA.myWords.splice(exist,1); save(); toast('Đã bỏ khỏi Từ của tôi'); }
+  else { DATA.myWords.push({id, word:en, meaningVi:vi, ts:Date.now()}); save(); toast('⭐ Đã lưu vào Từ của tôi'); }
+  render(); scrollToPractice();
 }
 
 /* Theme */
