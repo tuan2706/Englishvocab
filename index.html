@@ -309,6 +309,15 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 .fix-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px}
 .fix-row .bad{color:var(--danger);text-decoration:line-through;opacity:.8}
 .fix-row .good{color:var(--success);font-weight:600}
+.fix-reason{font-size:12px;color:var(--muted);margin:2px 0 8px 2px;line-height:1.5}
+.corrected-box{background:var(--surface-2);border:1px solid var(--border);border-radius:1rem;padding:12px 14px;margin-top:10px}
+.corrected-box .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;margin-bottom:6px}
+.corrected-box .txt{font-size:14px;line-height:1.6}
+.best-box{background:var(--brand-light);border:1px solid var(--brand);border-radius:1rem;padding:12px 14px;margin-top:10px}
+.best-box .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--brand);font-weight:700;margin-bottom:6px}
+.best-box .txt{font-size:15px;line-height:1.55;font-weight:500;color:var(--ink)}
+.best-box .acts{display:flex;gap:8px;margin-top:10px}
+.hl-change{background:var(--success-bg);color:var(--success);border-radius:4px;padding:0 3px;font-weight:600}
 .natural{background:var(--success-bg);border:1px solid var(--success);border-radius:var(--r-card);padding:14px;margin-top:4px}
 .natural .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--success);font-weight:600;margin-bottom:6px}
 .natural .txt{font-size:15px;line-height:1.5}
@@ -3064,7 +3073,7 @@ function speak(text){
    Key lưu localStorage (app cá nhân). Ép model trả JSON đúng format.
    Nếu lỗi/offline/không key → ném lỗi để caller fallback về chấm cục bộ.
 ================================================================= */
-const GEMINI_MODEL = 'gemini-2.0-flash';
+const GEMINI_MODEL = 'gemini-3.5-flash';
 function hasKey(){ return !!(DATA.geminiKey && DATA.geminiKey.trim()); }
 function isOnline(){ return navigator.onLine !== false; }
 // Tương thích ngược + tự gán mức độ theo vị trí đề (1=medium,2=good,3=hard)
@@ -3078,7 +3087,7 @@ function getExercises(v){
 
 function buildPrompt(sentence, vocab, ex){
   ex = ex || getExercises(vocab)[0] || {targetPhrase:vocab.word, promptVi:''};
-  return `Bạn là giáo viên tiếng Anh cho người Việt. Chấm câu tiếng Anh do học viên viết.
+  return `Bạn là giáo viên tiếng Anh giàu kinh nghiệm, dạy người Việt. Hãy chấm và CHỮA câu tiếng Anh do học viên viết.
 
 TỪ/CỤM MỤC TIÊU (bắt buộc phải xuất hiện trong câu): "${ex.targetPhrase}"
 GỢI Ý NGHĨA (tiếng Việt) mà học viên cần diễn đạt: "${ex.promptVi}"
@@ -3091,11 +3100,21 @@ Hãy chấm theo 5 tiêu chí, mỗi tiêu chí 0-100:
 - naturalnessScore: có tự nhiên như người bản ngữ không.
 - score: điểm tổng 0-100 (nếu thiếu cụm mục tiêu thì tối đa 55).
 
-Đặc biệt chú ý lỗi phổ biến của người Việt: thiếu a/an/the, sai số ít/nhiều, sai giới từ, sai thì, dịch word-by-word, sai word order, sai collocation, subject-verb agreement, nhầm affect/effect, advice/advise, say/tell.
+QUAN TRỌNG — hãy làm thật kỹ 3 việc sau:
 
-Feedback và giải thích PHẢI bằng tiếng Việt, rõ ràng, cụ thể (KHÔNG chỉ nói "sai", phải nói vì sao).
+1) SỬA LỖI CHI TIẾT (mảng "fixes"): liệt kê TỪNG lỗi cụ thể trong câu học viên. Mỗi lỗi gồm:
+   - "bad": đúng phần sai trong câu gốc (từ/cụm sai, không chép cả câu),
+   - "good": phần đã sửa đúng,
+   - "reason": giải thích NGẮN bằng tiếng Việt VÌ SAO sai và quy tắc đúng (vd "động từ số ít cần thêm s", "cần mạo từ 'the' trước danh từ xác định", "sai giới từ: dùng 'on' thay 'in'").
+   Chú ý lỗi phổ biến của người Việt: thiếu a/an/the, sai số ít/nhiều, sai giới từ, sai thì, dịch word-by-word, sai trật tự từ, sai collocation, chia động từ theo chủ ngữ, nhầm affect/effect, advice/advise, say/tell. Nếu câu KHÔNG có lỗi thì "fixes" là mảng rỗng.
 
-CHỈ trả về JSON thuần (không markdown, không giải thích ngoài JSON) đúng cấu trúc:
+2) CÂU ĐÃ SỬA (correctedSentence): viết lại CHÍNH câu của học viên sau khi sửa hết lỗi ngữ pháp/chính tả/giới từ, GIỮ nguyên ý và cách diễn đạt của họ nhiều nhất có thể (chỉ sửa chỗ sai). Vẫn phải chứa cụm mục tiêu.
+
+3) CÂU MẪU TỐT NHẤT (bestVersion): tự đặt MỘT câu tiếng Anh hoàn chỉnh, đúng ngữ pháp, tự nhiên như người bản ngữ, hay nhất mà bạn đề xuất cho đề bài này — bắt buộc dùng cụm mục tiêu "${ex.targetPhrase}". Đây là câu mẫu để học viên học theo.
+
+Feedback và mọi giải thích PHẢI bằng tiếng Việt, rõ ràng, cụ thể.
+
+CHỈ trả về JSON thuần (không markdown, không chữ nào ngoài JSON) đúng cấu trúc:
 {
   "score": <int>,
   "meaningScore": <int>,
@@ -3104,11 +3123,12 @@ CHỈ trả về JSON thuần (không markdown, không giải thích ngoài JSON
   "naturalnessScore": <int>,
   "targetWordUsed": <true|false>,
   "isAcceptable": <true|false>,
-  "correctedSentence": "<câu học viên, giữ nguyên>",
-  "fixes": [ { "bad": "<phần sai>", "good": "<sửa đúng>" } ],
-  "feedback": [ "<gạch đầu dòng tiếng Việt>", "..." ],
+  "originalSentence": "<câu gốc của học viên, giữ nguyên>",
+  "correctedSentence": "<câu của học viên ĐÃ SỬA hết lỗi>",
+  "fixes": [ { "bad": "<phần sai>", "good": "<sửa đúng>", "reason": "<vì sao, tiếng Việt>" } ],
+  "feedback": [ "<nhận xét tiếng Việt>", "..." ],
   "explanationVi": "<giải thích tổng quan bằng tiếng Việt>",
-  "moreNaturalVersion": "<một câu tiếng Anh tự nhiên hơn dùng cụm mục tiêu>"
+  "bestVersion": "<câu mẫu tiếng Anh hoàn chỉnh và hay nhất, có cụm mục tiêu>"
 }`;
 }
 
@@ -3129,8 +3149,15 @@ async function evaluateWithGemini(sentence, vocab, ex){
   }catch(e){ clearTimeout(timer); throw new Error(e.name==='AbortError'?'TIMEOUT':'NETWORK'); }
   clearTimeout(timer);
   if(!res.ok){
-    if(res.status===400||res.status===403) throw new Error('BAD_KEY');
-    if(res.status===429) throw new Error('RATE_LIMIT');
+    // đọc nội dung lỗi để phân loại chính xác (Google hay trả 400 cho nhiều nguyên nhân)
+    let emsg='';
+    try{ const ej=await res.json(); emsg=(ej?.error?.message||ej?.error?.status||'')+''; }catch(_){}
+    const lm=emsg.toLowerCase();
+    if(res.status===404 || lm.includes('not found') || lm.includes('is not supported') || lm.includes('not supported for') || lm.includes('unknown model')) throw new Error('MODEL_NOT_FOUND');
+    if(res.status===401||res.status===403 || lm.includes('api key') || lm.includes('api_key') || lm.includes('permission')) throw new Error('BAD_KEY');
+    if(res.status===429 || lm.includes('quota') || lm.includes('rate limit') || lm.includes('resource_exhausted')) throw new Error('RATE_LIMIT');
+    if(res.status===400) throw new Error('BAD_KEY'); // 400 còn lại thường do key
+    if(res.status>=500) throw new Error('SERVER');
     throw new Error('HTTP_'+res.status);
   }
   const data = await res.json();
@@ -3141,17 +3168,20 @@ async function evaluateWithGemini(sentence, vocab, ex){
   catch(e){ const m=text.match(/\{[\s\S]*\}/); if(m){ try{ json=JSON.parse(m[0]); }catch(_){}} }
   if(!json || typeof json.score!=='number') throw new Error('PARSE');
   // chuẩn hoá + đảm bảo đủ trường
+  const best = json.bestVersion || json.moreNaturalVersion || '';
   return {
     score: clampInt(json.score), meaningScore: clampInt(json.meaningScore),
     grammarScore: clampInt(json.grammarScore), vocabularyScore: clampInt(json.vocabularyScore),
     naturalnessScore: clampInt(json.naturalnessScore),
     targetWordUsed: !!json.targetWordUsed,
     isAcceptable: json.isAcceptable!==undefined? !!json.isAcceptable : (json.score>=70 && !!json.targetWordUsed),
+    originalSentence: json.originalSentence || sentence,
     correctedSentence: json.correctedSentence || sentence,
-    fixes: Array.isArray(json.fixes)? json.fixes.filter(f=>f&&f.bad&&f.good).slice(0,8) : [],
+    fixes: Array.isArray(json.fixes)? json.fixes.filter(f=>f&&f.bad&&f.good).map(f=>({bad:f.bad,good:f.good,reason:f.reason||''})).slice(0,8) : [],
     feedback: Array.isArray(json.feedback)? json.feedback.filter(Boolean).slice(0,6) : [],
     explanationVi: json.explanationVi || '',
-    moreNaturalVersion: json.moreNaturalVersion || '',
+    bestVersion: best,
+    moreNaturalVersion: best, // giữ tương thích UI cũ
     _local: false,
   };
 }
@@ -3203,11 +3233,13 @@ function suggestWordsLocal(vocab, ex){
 function errMsgVi(code){
   return ({
     BAD_KEY:'API key không hợp lệ. Kiểm tra lại trong Cài đặt.',
-    RATE_LIMIT:'Đã dùng hết lượt miễn phí tạm thời. Thử lại sau ít phút.',
+    MODEL_NOT_FOUND:'Model Gemini không khả dụng. Hãy kiểm tra model configuration.',
+    RATE_LIMIT:'Gemini đang giới hạn lượt sử dụng. Hãy thử lại sau.',
+    SERVER:'Máy chủ Gemini đang gặp sự cố. Hãy thử lại sau.',
     TIMEOUT:'AI phản hồi quá lâu. Kiểm tra mạng và thử lại.',
     NETWORK:'Không kết nối được tới AI. Kiểm tra Internet.',
-    OFFLINE:'Bạn đang offline. AI cần Internet.',
-    PARSE:'AI trả về dữ liệu không đọc được. Thử lại nhé.',
+    OFFLINE:'Bạn đang offline. AI cần kết nối Internet.',
+    PARSE:'Gemini không trả về kết quả hợp lệ. Hãy thử lại.',
   })[code] || 'Không thể đánh giá lúc này. Hãy thử lại sau.';
 }
 
@@ -3419,10 +3451,16 @@ function practiceInlineHTML(v){
   let resultHTML='';
   if(st.loading){
     resultHTML=`<div class="loading-wrap" style="padding:24px"><span class="spin"></span><div>AI đang chấm...</div></div>`;
-  } else if(st.error==='BAD_KEY'){
+  } else if(st.error){
+    const isKey = st.error==='BAD_KEY';
+    const icon = isKey?'🔑':(st.error==='MODEL_NOT_FOUND'?'⚙️':(st.error==='RATE_LIMIT'?'⏳':(st.error==='OFFLINE'?'📴':'⚠️')));
     resultHTML=`<div class="mini-result" style="border-color:var(--danger)">
-      <div class="mini-fb">🔑 API key không hợp lệ. Kiểm tra trong Cài đặt, hoặc
-      <button class="link" style="background:none;border:none" onclick="fxGradeLocalNow('${v.id}',${idx})">chấm bằng máy</button>.</div></div>`;
+      <div class="mini-fb" style="font-weight:600;color:var(--ink)">${icon} ${escapeHtml(errMsgVi(st.error))}</div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        ${isKey?`<button class="btn btn-outline btn-sm" style="width:auto" onclick="openSettings()">Mở Cài đặt</button>`:''}
+        <button class="btn btn-outline btn-sm" style="width:auto" onclick="fxEvaluate('${v.id}',${idx})">↻ Thử lại AI</button>
+        <button class="btn btn-brand btn-sm" style="width:auto" onclick="fxGradeLocalNow('${v.id}',${idx})">⚙️ Chấm bằng máy</button>
+      </div></div>`;
   } else if(st.result){
     resultHTML=miniResultHTML(st.result);
   }
@@ -3486,16 +3524,51 @@ function miniResultHTML(r){
   const color = r.score>=90?'var(--success)':r.score>=70?'var(--brand)':'var(--warn)';
   const verdict = r.score>=90?'Excellent! 🎉':r.score>=70?'Tốt lắm 👍':'Cần luyện thêm 💪';
   const badge = r._local?`<span class="local-badge">⚙️ Máy</span>`:`<span class="ai-badge">✨ AI</span>`;
+  const changed = r.correctedSentence && r.originalSentence &&
+    r.correctedSentence.trim().toLowerCase()!==r.originalSentence.trim().toLowerCase();
+  const best = r.bestVersion || r.moreNaturalVersion;
   return `<div class="mini-result" style="border-color:${color}">
     <div class="top">
       <span class="sc" style="color:${color}">${r.score}<span style="font-size:15px;color:var(--muted)">/100</span></span>
       <span style="font-weight:600;color:${color};font-size:14px">${verdict}</span>
       <span style="flex:1"></span>${badge}
     </div>
-    ${r.fixes?.length?`<div class="fixes">${r.fixes.map(f=>`<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span></div>`).join('')}</div>`:''}
-    ${r.feedback?.length?`<div class="mini-fb">${r.feedback.map(f=>'• '+escapeHtml(f)).join('<br>')}</div>`:''}
-    ${r.moreNaturalVersion?`<div class="natural" style="margin-top:10px"><div class="lbl">Câu tự nhiên hơn</div><div class="txt">${escapeHtml(r.moreNaturalVersion)}</div></div>`:''}
+
+    ${r.fixes?.length?`<div class="fixes" style="margin-top:6px">
+      <div class="corrected-box" style="background:none;border:none;padding:0;margin:0 0 8px">
+        <div class="lbl">🔧 Lỗi cần sửa</div>
+      </div>
+      ${r.fixes.map(f=>`<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span></div>
+        ${f.reason?`<div class="fix-reason">↳ ${escapeHtml(f.reason)}</div>`:''}`).join('')}
+    </div>`:''}
+
+    ${changed?`<div class="corrected-box">
+      <div class="lbl">✅ Câu của bạn sau khi sửa</div>
+      <div class="txt">${highlightDiff(r.originalSentence, r.correctedSentence)}</div>
+      <div class="acts" style="margin-top:8px"><button class="btn btn-ghost btn-sm" style="width:auto" onclick="speak('${escq(r.correctedSentence)}')">🔊 Nghe</button></div>
+    </div>`:''}
+
+    ${r.feedback?.length?`<div class="mini-fb" style="margin-top:10px">${r.feedback.map(f=>'• '+escapeHtml(f)).join('<br>')}</div>`:''}
+
+    ${best?`<div class="best-box">
+      <div class="lbl">⭐ Câu mẫu AI đề xuất (hay nhất)</div>
+      <div class="txt">${escapeHtml(best)}</div>
+      <div class="acts">
+        <button class="btn btn-ghost btn-sm" style="width:auto" onclick="speak('${escq(best)}')">🔊 Nghe</button>
+        <button class="btn btn-outline btn-sm" style="width:auto" onclick="fxCopyBest('${escq(best)}')">📋 Dùng câu này</button>
+      </div>
+    </div>`:''}
   </div>`;
+}
+// tô đậm những từ đã thay đổi so với câu gốc
+function highlightDiff(orig, corrected){
+  const oWords = (orig||'').trim().split(/\s+/);
+  const cWords = (corrected||'').trim().split(/\s+/);
+  const oSet = new Set(oWords.map(w=>w.toLowerCase().replace(/[^a-z0-9']/g,'')));
+  return cWords.map(w=>{
+    const clean=w.toLowerCase().replace(/[^a-z0-9']/g,'');
+    return oSet.has(clean)? escapeHtml(w) : `<span class="hl-change">${escapeHtml(w)}</span>`;
+  }).join(' ');
 }
 function viewDeckDone(){
   return `<div class="deck-top"><button class="icon-btn" onclick="exitDeck()">‹</button>
@@ -3598,14 +3671,14 @@ function gradeLocally(sentence, vocab, ex){
 
   // Heuristic lỗi phổ biến người Việt (chỉ gợi ý, không phải chấm tuyệt đối)
   if(words.length && !/[.!?]$/.test(raw)) feedback.push('Câu nên kết thúc bằng dấu chấm.');
-  if(/\bi\b/.test(s) && !/\bI\b/.test(raw)) { fixes.push({bad:'i', good:'I'}); feedback.push('Đại từ "I" luôn viết hoa.'); }
+  if(/\bi\b/.test(s) && !/\bI\b/.test(raw)) { fixes.push({bad:'i', good:'I', reason:'Đại từ "I" luôn viết hoa dù ở giữa câu.'}); }
   // "I am + V-nguyên thể" (lỗi hay gặp)
   const amVerb = s.match(/\bi am (\w+)\b/);
   if(amVerb && !/ing$|tired|happy|ready|sure|able|responsible|interested/.test(amVerb[1])){
     feedback.push('Cẩn thận "I am + động từ": thường dùng "I " + động từ (vd: "I help"), hoặc "I am " + V-ing.');
   }
   // lặp từ liền nhau
-  for(let i=1;i<words.length;i++){ if(words[i]===words[i-1] && words[i].length>2){ fixes.push({bad:words[i]+' '+words[i], good:words[i]}); break; } }
+  for(let i=1;i<words.length;i++){ if(words[i]===words[i-1] && words[i].length>2){ fixes.push({bad:words[i]+' '+words[i], good:words[i], reason:'Bị lặp từ liền nhau.'}); break; } }
 
   // Điểm từng tiêu chí (ước lượng cục bộ)
   const lenOk = words.length>=4 && words.length<=40;
@@ -3624,23 +3697,24 @@ function gradeLocally(sentence, vocab, ex){
   return {
     score, meaningScore, grammarScore, vocabularyScore, naturalnessScore,
     targetWordUsed: targetUsed, isAcceptable,
+    originalSentence: raw,
     correctedSentence: raw,
     fixes,
     feedback,
     explanationVi: targetUsed
-      ? 'Đây là chấm cơ bản bằng máy. Bật AI trong Cài đặt để có phân tích ngữ pháp & độ tự nhiên chi tiết hơn.'
+      ? 'Đây là chấm cơ bản bằng máy. Bật AI trong Cài đặt để có phân tích ngữ pháp, chữa câu chi tiết và câu mẫu tốt nhất.'
       : 'Câu chưa đạt vì thiếu cụm mục tiêu. Hãy viết lại và chèn cụm đó vào.',
-    moreNaturalVersion: '',   // Phase 3 (AI) sẽ điền
+    bestVersion: '',          // chỉ AI mới đề xuất câu mẫu
+    moreNaturalVersion: '',
     _local: true,
   };
 }
 async function evaluateAnswer(){
   const v=state.practiceVocab; const sent=(state.practiceInput||'').trim();
   if(!sent){ toast('Hãy nhập câu trước đã'); return; }
-  // Không key hoặc offline → chấm cục bộ luôn
-  if(!hasKey() || !isOnline()){
-    const r=gradeLocally(sent,v); finishEvaluation(v,r); return;
-  }
+  // Không có key → chấm máy luôn (UI đã báo trước cần bật AI)
+  if(!hasKey()){ const r=gradeLocally(sent,v); finishEvaluation(v,r); return; }
+  if(!isOnline()){ state.practiceError='OFFLINE'; state.tab='result'; render(); document.getElementById('main').scrollTop=0; return; }
   // Có key + online → gọi AI, có loading
   state.practiceLoading=true; state.practiceError=null; render();
   try{
@@ -3648,11 +3722,10 @@ async function evaluateAnswer(){
     state.practiceLoading=false;
     finishEvaluation(v, r);
   }catch(e){
+    // KHÔNG âm thầm chấm máy: hiện rõ lý do + để nút "Chấm bằng máy"
     state.practiceLoading=false;
-    // key sai → báo lỗi rõ, cho thử lại; lỗi khác → fallback cục bộ + thông báo nhẹ
-    if(e.message==='BAD_KEY'){ state.practiceError='BAD_KEY'; state.tab='result'; render(); return; }
-    toast('AI lỗi ('+errMsgVi(e.message).slice(0,30)+'…) — chấm tạm bằng máy');
-    const r=gradeLocally(sent,v); finishEvaluation(v,r);
+    state.practiceError=e.message||'UNKNOWN';
+    state.tab='result'; render(); document.getElementById('main').scrollTop=0;
   }
 }
 function finishEvaluation(v, r){
@@ -3664,17 +3737,20 @@ function finishEvaluation(v, r){
 /* ---------- RESULT ---------- */
 function viewResult(){
   const v=state.practiceVocab, r=state.practiceResult;
-  // Trường hợp lỗi AI cần người dùng xử lý (key sai)
-  if(state.practiceError==='BAD_KEY'){
+  // Trường hợp lỗi AI: hiện rõ lý do, vẫn cho chấm bằng máy
+  if(state.practiceError){
+    const code=state.practiceError, isKey=code==='BAD_KEY';
+    const icon = isKey?'🔑':(code==='MODEL_NOT_FOUND'?'⚙️':(code==='RATE_LIMIT'?'⏳':(code==='OFFLINE'?'📴':'⚠️')));
+    const title = isKey?'API key không hợp lệ':(code==='MODEL_NOT_FOUND'?'Model Gemini không khả dụng':(code==='RATE_LIMIT'?'Gemini đang giới hạn lượt':(code==='OFFLINE'?'Bạn đang offline':'Gemini gặp sự cố')));
     return `<div class="deck-top"><button class="icon-btn" onclick="retryPractice()">‹</button>
-      <span class="deck-count">Lỗi</span><span style="width:40px"></span></div>
+      <span class="deck-count">Lỗi AI</span><span style="width:40px"></span></div>
       <div class="err-card">
-        <div class="e">🔑</div>
-        <div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px">API key không hợp lệ</div>
-        <div style="font-size:14px;line-height:1.6">Hãy kiểm tra lại Gemini API key trong Cài đặt, hoặc chấm tạm bằng máy.</div>
+        <div class="e">${icon}</div>
+        <div style="font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px">${title}</div>
+        <div style="font-size:14px;line-height:1.6">${escapeHtml(errMsgVi(code))}</div>
       </div>
       <div style="display:flex;gap:10px;margin-top:14px">
-        <button class="btn btn-outline" onclick="openSettings()">Mở Cài đặt</button>
+        ${isKey?`<button class="btn btn-outline" onclick="openSettings()">Mở Cài đặt</button>`:`<button class="btn btn-outline" onclick="retryAIEval()">↻ Thử lại AI</button>`}
         <button class="btn btn-brand" onclick="gradeNowLocal()">Chấm bằng máy</button>
       </div>
       <button class="btn btn-ghost" style="margin-top:10px" onclick="retryPractice()">‹ Quay lại viết câu</button>`;
@@ -3713,9 +3789,15 @@ function viewResult(){
 
     <div class="card">
       <div class="card-title" style="margin-bottom:8px">Câu bạn viết</div>
-      <div style="font-size:15px;line-height:1.6;color:var(--muted)">"${escapeHtml(r.correctedSentence)}"</div>
-      ${r.fixes?.length?`<div class="card-title" style="margin:16px 0 4px">Cần sửa</div>
-        ${r.fixes.map(f=>`<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span></div>`).join('')}`:''}
+      <div style="font-size:15px;line-height:1.6;color:var(--muted)">"${escapeHtml(r.originalSentence||r.correctedSentence)}"</div>
+      ${r.fixes?.length?`<div class="card-title" style="margin:16px 0 8px">🔧 Lỗi cần sửa</div>
+        ${r.fixes.map(f=>`<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span></div>
+          ${f.reason?`<div class="fix-reason">↳ ${escapeHtml(f.reason)}</div>`:''}`).join('')}`:''}
+      ${(r.correctedSentence && r.originalSentence && r.correctedSentence.trim().toLowerCase()!==r.originalSentence.trim().toLowerCase())?`
+        <div class="corrected-box"><div class="lbl">✅ Câu của bạn sau khi sửa</div>
+          <div class="txt">${highlightDiff(r.originalSentence, r.correctedSentence)}</div>
+          <div class="acts" style="margin-top:8px"><button class="btn btn-ghost btn-sm" style="width:auto" onclick="speak('${escq(r.correctedSentence)}')">🔊 Nghe</button></div>
+        </div>`:''}
     </div>
 
     ${r.feedback?.length?`<div class="card">
@@ -3724,7 +3806,11 @@ function viewResult(){
       <div class="card-sub" style="margin-top:8px">${r.explanationVi}</div>
     </div>`:''}
 
-    ${r.moreNaturalVersion?`<div class="natural"><div class="lbl">Câu tự nhiên hơn</div><div class="txt">${escapeHtml(r.moreNaturalVersion)}</div></div>`:''}
+    ${(r.bestVersion||r.moreNaturalVersion)?`<div class="best-box">
+      <div class="lbl">⭐ Câu mẫu AI đề xuất (hay nhất)</div>
+      <div class="txt">${escapeHtml(r.bestVersion||r.moreNaturalVersion)}</div>
+      <div class="acts"><button class="btn btn-ghost btn-sm" style="width:auto" onclick="speak('${escq(r.bestVersion||r.moreNaturalVersion)}')">🔊 Nghe</button></div>
+    </div>`:''}
 
     <div style="display:flex;gap:10px;margin-top:14px">
       <button class="btn btn-outline" onclick="retryPractice()">Sửa lại</button>
@@ -3843,8 +3929,10 @@ function retryPractice(){ state.practiceResult=null; state.practiceError=null; s
 function gradeNowLocal(){
   const v=state.practiceVocab, sent=(state.practiceInput||'').trim();
   if(!sent){ retryPractice(); return; }
+  state.practiceError=null;
   const r=gradeLocally(sent,v); finishEvaluation(v,r);
 }
+function retryAIEval(){ state.practiceError=null; state.tab='practice'; render(); setTimeout(()=>evaluateAnswer(),50); }
 function exitPractice(){ state.practiceResult=null; go('review'); }
 function flip(){ state.flip=!state.flip; state.fxTab=0; render(); }
 function rate(known){
@@ -3866,18 +3954,17 @@ async function fxEvaluate(vid, idx){
   const v=findVocab(vid); const ex=getExercises(v)[idx];
   const sent=(fxGet(vid,idx).input||'').trim();
   if(!sent){ toast('Hãy nhập câu trước đã'); return; }
-  if(!hasKey() || !isOnline()){
-    const r=gradeLocally(sent,v,ex); fxFinish(vid,idx,v,r); return;
-  }
+  // Không có key hoặc offline → chấm máy luôn (đã có banner báo trước ở UI)
+  if(!hasKey()){ const r=gradeLocally(sent,v,ex); fxFinish(vid,idx,v,r); return; }
+  if(!isOnline()){ fxSet(vid,idx,{error:'OFFLINE'}); render(); scrollToPractice(); return; }
   fxSet(vid,idx,{loading:true,error:null}); render(); scrollToPractice();
   try{
     const r=await evaluateWithGemini(sent,v,ex);
     fxSet(vid,idx,{loading:false}); fxFinish(vid,idx,v,r);
   }catch(e){
-    fxSet(vid,idx,{loading:false});
-    if(e.message==='BAD_KEY'){ fxSet(vid,idx,{error:'BAD_KEY'}); render(); scrollToPractice(); return; }
-    toast('AI lỗi — chấm tạm bằng máy');
-    const r=gradeLocally(sent,v,ex); fxFinish(vid,idx,v,r);
+    // KHÔNG âm thầm chấm máy: hiện rõ lý do lỗi + để nút "Chấm bằng máy"
+    fxSet(vid,idx,{loading:false, error:e.message||'UNKNOWN'});
+    render(); scrollToPractice();
   }
 }
 function fxGradeLocalNow(vid, idx){
@@ -3913,6 +4000,14 @@ function fxInsertWord(vid, idx, word){
 }
 const savedKey = en => 'my-'+en.toLowerCase().replace(/[^a-z0-9]+/g,'-');
 function isSaved(en){ return (DATA.myWords||[]).some(w=>w.id===savedKey(en)); }
+function fxCopyBest(sentence){
+  // đưa câu mẫu vào ô nhập của đề đang mở để học viên chép/sửa lại
+  const v = state.deck[state.deckIdx]; if(!v) return;
+  const idx = state.fxTab||0;
+  fxSet(v.id, idx, {input:sentence});
+  const ta=document.getElementById('fxInput'); if(ta){ ta.value=sentence; ta.focus(); }
+  toast('Đã đưa câu mẫu vào ô nhập');
+}
 function fxSaveWord(en, vi){
   if(!DATA.myWords) DATA.myWords=[];
   const id=savedKey(en);
