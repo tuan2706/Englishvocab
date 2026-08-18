@@ -10231,6 +10231,7 @@ const defaultData = () => ({
   myWords:[],             // [{id, word, meaningVi, ts}] — từ tự lưu khi luyện
   theme:'dark',
   geminiKey:'',
+  geminiModel:'',
 });
 let DATA = load();
 function load(){
@@ -10309,7 +10310,11 @@ function speak(text){
    Key lưu localStorage (app cá nhân). Ép model trả JSON đúng format.
    Nếu lỗi/offline/không key → ném lỗi để caller fallback về chấm cục bộ.
 ================================================================= */
-const GEMINI_MODEL = 'gemini-3.5-flash';
+// Ưu tiên bản Flash-Lite (nhiều lượt/phút hơn, ít bị giới hạn). Nếu 1 model không khả dụng
+// với key của bạn (lỗi 404), app tự thử model kế tiếp và ghi nhớ model chạy được.
+const GEMINI_MODELS = ['gemini-3.5-flash-lite','gemini-2.5-flash-lite','gemini-3.5-flash','gemini-2.5-flash'];
+function currentModel(){ return DATA.geminiModel && GEMINI_MODELS.includes(DATA.geminiModel) ? DATA.geminiModel : GEMINI_MODELS[0]; }
+const GEMINI_MODEL = GEMINI_MODELS[0]; // giữ tương thích tham chiếu cũ
 function hasKey(){ return !!(DATA.geminiKey && DATA.geminiKey.trim()); }
 function isOnline(){ return navigator.onLine !== false; }
 // Tương thích ngược + tự gán mức độ theo vị trí đề (1=medium,2=good,3=hard)
@@ -10368,10 +10373,10 @@ CHỈ trả về JSON thuần (không markdown, không chữ nào ngoài JSON) �
 }`;
 }
 
-async function evaluateWithGemini(sentence, vocab, ex){
-  if(!hasKey()) throw new Error('NO_KEY');
-  if(!isOnline()) throw new Error('OFFLINE');
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+// Gọi 1 model. Trả {data} nếu OK; ném lỗi có phân loại (kèm cờ _minute cho 429 tạm thời).
+async function callGemini(model, sentence, vocab, ex){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
   const body = {
     contents:[{ parts:[{ text: buildPrompt(sentence, vocab, ex) }] }],
     generationConfig:{ temperature:0.3, responseMimeType:'application/json' }
@@ -10385,18 +10390,54 @@ async function evaluateWithGemini(sentence, vocab, ex){
   }catch(e){ clearTimeout(timer); throw new Error(e.name==='AbortError'?'TIMEOUT':'NETWORK'); }
   clearTimeout(timer);
   if(!res.ok){
-    // đọc nội dung lỗi để phân loại chính xác (Google hay trả 400 cho nhiều nguyên nhân)
     let emsg='';
     try{ const ej=await res.json(); emsg=(ej?.error?.message||ej?.error?.status||'')+''; }catch(_){}
     const lm=emsg.toLowerCase();
-    if(res.status===404 || lm.includes('not found') || lm.includes('is not supported') || lm.includes('not supported for') || lm.includes('unknown model')) throw new Error('MODEL_NOT_FOUND');
+    if(res.status===404 || lm.includes('not found') || lm.includes('is not supported') || lm.includes('not supported for') || lm.includes('unknown model')){ const er=new Error('MODEL_NOT_FOUND'); er._badModel=true; throw er; }
     if(res.status===401||res.status===403 || lm.includes('api key') || lm.includes('api_key') || lm.includes('permission')) throw new Error('BAD_KEY');
-    if(res.status===429 || lm.includes('quota') || lm.includes('rate limit') || lm.includes('resource_exhausted')) throw new Error('RATE_LIMIT');
-    if(res.status===400) throw new Error('BAD_KEY'); // 400 còn lại thường do key
+    if(res.status===429 || lm.includes('quota') || lm.includes('rate limit') || lm.includes('resource_exhausted')){
+      const er=new Error('RATE_LIMIT');
+      // 429 theo NGÀY (RPD) thường có chữ "per day"/"daily"; còn lại coi là theo PHÚT (chờ chút là được)
+      er._perDay = /per day|daily|requests? per day|rpd/.test(lm);
+      throw er;
+    }
+    if(res.status===400) throw new Error('BAD_KEY');
     if(res.status>=500) throw new Error('SERVER');
     throw new Error('HTTP_'+res.status);
   }
-  const data = await res.json();
+  return res;
+}
+async function evaluateWithGemini(sentence, vocab, ex){
+  if(!hasKey()) throw new Error('NO_KEY');
+  if(!isOnline()) throw new Error('OFFLINE');
+  // Danh sách model để thử: model đã lưu (chạy được lần trước) lên đầu, rồi tới các model còn lại.
+  const saved = currentModel();
+  const models = [saved, ...GEMINI_MODELS.filter(m=>m!==saved)];
+  const backoff = [0, 2000, 5000]; // tự chờ 0s → 2s → 5s khi gặp nghẽn theo phút
+  let lastErr = new Error('RATE_LIMIT');
+  for(const model of models){
+    for(let attempt=0; attempt<backoff.length; attempt++){
+      if(backoff[attempt]>0) await sleep(backoff[attempt]);
+      try{
+        const res = await callGemini(model, sentence, vocab, ex);
+        DATA.geminiModel = model; try{ save(); }catch(_){}  // nhớ model chạy được
+        var okRes = res; break;
+      }catch(e){
+        lastErr = e;
+        if(e._badModel) break;                 // model này không có → sang model kế
+        if(e.message==='BAD_KEY') throw e;       // key sai → báo ngay, thử tiếp vô ích
+        if(e.message==='OFFLINE') throw e;
+        if(e.message==='RATE_LIMIT' && e._perDay) throw new Error('RATE_LIMIT_DAY'); // hết lượt NGÀY → không chờ được
+        if(e.message==='RATE_LIMIT'){ continue; }          // nghẽn PHÚT → chờ rồi thử lại
+        if(e.message==='SERVER' || e.message==='TIMEOUT' || e.message==='NETWORK'){ continue; }
+        // lỗi khác → thử model kế
+        break;
+      }
+    }
+    if(typeof okRes!=='undefined' && okRes) { var finalRes = okRes; break; }
+  }
+  if(typeof finalRes==='undefined' || !finalRes) throw lastErr;
+  const data = await finalRes.json();
   let text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
   text = text.replace(/```json|```/g,'').trim();
   let json;
@@ -10426,7 +10467,7 @@ function clampInt(n){ n=Math.round(Number(n)||0); return Math.max(0,Math.min(100
 /* Gợi ý từ/cụm tiếng Anh giúp đặt câu (kèm nghĩa VN). AI nếu có key, else cục bộ. */
 async function suggestWordsAI(vocab, ex){
   if(!hasKey() || !isOnline()) throw new Error('NO_AI');
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/${currentModel()}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
   const prompt=`Học viên người Việt cần viết câu tiếng Anh sau: "${ex.promptVi}" (bắt buộc dùng "${ex.targetPhrase}").
 Gợi ý 5-6 từ hoặc cụm từ tiếng Anh HỮU ÍCH để viết câu này (động từ, danh từ, cụm collocation phù hợp ngữ cảnh, KHÔNG lặp lại chính "${ex.targetPhrase}").
 CHỈ trả JSON thuần: {"words":[{"en":"<từ/cụm tiếng Anh>","vi":"<nghĩa tiếng Việt ngắn>"}]}`;
@@ -10470,7 +10511,8 @@ function errMsgVi(code){
   return ({
     BAD_KEY:'API key không hợp lệ. Kiểm tra lại trong Cài đặt.',
     MODEL_NOT_FOUND:'Model Gemini không khả dụng. Hãy kiểm tra model configuration.',
-    RATE_LIMIT:'Gemini đang giới hạn lượt sử dụng. Hãy thử lại sau.',
+    RATE_LIMIT:'Gemini bận trong chốc lát (giới hạn theo phút). App đã tự thử lại — nếu vẫn báo, chờ ~30 giây rồi bấm lại.',
+    RATE_LIMIT_DAY:'Bạn đã dùng hết lượt AI miễn phí trong hôm nay. Lượt sẽ được cấp lại vào ngày mai. Trong lúc chờ, bạn có thể chấm bằng máy.',
     SERVER:'Máy chủ Gemini đang gặp sự cố. Hãy thử lại sau.',
     TIMEOUT:'AI phản hồi quá lâu. Kiểm tra mạng và thử lại.',
     NETWORK:'Không kết nối được tới AI. Kiểm tra Internet.',
@@ -10714,7 +10756,7 @@ function practiceInlineHTML(v){
     resultHTML=`<div class="loading-wrap" style="padding:24px"><span class="spin"></span><div>AI đang chấm...</div></div>`;
   } else if(st.error){
     const isKey = st.error==='BAD_KEY';
-    const icon = isKey?'🔑':(st.error==='MODEL_NOT_FOUND'?'⚙️':(st.error==='RATE_LIMIT'?'⏳':(st.error==='OFFLINE'?'📴':'⚠️')));
+    const icon = isKey?'🔑':(st.error==='MODEL_NOT_FOUND'?'⚙️':((st.error==='RATE_LIMIT'||st.error==='RATE_LIMIT_DAY')?'⏳':(st.error==='OFFLINE'?'📴':'⚠️')));
     resultHTML=`<div class="mini-result" style="border-color:var(--danger)">
       <div class="mini-fb" style="font-weight:600;color:var(--ink)">${icon} ${escapeHtml(errMsgVi(st.error))}</div>
       <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
@@ -11001,8 +11043,8 @@ function viewResult(){
   // Trường hợp lỗi AI: hiện rõ lý do, vẫn cho chấm bằng máy
   if(state.practiceError){
     const code=state.practiceError, isKey=code==='BAD_KEY';
-    const icon = isKey?'🔑':(code==='MODEL_NOT_FOUND'?'⚙️':(code==='RATE_LIMIT'?'⏳':(code==='OFFLINE'?'📴':'⚠️')));
-    const title = isKey?'API key không hợp lệ':(code==='MODEL_NOT_FOUND'?'Model Gemini không khả dụng':(code==='RATE_LIMIT'?'Gemini đang giới hạn lượt':(code==='OFFLINE'?'Bạn đang offline':'Gemini gặp sự cố')));
+    const icon = isKey?'🔑':(code==='MODEL_NOT_FOUND'?'⚙️':((code==='RATE_LIMIT'||code==='RATE_LIMIT_DAY')?'⏳':(code==='OFFLINE'?'📴':'⚠️')));
+    const title = isKey?'API key không hợp lệ':(code==='MODEL_NOT_FOUND'?'Model Gemini không khả dụng':((code==='RATE_LIMIT'||code==='RATE_LIMIT_DAY')?'Gemini đang giới hạn lượt':(code==='OFFLINE'?'Bạn đang offline':'Gemini gặp sự cố')));
     return `<div class="deck-top"><button class="icon-btn" onclick="retryPractice()">${svg(IC.back,20)}</button>
       <span class="deck-count">Lỗi AI</span><span style="width:40px"></span></div>
       <div class="err-card">
