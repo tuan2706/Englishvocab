@@ -11284,9 +11284,27 @@ function openTopic(id){ state.topic=id; state.tab='topic'; closeFab(); render();
 function openTopicAt(topicId,vocabId){ startDeck(topicId,vocabId); }
 function onSearch(v){ state.search=v; render(); }
 
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
 function startDeck(topicId, startId){
-  let list=allVocab().filter(v=>v.topic===topicId);
-  state.deck=list; state.deckIdx = startId? Math.max(0,list.findIndex(v=>v.id===startId)) : 0;
+  const all=allVocab().filter(v=>v.topic===topicId);
+  if(startId){
+    // Mở đúng từ được chọn (từ danh sách/tìm kiếm) — giữ nguyên thứ tự để tìm được vị trí
+    state.deck=all; state.deckIdx=Math.max(0, all.findIndex(v=>v.id===startId));
+  }else{
+    // "Học từ mới": bỏ từ đã học + xáo trộn ngẫu nhiên
+    const fresh=shuffle(all.filter(v=>!DATA.learned[v.id]));
+    if(fresh.length){
+      state.deck=fresh; state.deckIdx=0;
+    }else{
+      // Đã học hết từ trong chủ đề → cho ôn lại toàn bộ (cũng random) + báo
+      toast('🎉 Bạn đã học hết từ mới trong chủ đề này! Giờ ôn lại nhé.');
+      state.deck=shuffle(all); state.deckIdx=0;
+    }
+  }
   state.flip=false; state.tab='flash'; render(); document.getElementById('main').scrollTop=0;
 }
 function startReview(){
