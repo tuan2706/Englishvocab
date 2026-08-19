@@ -253,6 +253,46 @@ html.light .app::before{background:
 
 /* Empty state */
 .empty{text-align:center;padding:40px 20px;color:var(--muted)}
+/* Lịch từ đã học */
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin:8px 0 14px}
+.cal-title{font-size:17px;font-weight:700;font-family:"Poppins",sans-serif}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;background:var(--surface);border:1px solid var(--border);
+  border-radius:1.5rem;box-shadow:var(--sh-card);padding:12px 8px 16px}
+.cal-dow{text-align:center;font-size:11px;font-weight:600;color:var(--muted);padding:4px 0 10px;min-width:0}
+.cal-cell{position:relative;min-width:0;aspect-ratio:1/1.2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  border-radius:12px;background:none;border:none;transition:transform .15s,background .15s}
+.cal-cell.empty{visibility:hidden}
+.cal-cell:active{transform:scale(.9)}
+.cal-cell .cal-num{font-size:15px;font-weight:600;color:var(--ink)}
+.cal-cell.has:hover{background:var(--surface-2)}
+.cal-cell.today .cal-num{color:#fff}
+.cal-cell.today{background:var(--brand)}
+.cal-cell.sel{outline:2px solid var(--brand);outline-offset:-2px}
+.cal-cell.today.sel{outline-color:#fff}
+.cal-badge{font-size:9px;font-weight:700;color:var(--muted);background:var(--surface-2);border-radius:999px;padding:1px 5px;line-height:1.5}
+.cal-cell.has .cal-badge{color:var(--brand);background:var(--brand-light)}
+.cal-cell.today .cal-badge{color:#fff;background:rgba(255,255,255,.25)}
+.cal-badge.empty{background:none;color:var(--border-strong);padding:1px 4px}
+.cal-hint{text-align:center;color:var(--muted);font-size:13px;padding:22px 16px;line-height:1.6}
+.daylist{margin-top:18px}
+.daylist-head{font-size:14px;font-weight:700;color:var(--brand);margin:0 2px 12px;font-family:"Poppins",sans-serif}
+.dayword{background:var(--surface);border:1px solid var(--border);border-radius:1.15rem;box-shadow:var(--sh-card);margin-bottom:10px;overflow:hidden}
+.dayword.open{border-color:var(--brand)}
+.dayword-top{width:100%;text-align:left;padding:14px 16px;background:none;border:none;display:block}
+.dw-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dw-word{font-size:16px;font-weight:700;color:var(--ink);font-family:"Poppins",sans-serif}
+.dw-type{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-light);border-radius:999px;padding:2px 9px}
+.dw-vi{font-size:14px;color:var(--muted);margin-top:4px}
+.dw-caret{position:absolute;right:16px;top:16px;color:var(--muted);font-size:13px}
+.dayword-top{position:relative}
+.dayword-body{padding:0 16px 16px;border-top:1px solid var(--border);margin-top:2px;padding-top:14px}
+.dw-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.dw-notes{background:var(--surface-2);border-radius:1rem;padding:12px 14px}
+.dw-notes-lbl{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:8px}
+.dw-note{font-size:14px;margin-bottom:8px}
+.dw-note .bad{color:var(--danger);text-decoration:line-through}
+.dw-note .good{color:var(--success);font-weight:600}
+.dw-note-reason{font-size:12px;color:var(--muted);margin-top:3px}
 .empty .e{font-size:40px;margin-bottom:10px}
 
 /* Toast */
@@ -10281,8 +10321,13 @@ function load(){
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(DATA)); }catch(e){} }
 
 function markLearned(id){
-  const first = !DATA.learned[id];
-  DATA.learned[id] = { ts:Date.now(), box:(DATA.learned[id]?.box||0)+1 };
+  const prev = DATA.learned[id];
+  const first = !prev;
+  DATA.learned[id] = {
+    ts: Date.now(),
+    box: (prev?.box||0)+1,
+    firstDay: prev?.firstDay || todayStr()   // ngày học lần đầu (không đổi khi học lại)
+  };
   if(first){ bumpDaily(); }
   bumpStreak();
   save();
@@ -10562,7 +10607,8 @@ function errMsgVi(code){
 
 const state = { tab:'home', topic:null, deck:[], deckIdx:0, flip:false, search:'',
   practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null,
-  fx:{}, fxTab:0 };
+  fx:{}, fxTab:0,
+  calYear:null, calMonth:null, calSel:null, calWord:null };
 // fx[vocabId] = { [exIdx]: { input, result, loading, error } }  — luyện câu inline trong flashcard
 function fxGet(vid, idx){ return (state.fx[vid] && state.fx[vid][idx]) || { input:'', result:null, loading:false, error:null }; }
 function fxSet(vid, idx, patch){
@@ -10966,28 +11012,128 @@ function viewDeckDone(){
     </div>`;
 }
 
-/* ---------- REVIEW placeholder (Phase 2 sẽ mở rộng) ---------- */
+/* ---------- REVIEW = LỊCH TỪ ĐÃ HỌC ---------- */
+// Ngày học của 1 từ: ưu tiên firstDay, else suy từ ts.
+function learnedDayOf(id){
+  const L=DATA.learned[id]; if(!L) return null;
+  if(L.firstDay) return L.firstDay;
+  if(L.ts){ const d=new Date(L.ts); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+  return null;
+}
+// Map: 'YYYY-MM-DD' -> [vocabId,...]
+function learnedByDay(){
+  const map={};
+  for(const id in DATA.learned){
+    const day=learnedDayOf(id); if(!day) continue;
+    (map[day]=map[day]||[]).push(id);
+  }
+  return map;
+}
+const TYPE_VI = {
+  'noun':'Danh từ','noun phrase':'Cụm danh từ','verb':'Động từ','phrasal verb':'Cụm động từ',
+  'adjective':'Tính từ','adverb':'Trạng từ','collocation':'Cụm từ','idiom':'Thành ngữ',
+  'preposition':'Giới từ','conjunction':'Liên từ','phrase':'Cụm từ','expression':'Cách diễn đạt',
+  'determiner':'Từ hạn định','pronoun':'Đại từ'
+};
+function typeVi(t){ return TYPE_VI[t] || t || ''; }
+function ymd(y,m,d){ return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`; }
+
 function viewReview(){
   const due=dueList();
-  const canPractice = allVocab().some(v=>DATA.learned[v.id]);
-  const practiceCard = `<div class="card">
-      <div class="card-title">✎ Luyện đặt câu</div>
-      <div class="card-sub" style="margin-top:4px">Tự viết câu tiếng Anh dùng từ đã học — cách tốt nhất để nhớ lâu.</div>
-      <button class="btn btn-brand" style="margin-top:14px" onclick="startPractice()">Bắt đầu luyện ▸</button>
+  // state lịch
+  if(state.calYear==null){ const n=new Date(); state.calYear=n.getFullYear(); state.calMonth=n.getMonth(); }
+  const byDay=learnedByDay();
+  const y=state.calYear, m=state.calMonth;
+  const today=new Date(); const todayKey=ymd(today.getFullYear(),today.getMonth(),today.getDate());
+
+  // tiêu đề + nút ôn giãn cách (giữ lại, gọn)
+  let body = header('Từ đã học theo ngày','📅 Ôn tập');
+  if(due.length){
+    body += `<div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <div style="flex:1"><div class="card-title">🔁 ${due.length} từ cần ôn hôm nay</div>
+        <div class="card-sub" style="margin-top:2px">Ôn đúng lúc giúp nhớ lâu.</div></div>
+      <button class="btn btn-brand btn-sm" style="width:auto;flex:none" onclick="startReview()">Ôn ▸</button>
     </div>`;
-  return header('Ôn tập & luyện tập','Ôn tập')
-  + (canPractice? practiceCard : '')
-  + (due.length
-    ? `<div class="card"><div class="card-title">🔁 ${due.length} từ cần ôn Flashcard hôm nay</div>
-        <div class="card-sub" style="margin-top:4px">Ôn đúng lúc giúp nhớ lâu hơn.</div>
-        <button class="btn btn-outline" style="margin-top:14px" onclick="startReview()">Ôn Flashcard ▸</button></div>
-       <div class="slabel">Danh sách cần ôn</div>
-       <div class="card" style="padding:6px 16px">${due.map(vitemHTML).join('')}</div>`
-    : (canPractice? '' : `<div class="empty"><div class="e">✅</div>
-        <div style="font-size:17px;font-weight:600;color:var(--ink);margin-bottom:6px">Chưa có gì để ôn</div>
-        Học thêm từ mới ở tab <b>Học</b> để mở khoá luyện tập nhé.
-        <div style="margin-top:20px"><button class="btn btn-brand" style="width:auto;margin:0 auto" onclick="go('learn')">Đi học từ mới</button></div>
-       </div>`));
+  }
+
+  // Header tháng + nút chuyển
+  const monthName=`Tháng ${m+1}, ${y}`;
+  body += `<div class="cal-head">
+    <button class="icon-btn" onclick="calPrev()" aria-label="Tháng trước">${svg(IC.back,18)}</button>
+    <div class="cal-title">${monthName}</div>
+    <button class="icon-btn" onclick="calNext()" aria-label="Tháng sau"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>`;
+
+  // Lưới lịch (T2..CN)
+  const dows=['T2','T3','T4','T5','T6','T7','CN'];
+  const firstDow=(new Date(y,m,1).getDay()+6)%7; // 0=T2
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  let cells='';
+  for(const d of dows) cells+=`<div class="cal-dow">${d}</div>`;
+  for(let i=0;i<firstDow;i++) cells+=`<div class="cal-cell empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const key=ymd(y,m,d);
+    const cnt=(byDay[key]||[]).length;
+    const isToday=key===todayKey;
+    const isSel=state.calSel===key;
+    const badge = cnt>0 ? `<span class="cal-badge">+${cnt}</span>` : `<span class="cal-badge empty">·</span>`;
+    cells+=`<button class="cal-cell${isToday?' today':''}${isSel?' sel':''}${cnt>0?' has':''}" onclick="calSelect('${key}')">
+      <span class="cal-num">${d}</span>${badge}</button>`;
+  }
+  body += `<div class="cal-grid">${cells}</div>`;
+
+  // Panel danh sách từ của ngày được chọn
+  if(state.calSel){
+    const ids=(byDay[state.calSel]||[]);
+    const [yy,mm,dd]=state.calSel.split('-');
+    const label=`${+dd}/${+mm}/${yy}`;
+    if(!ids.length){
+      body += `<div class="daylist"><div class="daylist-head">📆 ${label}</div>
+        <div class="empty" style="padding:24px 12px"><div class="e">🌱</div>Ngày này bạn chưa học từ nào.</div></div>`;
+    }else{
+      body += `<div class="daylist"><div class="daylist-head">📆 ${label} · Đã học ${ids.length} từ</div>
+        ${ids.map(id=>dayWordHTML(id)).join('')}</div>`;
+    }
+  } else {
+    body += `<div class="cal-hint">👆 Bấm vào một ngày để xem những từ bạn đã học hôm đó.</div>`;
+  }
+  return body;
+}
+// Một từ trong danh sách ngày (bấm để mở rộng xem ghi chú)
+function dayWordHTML(id){
+  const v=findVocab(id); if(!v) return '';
+  const open=state.calWord===id;
+  const notes=(DATA.notes||[]).filter(n=>{
+    if(n.kind==='fix') return (n.word||'').toLowerCase()===v.word.toLowerCase();
+    return false;
+  });
+  return `<div class="dayword${open?' open':''}">
+    <button class="dayword-top" onclick="calToggleWord('${id}')">
+      <div class="dw-main">
+        <span class="dw-word">${escapeHtml(v.word)}</span>
+        <span class="dw-type">${typeVi(v.type)}</span>
+      </div>
+      <div class="dw-vi">${escapeHtml(v.meaningVi)}</div>
+      <span class="dw-caret">${open?'▾':'▸'}</span>
+    </button>
+    ${open?`<div class="dayword-body">
+      <div class="dw-row"><button class="btn btn-outline btn-sm" style="width:auto" onclick="speak('${escq(v.word)}')">${svg(IC.sound,15)} Nghe</button>
+        <button class="btn btn-brand btn-sm" style="width:auto" onclick="practiceThisWord('${id}')">✎ Luyện đặt câu</button></div>
+      ${notes.length? `<div class="dw-notes">
+        <div class="dw-notes-lbl">📌 Ghi chú đã lưu</div>
+        ${notes.map(n=>`<div class="dw-note"><span class="bad">${escapeHtml(n.bad)}</span> → <span class="good">${escapeHtml(n.good)}</span>${n.reason?`<div class="dw-note-reason">↳ ${escapeHtml(n.reason)}</div>`:''}</div>`).join('')}
+      </div>`:''}
+    </div>`:''}
+  </div>`;
+}
+function calPrev(){ if(state.calMonth===0){state.calMonth=11;state.calYear--;}else state.calMonth--; state.calSel=null; state.calWord=null; render(); }
+function calNext(){ if(state.calMonth===11){state.calMonth=0;state.calYear++;}else state.calMonth++; state.calSel=null; state.calWord=null; render(); }
+function calSelect(key){ state.calSel = (state.calSel===key? null : key); state.calWord=null; render(); }
+function calToggleWord(id){ state.calWord = (state.calWord===id? null : id); render(); }
+function practiceThisWord(id){
+  const v=findVocab(id); if(!v) return;
+  state.practiceVocab=v; state.practiceInput=''; state.practiceResult=null; state.practiceError=null;
+  state.tab='practice'; render(); document.getElementById('main').scrollTop=0;
 }
 
 /* ---------- PRACTICE (luyện đặt câu) ---------- */
