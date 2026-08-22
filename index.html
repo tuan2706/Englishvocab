@@ -224,6 +224,10 @@ html.light .app::before{background:
 .nav a .ico{width:22px;height:22px}
 .nav a .hl{position:absolute;inset:2px 10px;border-radius:1rem;background:var(--brand-light);z-index:-1;opacity:0;transition:opacity .25s}
 .nav a.active .hl{opacity:1}
+/* Khi bàn phím mở: ẩn thanh điều hướng + FAB để không trôi lên giữa màn hình / không tạo khoảng trống */
+body.kb-open .nav{display:none}
+body.kb-open .fab{display:none}
+body.kb-open .main{padding-bottom:16px}
 
 /* FAB */
 .fab{position:absolute;left:0;right:0;bottom:calc(90px + env(safe-area-inset-bottom));
@@ -415,6 +419,8 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 .fix-row .bad{color:var(--danger);text-decoration:line-through;opacity:.8}
 .fix-row .good{color:var(--success);font-weight:700}
 .fix-reason{font-size:13px;color:var(--ink);margin-top:6px;line-height:1.5}
+.fix-tip{font-size:13px;color:var(--ink);margin-top:7px;line-height:1.5}
+.fix-tip b{color:var(--brand);font-weight:700}
 .fix-example{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5}
 .fix-example i{color:var(--brand);font-style:normal;font-weight:600}
 .note-save-btn{flex:none;font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px;
@@ -476,15 +482,18 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 (function(){
   function computeH(){
     var h = window.innerHeight;
+    var kb = false;
     if(window.visualViewport){
       var vv = window.visualViewport.height;
-      if(vv > 0 && vv < h - 80) h = vv; // chênh lệch lớn = bàn phím đang mở → thu nhỏ theo
+      if(vv > 0 && vv < h - 80){ h = vv; kb = true; } // chênh lệch lớn = bàn phím đang mở → thu nhỏ theo
     }
-    return h;
+    return { h:h, kb:kb };
   }
   function setVH(){
-    var h = computeH();
-    if(h > 200){ document.documentElement.style.setProperty('--vh-real', h + 'px'); }
+    var r = computeH();
+    if(r.h > 200){ document.documentElement.style.setProperty('--vh-real', r.h + 'px'); }
+    // Khi bàn phím mở: đánh dấu để ẩn thanh điều hướng + FAB (tránh chúng trôi lên giữa màn hình)
+    if(document.body){ document.body.classList.toggle('kb-open', r.kb); }
   }
   setVH();
   // Đo lại nhiều lần sau khi tải — một số trình duyệt (đặc biệt webview trong app) báo kích
@@ -10486,19 +10495,19 @@ Hãy chấm theo 5 tiêu chí, mỗi tiêu chí 0-100:
 
 QUAN TRỌNG — hãy làm thật kỹ 3 việc sau:
 
-1) SỬA LỖI CHI TIẾT (mảng "fixes"): liệt kê TỪNG lỗi cụ thể trong câu học viên. Mỗi lỗi gồm 4 phần:
-   - "bad": đúng phần sai trong câu gốc (từ/cụm sai, không chép cả câu).
+1) SỬA LỖI (mảng "fixes"): Chỉ liệt kê TỐI ĐA 3 lỗi QUAN TRỌNG NHẤT (KHÔNG liệt kê 8-10 lỗi). Ưu tiên: (1) lỗi làm sai NGHĨA, (2) lỗi ngữ pháp cơ bản, (3) lỗi dùng sai/thiếu từ mục tiêu, (4) collocation, (5) thiếu tự nhiên. Mỗi lỗi gồm 5 phần NGẮN GỌN:
+   - "category": MỘT từ khóa IN HOA (tiếng Anh) đặt tên loại lỗi, chọn 1 trong: GRAMMAR, PREPOSITION, ARTICLE, TENSE, PLURAL, WORD ORDER, COLLOCATION, VOCABULARY, NATURALNESS, TARGET WORD, SPELLING.
+   - "bad": đúng phần sai trong câu gốc (từ/cụm sai, KHÔNG chép cả câu).
    - "good": phần đã sửa đúng.
-   - "tag": MỘT nhãn từ khóa NGẮN (2-4 chữ) đặt tên cho LOẠI lỗi, để học viên nhìn phát nhớ liền — chọn hoặc phỏng theo các nhãn quen thuộc: "Chia động từ", "Thiếu mạo từ", "Sai giới từ", "Sai thì", "Số ít/nhiều", "Trật tự từ", "Từ sai nghĩa", "Sai chính tả", "Thiếu từ nối", "Lặp từ", "Collocation sai", "Thừa từ".
-   - "reason": giải thích CỰC NGẮN (tối đa 12 từ), bằng tiếng Việt ĐỜI THƯỜNG như đang nói chuyện, TUYỆT ĐỐI KHÔNG dùng thuật ngữ ngữ pháp học thuật (KHÔNG viết "phân từ", "mệnh đề quan hệ", "cụm động từ nguyên mẫu", "danh động từ"...). Ví dụ ĐÚNG phong cách: "Chủ ngữ số ít nên động từ thêm s", "Danh từ đếm được cần a/an phía trước", "Đây là quá khứ nên đổi is → was". Ví dụ SAI phong cách (không được viết kiểu này): "Dùng phân từ hiện đại 'spanning' để bổ nghĩa cho danh từ 'data' hoặc dùng mệnh đề quan hệ".
-   - "example": MỘT ví dụ mini cực ngắn (3-7 từ tiếng Anh) minh hoạ đúng quy tắc đó, KHÁC với câu học viên đang viết. Ví dụ: nếu lỗi là thiếu "s" ở động từ số ít, example có thể là "She works every day." (không cần dịch).
-   Chú ý lỗi phổ biến của người Việt: thiếu a/an/the, sai số ít/nhiều, sai giới từ, sai thì, dịch word-by-word, sai trật tự từ, sai collocation, chia động từ theo chủ ngữ, nhầm affect/effect, advice/advise, say/tell. Nếu câu KHÔNG có lỗi thì "fixes" là mảng rỗng.
+   - "memoryTip": MỘT mẹo nhớ CỰC NGẮN (tối đa 8 từ), đời thường, KHÔNG thuật ngữ học thuật. Ví dụ: "interested IN", "He/She/It thêm S", "information không đếm được".
+   - "example": MỘT ví dụ mini tiếng Anh cực ngắn (3-7 từ) minh hoạ đúng, KHÁC câu học viên. Ví dụ: "I'm interested in AI." Nếu không cần thì để chuỗi rỗng "".
+   Nếu câu KHÔNG có lỗi thì "fixes" là mảng rỗng [].
 
-2) CÂU ĐÃ SỬA (correctedSentence): viết lại CHÍNH câu của học viên sau khi sửa hết lỗi ngữ pháp/chính tả/giới từ, GIỮ nguyên ý và cách diễn đạt của họ nhiều nhất có thể (chỉ sửa chỗ sai). Vẫn phải chứa cụm mục tiêu.
+2) CÂU ĐÃ SỬA (correctedSentence): viết lại CHÍNH câu học viên sau khi sửa hết lỗi, GIỮ nguyên ý và cách diễn đạt của họ (chỉ sửa chỗ sai). Vẫn phải chứa cụm mục tiêu.
 
-3) CÂU MẪU TỐT NHẤT (bestVersion): tự đặt MỘT câu tiếng Anh hoàn chỉnh, đúng ngữ pháp, tự nhiên như người bản ngữ, hay nhất mà bạn đề xuất cho đề bài này — bắt buộc dùng cụm mục tiêu "${ex.targetPhrase}". Đây là câu mẫu để học viên học theo.
+3) CÂU MẪU TỰ NHIÊN NHẤT (moreNaturalVersion): tự đặt MỘT câu tiếng Anh hoàn chỉnh, tự nhiên như người bản ngữ, hay nhất cho đề bài — bắt buộc dùng cụm mục tiêu "${ex.targetPhrase}".
 
-Feedback và mọi giải thích PHẢI bằng tiếng Việt, CỰC KỲ ngắn gọn, đơn giản, dễ hiểu như đang giải thích cho người mới học tiếng Anh — không dùng thuật ngữ học thuật ở BẤT KỲ đâu trong câu trả lời (kể cả "feedback" và "explanationVi").
+Mọi giải thích PHẢI bằng tiếng Việt, CỰC NGẮN, dễ hiểu cho người mới — KHÔNG dùng thuật ngữ học thuật ("phân từ", "mệnh đề quan hệ"...).
 
 CHỈ trả về JSON thuần (không markdown, không chữ nào ngoài JSON) đúng cấu trúc:
 {
@@ -10511,10 +10520,10 @@ CHỈ trả về JSON thuần (không markdown, không chữ nào ngoài JSON) �
   "isAcceptable": <true|false>,
   "originalSentence": "<câu gốc của học viên, giữ nguyên>",
   "correctedSentence": "<câu của học viên ĐÃ SỬA hết lỗi>",
-  "fixes": [ { "bad": "<phần sai>", "good": "<sửa đúng>", "tag": "<nhãn từ khóa ngắn>", "reason": "<vì sao, cực ngắn, đời thường>", "example": "<ví dụ mini tiếng Anh 3-7 từ>" } ],
-  "feedback": [ "<nhận xét tiếng Việt ngắn gọn>", "..." ],
-  "explanationVi": "<giải thích tổng quan bằng tiếng Việt, ngắn gọn>",
-  "bestVersion": "<câu mẫu tiếng Anh hoàn chỉnh và hay nhất, có cụm mục tiêu>"
+  "fixes": [ { "category": "<TỪ KHÓA IN HOA>", "bad": "<phần sai>", "good": "<sửa đúng>", "memoryTip": "<mẹo nhớ cực ngắn>", "example": "<ví dụ mini hoặc rỗng>" } ],
+  "feedback": [ "<nhận xét tiếng Việt ngắn gọn>" ],
+  "explanationVi": "<giải thích tổng quan tiếng Việt, ngắn gọn>",
+  "moreNaturalVersion": "<câu mẫu tiếng Anh tự nhiên nhất, có cụm mục tiêu>"
 }`;
 }
 
@@ -10599,7 +10608,14 @@ async function evaluateWithGemini(sentence, vocab, ex){
     isAcceptable: json.isAcceptable!==undefined? !!json.isAcceptable : (json.score>=70 && !!json.targetWordUsed),
     originalSentence: json.originalSentence || sentence,
     correctedSentence: json.correctedSentence || sentence,
-    fixes: Array.isArray(json.fixes)? json.fixes.filter(f=>f&&f.bad&&f.good).map(f=>({bad:f.bad,good:f.good,tag:f.tag||'',reason:f.reason||'',example:f.example||''})).slice(0,8) : [],
+    fixes: Array.isArray(json.fixes)? json.fixes.filter(f=>f&&f.bad&&f.good).slice(0,3).map(f=>({
+      bad:f.bad, good:f.good,
+      tag:f.category||f.tag||'',            // nhãn hiển thị (schema mới: category; cũ: tag)
+      category:f.category||f.tag||'',
+      reason:f.memoryTip||f.reason||'',      // "reason" giữ để tương thích hiển thị/ghi chú cũ
+      memoryTip:f.memoryTip||f.reason||'',
+      example:f.example||''
+    })) : [],
     feedback: Array.isArray(json.feedback)? json.feedback.filter(Boolean).slice(0,6) : [],
     explanationVi: json.explanationVi || '',
     bestVersion: best,
@@ -11007,6 +11023,10 @@ function practiceInlineHTML(v){
 }
 // Icon nhỏ cho từng nhãn lỗi — giúp nhận diện nhanh bằng mắt (key-word, dễ nhớ)
 const TAG_ICON = {
+  // Từ khóa tiếng Anh (schema mới)
+  'GRAMMAR':'🔤','PREPOSITION':'🧭','ARTICLE':'📎','TENSE':'⏰','PLURAL':'🔢','WORD ORDER':'↔️',
+  'COLLOCATION':'🧩','VOCABULARY':'💬','NATURALNESS':'✨','TARGET WORD':'🎯','SPELLING':'✏️',
+  // Nhãn tiếng Việt (tương thích ghi chú đã lưu trước đây)
   'Chia động từ':'🔤','Thiếu mạo từ':'📎','Sai giới từ':'🧭','Sai thì':'⏰','Số ít/nhiều':'🔢',
   'Trật tự từ':'↔️','Từ sai nghĩa':'💬','Sai chính tả':'✏️','Thiếu từ nối':'🔗','Lặp từ':'🔁',
   'Collocation sai':'🧩','Thừa từ':'✂️','Viết hoa':'🔠'
@@ -11026,7 +11046,7 @@ function fixItemHTML(f, r, opts){
         onclick="fxSaveFixFromBtn(this)">${saved?'✓ Đã lưu':'📌 Lưu'}</button>`:''}
     </div>
     <div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span class="arw">→</span><span class="good">${escapeHtml(f.good)}</span></div>
-    ${f.reason?`<div class="fix-reason">${escapeHtml(f.reason)}</div>`:''}
+    ${(f.memoryTip||f.reason)?`<div class="fix-tip">💡 Nhớ: <b>${escapeHtml(f.memoryTip||f.reason)}</b></div>`:''}
     ${f.example?`<div class="fix-example">✏️ VD: <i>${escapeHtml(f.example)}</i></div>`:''}
   </div>`;
 }
