@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<meta name="theme-color" content="#0e0e10" />
+<meta name="theme-color" content="#0f172a" />
 <meta name="mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -56,14 +56,14 @@ html.light{
 *{box-sizing:border-box;border-color:var(--border);-webkit-tap-highlight-color:transparent}
 html,body{margin:0;overscroll-behavior-y:none}
 body{
-  background:#070b16;color:var(--ink);
+  background:#0f172a;color:var(--ink);
   font-family:"Open Sans",Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   -webkit-font-smoothing:antialiased;
   display:flex;justify-content:center;align-items:flex-start;
-  /* Khóa chiều cao đúng bằng màn hình thực (dvh không đổi khi thanh địa chỉ ẩn/hiện) → hết nhảy */
-  height:100vh;height:100dvh;overflow:hidden;
+  /* Chiều cao thực đo bằng JS (visualViewport) qua biến --vh-real; 100dvh là fallback nếu JS chưa chạy kịp */
+  height:100vh;height:100dvh;height:var(--vh-real,100dvh);overflow:hidden;
 }
-html.light body{background:#dfe4fb}
+html.light body{background:#eef2ff}
 h1,h2,h3{font-family:"Poppins",Inter,system-ui,sans-serif;letter-spacing:-.02em;margin:0;font-weight:600}
 .tabular{font-variant-numeric:tabular-nums}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -72,7 +72,7 @@ input,textarea{font-family:inherit}
 
 /* App shell */
 .app{position:relative;width:100%;max-width:430px;background:var(--bg);overflow:hidden;
-  height:100vh;height:100dvh;display:flex;flex-direction:column}
+  height:100vh;height:100dvh;height:var(--vh-real,100dvh);display:flex;flex-direction:column}
 .app::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(60% 40% at 15% 0%,rgba(99,102,241,.18),transparent 60%),
@@ -81,7 +81,7 @@ html.light .app::before{background:
   radial-gradient(60% 40% at 15% 0%,rgba(99,102,241,.12),transparent 60%),
   radial-gradient(55% 35% at 100% 8%,rgba(124,58,237,.1),transparent 55%);}
 @media(min-width:470px){
-  .app{height:calc(100dvh - 48px);margin:24px 0;border-radius:2.75rem;
+  .app{height:calc(100dvh - 48px);height:calc(var(--vh-real,100dvh) - 48px);margin:24px 0;border-radius:2.75rem;
     border:1px solid var(--glass-border);
     box-shadow:0 0 0 10px rgba(124,58,237,.04),0 40px 90px -20px rgba(2,6,23,.8)}
 }
@@ -294,10 +294,15 @@ html.light .app::before{background:
 .dw-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .dw-notes{background:var(--surface-2);border-radius:1rem;padding:12px 14px}
 .dw-notes-lbl{font-size:12px;font-weight:700;color:var(--brand);margin-bottom:8px}
-.dw-note{font-size:14px;margin-bottom:8px}
+.dw-note{font-size:14px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.dw-note:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
 .dw-note .bad{color:var(--danger);text-decoration:line-through}
 .dw-note .good{color:var(--success);font-weight:600}
-.dw-note-reason{font-size:12px;color:var(--muted);margin-top:3px}
+.dw-note-reason{font-size:12px;color:var(--muted);margin-top:4px}
+.dw-note-mine{font-size:13px;color:var(--ink);background:var(--brand-light);border-radius:.7rem;padding:8px 10px;margin-top:6px;line-height:1.5}
+.dw-note-example{font-size:12px;color:var(--muted);margin-top:5px}
+.dw-note-example i{color:var(--brand);font-style:normal;font-weight:600}
+.dw-note-edit{font-size:12px;font-weight:600;color:var(--brand);margin-top:8px;padding:4px 0;display:inline-block}
 .empty .e{font-size:40px;margin-bottom:10px}
 
 /* Toast */
@@ -398,12 +403,19 @@ html.light .app::before{background:
 .bar-mini{height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:8px}
 html.light .bar-mini{background:rgba(0,0,0,.08)}
 .bar-mini>i{display:block;height:100%;border-radius:999px}
-.fix-row{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:14px}
+.fix-card{background:var(--surface-2);border:1px solid var(--border);border-radius:1rem;padding:12px 14px;margin-bottom:10px}
+.fix-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.fix-tag{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--brand);
+  background:var(--brand-light);border-radius:999px;padding:3px 10px}
+.fix-row{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;flex-wrap:wrap}
+.fix-row .arw{color:var(--muted);font-weight:400}
 .fix-row .bad{color:var(--danger);text-decoration:line-through;opacity:.8}
-.fix-row .good{color:var(--success);font-weight:600}
-.fix-reason{font-size:12px;color:var(--muted);margin:2px 0 8px 2px;line-height:1.5}
-.note-save-btn{margin-left:auto;flex:none;font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px;
-  background:var(--surface-2);color:var(--brand);border:1px solid var(--border);transition:transform .15s}
+.fix-row .good{color:var(--success);font-weight:700}
+.fix-reason{font-size:13px;color:var(--ink);margin-top:6px;line-height:1.5}
+.fix-example{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.5}
+.fix-example i{color:var(--brand);font-style:normal;font-weight:600}
+.note-save-btn{flex:none;font-size:11px;font-weight:600;padding:5px 10px;border-radius:999px;
+  background:var(--surface);color:var(--brand);border:1px solid var(--border);transition:transform .15s}
 .note-save-btn:active{transform:scale(.92)}
 .note-save-btn.saved{background:var(--success-bg);color:var(--success);border-color:var(--success)}
 .note-day{margin-bottom:20px}
@@ -417,6 +429,9 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 .note-fix .good{color:var(--success)}
 .note-fix .arw{color:var(--muted)}
 .note-reason{font-size:13px;color:var(--ink);margin-top:6px;line-height:1.5}
+.note-mine{font-size:14px;color:var(--ink);background:var(--brand-light);border-radius:.85rem;padding:10px 12px;margin-top:8px;line-height:1.5;font-weight:500}
+.note-example{font-size:12.5px;color:var(--muted);margin-top:6px}
+.note-example i{color:var(--brand);font-style:normal;font-weight:600}
 .note-sent{font-size:12px;color:var(--muted);margin-top:6px;font-style:italic}
 .note-word{font-size:12px;color:var(--muted);margin-top:3px}
 .note-tag{display:inline-block;font-size:11px;font-weight:700;color:var(--brand);background:var(--surface);
@@ -447,6 +462,25 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 </style>
 </head>
 <body>
+<script>
+// Đo chiều cao HIỂN THỊ THỰC của màn hình (loại trừ thanh địa chỉ + bàn phím ảo khi đang mở).
+// Dùng visualViewport vì CSS 100dvh vẫn có sai số trên một số bản Safari/Chrome mobile,
+// đặc biệt khi bàn phím bật lên — visualViewport.height mới là con số chính xác 100%.
+(function(){
+  function setVH(){
+    var h = (window.visualViewport ? window.visualViewport.height : window.innerHeight);
+    document.documentElement.style.setProperty('--vh-real', h + 'px');
+  }
+  setVH();
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize', setVH);
+    window.visualViewport.addEventListener('scroll', setVH);
+  }
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', function(){ setTimeout(setVH, 60); setTimeout(setVH, 300); });
+  document.addEventListener('DOMContentLoaded', setVH);
+})();
+</script>
 <div class="app">
   <main class="main" id="main"></main>
 
@@ -10417,7 +10451,7 @@ function getExercises(v){
 
 function buildPrompt(sentence, vocab, ex){
   ex = ex || getExercises(vocab)[0] || {targetPhrase:vocab.word, promptVi:''};
-  return `Bạn là giáo viên tiếng Anh giàu kinh nghiệm, dạy người Việt. Hãy chấm và CHỮA câu tiếng Anh do học viên viết.
+  return `Bạn là giáo viên tiếng Anh giàu kinh nghiệm, dạy người Việt MỚI BẮT ĐẦU học. Hãy chấm và CHỮA câu tiếng Anh do học viên viết.
 
 TỪ/CỤM MỤC TIÊU (bắt buộc phải xuất hiện trong câu): "${ex.targetPhrase}"
 GỢI Ý NGHĨA (tiếng Việt) mà học viên cần diễn đạt: "${ex.promptVi}"
@@ -10432,17 +10466,19 @@ Hãy chấm theo 5 tiêu chí, mỗi tiêu chí 0-100:
 
 QUAN TRỌNG — hãy làm thật kỹ 3 việc sau:
 
-1) SỬA LỖI CHI TIẾT (mảng "fixes"): liệt kê TỪNG lỗi cụ thể trong câu học viên. Mỗi lỗi gồm:
-   - "bad": đúng phần sai trong câu gốc (từ/cụm sai, không chép cả câu),
-   - "good": phần đã sửa đúng,
-   - "reason": giải thích NGẮN bằng tiếng Việt VÌ SAO sai và quy tắc đúng (vd "động từ số ít cần thêm s", "cần mạo từ 'the' trước danh từ xác định", "sai giới từ: dùng 'on' thay 'in'").
+1) SỬA LỖI CHI TIẾT (mảng "fixes"): liệt kê TỪNG lỗi cụ thể trong câu học viên. Mỗi lỗi gồm 4 phần:
+   - "bad": đúng phần sai trong câu gốc (từ/cụm sai, không chép cả câu).
+   - "good": phần đã sửa đúng.
+   - "tag": MỘT nhãn từ khóa NGẮN (2-4 chữ) đặt tên cho LOẠI lỗi, để học viên nhìn phát nhớ liền — chọn hoặc phỏng theo các nhãn quen thuộc: "Chia động từ", "Thiếu mạo từ", "Sai giới từ", "Sai thì", "Số ít/nhiều", "Trật tự từ", "Từ sai nghĩa", "Sai chính tả", "Thiếu từ nối", "Lặp từ", "Collocation sai", "Thừa từ".
+   - "reason": giải thích CỰC NGẮN (tối đa 12 từ), bằng tiếng Việt ĐỜI THƯỜNG như đang nói chuyện, TUYỆT ĐỐI KHÔNG dùng thuật ngữ ngữ pháp học thuật (KHÔNG viết "phân từ", "mệnh đề quan hệ", "cụm động từ nguyên mẫu", "danh động từ"...). Ví dụ ĐÚNG phong cách: "Chủ ngữ số ít nên động từ thêm s", "Danh từ đếm được cần a/an phía trước", "Đây là quá khứ nên đổi is → was". Ví dụ SAI phong cách (không được viết kiểu này): "Dùng phân từ hiện đại 'spanning' để bổ nghĩa cho danh từ 'data' hoặc dùng mệnh đề quan hệ".
+   - "example": MỘT ví dụ mini cực ngắn (3-7 từ tiếng Anh) minh hoạ đúng quy tắc đó, KHÁC với câu học viên đang viết. Ví dụ: nếu lỗi là thiếu "s" ở động từ số ít, example có thể là "She works every day." (không cần dịch).
    Chú ý lỗi phổ biến của người Việt: thiếu a/an/the, sai số ít/nhiều, sai giới từ, sai thì, dịch word-by-word, sai trật tự từ, sai collocation, chia động từ theo chủ ngữ, nhầm affect/effect, advice/advise, say/tell. Nếu câu KHÔNG có lỗi thì "fixes" là mảng rỗng.
 
 2) CÂU ĐÃ SỬA (correctedSentence): viết lại CHÍNH câu của học viên sau khi sửa hết lỗi ngữ pháp/chính tả/giới từ, GIỮ nguyên ý và cách diễn đạt của họ nhiều nhất có thể (chỉ sửa chỗ sai). Vẫn phải chứa cụm mục tiêu.
 
 3) CÂU MẪU TỐT NHẤT (bestVersion): tự đặt MỘT câu tiếng Anh hoàn chỉnh, đúng ngữ pháp, tự nhiên như người bản ngữ, hay nhất mà bạn đề xuất cho đề bài này — bắt buộc dùng cụm mục tiêu "${ex.targetPhrase}". Đây là câu mẫu để học viên học theo.
 
-Feedback và mọi giải thích PHẢI bằng tiếng Việt, rõ ràng, cụ thể.
+Feedback và mọi giải thích PHẢI bằng tiếng Việt, CỰC KỲ ngắn gọn, đơn giản, dễ hiểu như đang giải thích cho người mới học tiếng Anh — không dùng thuật ngữ học thuật ở BẤT KỲ đâu trong câu trả lời (kể cả "feedback" và "explanationVi").
 
 CHỈ trả về JSON thuần (không markdown, không chữ nào ngoài JSON) đúng cấu trúc:
 {
@@ -10455,9 +10491,9 @@ CHỈ trả về JSON thuần (không markdown, không chữ nào ngoài JSON) �
   "isAcceptable": <true|false>,
   "originalSentence": "<câu gốc của học viên, giữ nguyên>",
   "correctedSentence": "<câu của học viên ĐÃ SỬA hết lỗi>",
-  "fixes": [ { "bad": "<phần sai>", "good": "<sửa đúng>", "reason": "<vì sao, tiếng Việt>" } ],
-  "feedback": [ "<nhận xét tiếng Việt>", "..." ],
-  "explanationVi": "<giải thích tổng quan bằng tiếng Việt>",
+  "fixes": [ { "bad": "<phần sai>", "good": "<sửa đúng>", "tag": "<nhãn từ khóa ngắn>", "reason": "<vì sao, cực ngắn, đời thường>", "example": "<ví dụ mini tiếng Anh 3-7 từ>" } ],
+  "feedback": [ "<nhận xét tiếng Việt ngắn gọn>", "..." ],
+  "explanationVi": "<giải thích tổng quan bằng tiếng Việt, ngắn gọn>",
   "bestVersion": "<câu mẫu tiếng Anh hoàn chỉnh và hay nhất, có cụm mục tiêu>"
 }`;
 }
@@ -10543,7 +10579,7 @@ async function evaluateWithGemini(sentence, vocab, ex){
     isAcceptable: json.isAcceptable!==undefined? !!json.isAcceptable : (json.score>=70 && !!json.targetWordUsed),
     originalSentence: json.originalSentence || sentence,
     correctedSentence: json.correctedSentence || sentence,
-    fixes: Array.isArray(json.fixes)? json.fixes.filter(f=>f&&f.bad&&f.good).map(f=>({bad:f.bad,good:f.good,reason:f.reason||''})).slice(0,8) : [],
+    fixes: Array.isArray(json.fixes)? json.fixes.filter(f=>f&&f.bad&&f.good).map(f=>({bad:f.bad,good:f.good,tag:f.tag||'',reason:f.reason||'',example:f.example||''})).slice(0,8) : [],
     feedback: Array.isArray(json.feedback)? json.feedback.filter(Boolean).slice(0,6) : [],
     explanationVi: json.explanationVi || '',
     bestVersion: best,
@@ -10949,6 +10985,31 @@ function practiceInlineHTML(v){
     ${resultHTML}
   </div>`;
 }
+// Icon nhỏ cho từng nhãn lỗi — giúp nhận diện nhanh bằng mắt (key-word, dễ nhớ)
+const TAG_ICON = {
+  'Chia động từ':'🔤','Thiếu mạo từ':'📎','Sai giới từ':'🧭','Sai thì':'⏰','Số ít/nhiều':'🔢',
+  'Trật tự từ':'↔️','Từ sai nghĩa':'💬','Sai chính tả':'✏️','Thiếu từ nối':'🔗','Lặp từ':'🔁',
+  'Collocation sai':'🧩','Thừa từ':'✂️','Viết hoa':'🔠'
+};
+function tagIcon(tag){ return TAG_ICON[tag] || '💡'; }
+// 1 thẻ lỗi: nhãn từ khóa (dễ nhớ) → sai/đúng → lý do CỰC NGẮN → ví dụ mini. Dùng chung cho mọi nơi hiển thị.
+function fixItemHTML(f, r, opts){
+  opts = opts || {};
+  const saved = opts.showSave ? noteFixSaved(f, r.originalSentence||'') : false;
+  return `<div class="fix-card">
+    <div class="fix-top">
+      ${f.tag?`<span class="fix-tag">${tagIcon(f.tag)} ${escapeHtml(f.tag)}</span>`:'<span></span>'}
+      ${opts.showSave?`<button class="note-save-btn ${saved?'saved':''}" title="${saved?'Đã lưu vào Ghi chú':'Lưu lỗi này vào Ghi chú'}"
+        data-bad="${escapeHtml(f.bad)}" data-good="${escapeHtml(f.good)}" data-tag="${escapeHtml(f.tag||'')}"
+        data-reason="${escapeHtml(f.reason||'')}" data-example="${escapeHtml(f.example||'')}"
+        data-sentence="${escapeHtml(r.originalSentence||'')}" data-word="${escapeHtml(r._word||'')}"
+        onclick="fxSaveFixFromBtn(this)">${saved?'✓ Đã lưu':'📌 Lưu'}</button>`:''}
+    </div>
+    <div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span class="arw">→</span><span class="good">${escapeHtml(f.good)}</span></div>
+    ${f.reason?`<div class="fix-reason">${escapeHtml(f.reason)}</div>`:''}
+    ${f.example?`<div class="fix-example">✏️ VD: <i>${escapeHtml(f.example)}</i></div>`:''}
+  </div>`;
+}
 function miniResultHTML(r){
   const color = r.score>=90?'var(--success)':r.score>=70?'var(--brand)':'var(--warn)';
   const verdict = r.score>=90?'Excellent! 🎉':r.score>=70?'Tốt lắm 👍':'Cần luyện thêm 💪';
@@ -10967,15 +11028,7 @@ function miniResultHTML(r){
       <div class="corrected-box" style="background:none;border:none;padding:0;margin:0 0 8px">
         <div class="lbl">🔧 Lỗi cần sửa</div>
       </div>
-      ${r.fixes.map(f=>{
-        const saved=noteFixSaved(f, r.originalSentence||'');
-        return `<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span>
-          <button class="note-save-btn ${saved?'saved':''}" title="${saved?'Đã lưu vào Ghi chú':'Lưu lỗi này vào Ghi chú'}"
-            data-bad="${escapeHtml(f.bad)}" data-good="${escapeHtml(f.good)}" data-reason="${escapeHtml(f.reason||'')}"
-            data-sentence="${escapeHtml(r.originalSentence||'')}" data-word="${escapeHtml(r._word||'')}"
-            onclick="fxSaveFixFromBtn(this)">${saved?'✓ Đã lưu':'📌 Lưu'}</button></div>
-        ${f.reason?`<div class="fix-reason">↳ ${escapeHtml(f.reason)}</div>`:''}`;
-      }).join('')}
+      ${r.fixes.map(f=>fixItemHTML(f, r, {showSave:true})).join('')}
     </div>`:''}
 
     ${changed?`<div class="corrected-box">
@@ -11126,7 +11179,15 @@ function dayWordHTML(id){
         <button class="btn btn-brand btn-sm" style="width:auto" onclick="practiceThisWord('${id}')">✎ Luyện đặt câu</button></div>
       ${notes.length? `<div class="dw-notes">
         <div class="dw-notes-lbl">📌 Ghi chú đã lưu</div>
-        ${notes.map(n=>`<div class="dw-note"><span class="bad">${escapeHtml(n.bad)}</span> → <span class="good">${escapeHtml(n.good)}</span>${n.reason?`<div class="dw-note-reason">↳ ${escapeHtml(n.reason)}</div>`:''}</div>`).join('')}
+        ${notes.map(n=>`<div class="dw-note">
+          ${n.tag?`<span class="fix-tag" style="margin-bottom:6px">${tagIcon(n.tag)} ${escapeHtml(n.tag)}</span>`:''}
+          <div><span class="bad">${escapeHtml(n.bad)}</span> → <span class="good">${escapeHtml(n.good)}</span></div>
+          ${n.myNote
+            ? `<div class="dw-note-mine">📝 ${escapeHtml(n.myNote)}</div>`
+            : (n.reason?`<div class="dw-note-reason">${escapeHtml(n.reason)}</div>`:'')}
+          ${n.example?`<div class="dw-note-example">✏️ VD: <i>${escapeHtml(n.example)}</i></div>`:''}
+          <button class="dw-note-edit" onclick="editMyNote('${n.id}')">${n.myNote?'✏️ Sửa ghi chú của bạn':'✏️ Thêm ghi chú của bạn'}</button>
+        </div>`).join('')}
       </div>`:''}
     </div>`:''}
   </div>`;
@@ -11207,14 +11268,14 @@ function gradeLocally(sentence, vocab, ex){
 
   // Heuristic lỗi phổ biến người Việt (chỉ gợi ý, không phải chấm tuyệt đối)
   if(words.length && !/[.!?]$/.test(raw)) feedback.push('Câu nên kết thúc bằng dấu chấm.');
-  if(/\bi\b/.test(s) && !/\bI\b/.test(raw)) { fixes.push({bad:'i', good:'I', reason:'Đại từ "I" luôn viết hoa dù ở giữa câu.'}); }
+  if(/\bi\b/.test(s) && !/\bI\b/.test(raw)) { fixes.push({bad:'i', good:'I', tag:'Viết hoa', reason:'Chữ "I" luôn viết hoa.', example:'I am happy.'}); }
   // "I am + V-nguyên thể" (lỗi hay gặp)
   const amVerb = s.match(/\bi am (\w+)\b/);
   if(amVerb && !/ing$|tired|happy|ready|sure|able|responsible|interested/.test(amVerb[1])){
     feedback.push('Cẩn thận "I am + động từ": thường dùng "I " + động từ (vd: "I help"), hoặc "I am " + V-ing.');
   }
   // lặp từ liền nhau
-  for(let i=1;i<words.length;i++){ if(words[i]===words[i-1] && words[i].length>2){ fixes.push({bad:words[i]+' '+words[i], good:words[i], reason:'Bị lặp từ liền nhau.'}); break; } }
+  for(let i=1;i<words.length;i++){ if(words[i]===words[i-1] && words[i].length>2){ fixes.push({bad:words[i]+' '+words[i], good:words[i], tag:'Lặp từ', reason:'Bị lặp từ liền nhau.', example:''}); break; } }
 
   // Điểm từng tiêu chí (ước lượng cục bộ)
   const lenOk = words.length>=4 && words.length<=40;
@@ -11328,15 +11389,7 @@ function viewResult(){
       <div class="card-title" style="margin-bottom:8px">Câu bạn viết</div>
       <div style="font-size:15px;line-height:1.6;color:var(--muted)">"${escapeHtml(r.originalSentence||r.correctedSentence)}"</div>
       ${r.fixes?.length?`<div class="card-title" style="margin:16px 0 8px">🔧 Lỗi cần sửa</div>
-        ${r.fixes.map(f=>{
-          const saved=noteFixSaved(f, r.originalSentence||'');
-          return `<div class="fix-row"><span class="bad">${escapeHtml(f.bad)}</span><span>→</span><span class="good">${escapeHtml(f.good)}</span>
-            <button class="note-save-btn ${saved?'saved':''}" title="${saved?'Đã lưu vào Ghi chú':'Lưu lỗi này vào Ghi chú'}"
-              data-bad="${escapeHtml(f.bad)}" data-good="${escapeHtml(f.good)}" data-reason="${escapeHtml(f.reason||'')}"
-              data-sentence="${escapeHtml(r.originalSentence||'')}" data-word="${escapeHtml(r._word||'')}"
-              onclick="fxSaveFixFromBtn(this)">${saved?'✓ Đã lưu':'📌 Lưu'}</button></div>
-            ${f.reason?`<div class="fix-reason">↳ ${escapeHtml(f.reason)}</div>`:''}`;
-        }).join('')}`:''}
+        ${r.fixes.map(f=>fixItemHTML(f, r, {showSave:true})).join('')}`:''}
       ${(r.correctedSentence && r.originalSentence && r.correctedSentence.trim().toLowerCase()!==r.originalSentence.trim().toLowerCase())?`
         <div class="corrected-box"><div class="lbl">✅ Câu của bạn sau khi sửa</div>
           <div class="txt">${highlightDiff(r.originalSentence, r.correctedSentence)}</div>
@@ -11452,16 +11505,25 @@ function viewNotes(){
       ${g.items.map(n=>{
         if(n.kind==='manual'){
           return `<div class="note-item note-manual">
-            <div class="note-body"><span class="note-tag">Ghi chú</span> ${escapeHtml(n.text)}</div>
+            <div class="note-body">
+              <span class="note-tag">✍️ Ghi chú của bạn</span>
+              <div style="margin-top:6px">${escapeHtml(n.text)}</div>
+              <button class="dw-note-edit" onclick="editManualNote('${n.id}')">✏️ Sửa</button>
+            </div>
             <button class="note-del" title="Xóa" onclick="deleteNote('${n.id}')">${svg(IC.close,15)}</button>
           </div>`;
         }
         return `<div class="note-item">
           <div class="note-body">
+            ${n.tag?`<span class="fix-tag" style="margin-bottom:6px">${tagIcon(n.tag)} ${escapeHtml(n.tag)}</span>`:''}
             <div class="note-fix"><span class="bad">${escapeHtml(n.bad)}</span><span class="arw">→</span><span class="good">${escapeHtml(n.good)}</span></div>
-            ${n.reason?`<div class="note-reason">↳ ${escapeHtml(n.reason)}</div>`:''}
+            ${n.myNote
+              ? `<div class="note-mine">📝 ${escapeHtml(n.myNote)}</div>`
+              : (n.reason?`<div class="note-reason">${escapeHtml(n.reason)}</div>`:'')}
+            ${n.example?`<div class="note-example">✏️ VD: <i>${escapeHtml(n.example)}</i></div>`:''}
             ${n.sentence?`<div class="note-sent">Câu: "${escapeHtml(n.sentence)}"</div>`:''}
             ${n.word?`<div class="note-word">Từ luyện: <b>${escapeHtml(n.word)}</b></div>`:''}
+            <button class="dw-note-edit" onclick="editMyNote('${n.id}')">${n.myNote?'✏️ Sửa ghi chú của bạn':'✏️ Thêm ghi chú của bạn'}</button>
           </div>
           <button class="note-del" title="Xóa" onclick="deleteNote('${n.id}')">${svg(IC.close,15)}</button>
         </div>`;
@@ -11481,6 +11543,25 @@ function render(){
   const si=document.getElementById('searchInput');
   if(si && state.search){ si.focus(); si.setSelectionRange(si.value.length,si.value.length); }
 }
+// Khi bàn phím mở (chạm vào ô nhập/textarea), tự cuộn để ô nhập KHÔNG bị bàn phím che khuất.
+// Dùng visualViewport để biết chính xác lúc nào bàn phím đã mở xong rồi mới cuộn (tránh cuộn hụt).
+(function(){
+  let pendingEl = null;
+  document.addEventListener('focusin', function(e){
+    const t = e.target;
+    if(!t || !(t.tagName==='TEXTAREA' || t.tagName==='INPUT')) return;
+    pendingEl = t;
+    const doScroll = ()=>{ if(pendingEl===t){ try{ t.scrollIntoView({block:'center', behavior:'smooth'}); }catch(_){ } } };
+    if(window.visualViewport){
+      const onResize=()=>{ doScroll(); window.visualViewport.removeEventListener('resize', onResize); };
+      window.visualViewport.addEventListener('resize', onResize);
+      setTimeout(()=>{ window.visualViewport.removeEventListener('resize', onResize); doScroll(); }, 400); // dự phòng nếu resize không bắn
+    } else {
+      setTimeout(doScroll, 300);
+    }
+  });
+  document.addEventListener('focusout', function(){ pendingEl=null; });
+})();
 function go(tab){ state.tab=tab; state.search=''; closeFab(); render(); document.getElementById('main').scrollTop=0; }
 function openTopic(id){ state.topic=id; state.tab='topic'; closeFab(); render(); document.getElementById('main').scrollTop=0; }
 function openTopicAt(topicId,vocabId){ startDeck(topicId,vocabId); }
@@ -11688,23 +11769,74 @@ function fxSaveLookup(vid, idx){
 /* ---- GHI CHÚ (sổ tay lỗi theo ngày) ---- */
 function noteFixId(f, sentence){ return 'fx-'+((f.bad||'')+'|'+(f.good||'')+'|'+(sentence||'')).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,80); }
 function noteFixSaved(f, sentence){ return (DATA.notes||[]).some(n=>n.id===noteFixId(f,sentence)); }
-function saveFixNote(bad, good, reason, sentence, word){
+function saveFixNote(bad, good, tag, reason, example, sentence, word, myNote){
   if(!DATA.notes) DATA.notes=[];
   const f={bad,good}; const id=noteFixId(f,sentence);
   const exist=DATA.notes.findIndex(n=>n.id===id);
-  if(exist>=0){ DATA.notes.splice(exist,1); save(); toast('Đã bỏ khỏi Ghi chú'); }
-  else{
-    DATA.notes.push({ id, ts:Date.now(), kind:'fix', bad, good, reason:reason||'', sentence:sentence||'', word:word||'' });
-    save(); toast('📌 Đã lưu vào Ghi chú');
-  }
-  render(); scrollToPractice();
+  if(exist>=0){ DATA.notes.splice(exist,1); save(); toast('Đã bỏ khỏi Ghi chú'); render(); scrollToPractice(); return; }
+  DATA.notes.push({ id, ts:Date.now(), kind:'fix', bad, good, tag:tag||'', reason:reason||'', example:example||'',
+    sentence:sentence||'', word:word||'', myNote:myNote||'' });
+  save(); toast('📌 Đã lưu vào Ghi chú'); render(); scrollToPractice();
 }
-// nút lưu trong kết quả AI gọi hàm này (dùng data-* để tránh lỗi escape khi onclick)
+// Bấm "📌 Lưu" → mở 1 ô nhỏ cho phép viết ghi chú theo CÁCH HIỂU CỦA RIÊNG BẠN trước khi lưu (không bắt buộc).
+// Nếu lỗi đã lưu rồi thì bấm lại = bỏ lưu (giữ hành vi cũ, không hỏi lại).
 function fxSaveFixFromBtn(btn){
   try{
     const d=btn.dataset;
-    saveFixNote(d.bad, d.good, d.reason, d.sentence, d.word);
+    const f={bad:d.bad, good:d.good};
+    if(noteFixSaved(f, d.sentence||'')){ saveFixNote(d.bad,d.good,d.tag,d.reason,d.example,d.sentence,d.word,''); return; }
+    openNoteComposer({bad:d.bad, good:d.good, tag:d.tag, reason:d.reason, example:d.example, sentence:d.sentence, word:d.word});
   }catch(e){ toast('Không lưu được ghi chú'); }
+}
+// Sheet nhỏ: viết ghi chú riêng theo cách bạn dễ nhớ nhất, rồi mới lưu vào Ghi chú.
+function openNoteComposer(f){
+  const safe=v=>escapeHtml(v||'');
+  showSheet(`<h2>📌 Lưu vào Ghi chú</h2>
+    <p class="sub">Viết ghi chú theo CÁCH BẠN DỄ NHỚ NHẤT — không bắt buộc. Bỏ trống thì dùng gợi ý của AI.</p>
+    <div class="card" style="margin:0 0 14px">
+      ${f.tag?`<span class="fix-tag">${tagIcon(f.tag)} ${safe(f.tag)}</span>`:''}
+      <div class="fix-row" style="margin-top:8px"><span class="bad">${safe(f.bad)}</span><span class="arw">→</span><span class="good">${safe(f.good)}</span></div>
+      ${f.reason?`<div class="fix-reason">${safe(f.reason)}</div>`:''}
+    </div>
+    <textarea class="answer-area" id="myNoteInput" style="min-height:90px" placeholder="Ví dụ: 'nhớ là she/he/it phải thêm s nha!'"></textarea>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btn-outline" onclick="closeSheet()">Bỏ qua</button>
+      <button class="btn btn-brand" onclick="confirmSaveNote('${escq(f.bad)}','${escq(f.good)}','${escq(f.tag||'')}','${escq(f.reason||'')}','${escq(f.example||'')}','${escq(f.sentence||'')}','${escq(f.word||'')}')">💾 Lưu ghi chú</button>
+    </div>`);
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheet').classList.add('show');
+  setTimeout(()=>{ const el=document.getElementById('myNoteInput'); if(el) el.focus(); },200);
+}
+function confirmSaveNote(bad,good,tag,reason,example,sentence,word){
+  const ta=document.getElementById('myNoteInput');
+  const myNote=(ta? ta.value : '').trim();
+  closeSheet();
+  saveFixNote(bad,good,tag,reason,example,sentence,word,myNote);
+}
+// Sửa lại ghi chú cá nhân của MỘT lỗi đã lưu (mở sau, trong màn Ghi chú/Lịch)
+function editMyNote(noteId){
+  const n=(DATA.notes||[]).find(x=>x.id===noteId); if(!n) return;
+  const safe=v=>escapeHtml(v||'');
+  showSheet(`<h2>✏️ Ghi chú của bạn</h2>
+    <p class="sub">Viết lại theo cách bạn dễ nhớ nhất.</p>
+    <div class="card" style="margin:0 0 14px">
+      ${n.tag?`<span class="fix-tag">${tagIcon(n.tag)} ${safe(n.tag)}</span>`:''}
+      <div class="fix-row" style="margin-top:8px"><span class="bad">${safe(n.bad)}</span><span class="arw">→</span><span class="good">${safe(n.good)}</span></div>
+    </div>
+    <textarea class="answer-area" id="myNoteEditInput" style="min-height:90px" placeholder="Ví dụ: 'nhớ là she/he/it phải thêm s nha!'">${safe(n.myNote)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btn-outline" onclick="closeSheet()">Huỷ</button>
+      <button class="btn btn-brand" onclick="saveMyNoteEdit('${noteId}')">💾 Lưu</button>
+    </div>`);
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheet').classList.add('show');
+  setTimeout(()=>{ const el=document.getElementById('myNoteEditInput'); if(el) el.focus(); },200);
+}
+function saveMyNoteEdit(noteId){
+  const n=(DATA.notes||[]).find(x=>x.id===noteId); if(!n) return;
+  const ta=document.getElementById('myNoteEditInput');
+  n.myNote=(ta? ta.value : '').trim();
+  save(); closeSheet(); toast('📝 Đã cập nhật ghi chú'); render();
 }
 function addManualNote(){
   const ta=document.getElementById('manualNoteInput');
@@ -11713,6 +11845,26 @@ function addManualNote(){
   if(!DATA.notes) DATA.notes=[];
   DATA.notes.push({ id:'mn-'+Date.now(), ts:Date.now(), kind:'manual', text });
   save(); if(ta) ta.value=''; toast('📝 Đã thêm ghi chú'); render();
+}
+function editManualNote(noteId){
+  const n=(DATA.notes||[]).find(x=>x.id===noteId); if(!n) return;
+  const safe=v=>escapeHtml(v||'');
+  showSheet(`<h2>✏️ Sửa ghi chú</h2>
+    <textarea class="answer-area" id="manualEditInput" style="min-height:100px">${safe(n.text)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn btn-outline" onclick="closeSheet()">Huỷ</button>
+      <button class="btn btn-brand" onclick="saveManualNoteEdit('${noteId}')">💾 Lưu</button>
+    </div>`);
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheet').classList.add('show');
+  setTimeout(()=>{ const el=document.getElementById('manualEditInput'); if(el) el.focus(); },200);
+}
+function saveManualNoteEdit(noteId){
+  const n=(DATA.notes||[]).find(x=>x.id===noteId); if(!n) return;
+  const ta=document.getElementById('manualEditInput');
+  const text=(ta? ta.value : '').trim();
+  if(!text){ toast('Ghi chú không được để trống'); return; }
+  n.text=text; save(); closeSheet(); toast('📝 Đã cập nhật'); render();
 }
 function deleteNote(id){
   DATA.notes=(DATA.notes||[]).filter(n=>n.id!==id);
@@ -11742,7 +11894,7 @@ function groupNotesByDay(){
 function applyTheme(){
   const light = DATA.theme==='light';
   document.documentElement.classList.toggle('light', light);
-  document.querySelector('meta[name=theme-color]').setAttribute('content', light?'#f4f5f7':'#0e0e10');
+  document.querySelector('meta[name=theme-color]').setAttribute('content', light?'#eef2ff':'#0f172a');
 }
 function toggleTheme(){ DATA.theme = DATA.theme==='light'?'dark':'light'; save(); render(); }
 
