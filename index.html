@@ -66,8 +66,9 @@ body{
   letter-spacing:-.01em;
   -webkit-font-smoothing:antialiased;
   display:flex;justify-content:center;align-items:flex-start;
-  /* Chiều cao thực đo bằng JS (visualViewport) qua biến --vh-real; 100dvh là fallback nếu JS chưa chạy kịp */
-  height:100vh;height:100dvh;height:var(--vh-real,100dvh);overflow:hidden;
+  /* Chiều cao giao hoàn toàn cho CSS xử lý — trình duyệt tự điều chỉnh khi thanh địa chỉ ẩn/hiện,
+     không còn JS resize liên tục (đúng khuyến nghị: để browser lo phần viewport). */
+  height:100vh;height:100svh;height:100dvh;overflow:hidden;
 }
 html.light body{background:#f2f4f9}
 h1,h2,h3{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue","Poppins",Inter,system-ui,sans-serif;letter-spacing:-.022em;margin:0;font-weight:700}
@@ -78,7 +79,7 @@ input,textarea{font-family:inherit}
 
 /* App shell */
 .app{position:relative;width:100%;max-width:430px;background:var(--bg);overflow:hidden;
-  height:100vh;height:100dvh;height:var(--vh-real,100dvh);display:flex;flex-direction:column}
+  height:100vh;height:100svh;height:100dvh;display:flex;flex-direction:column}
 .app::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
   background:
     radial-gradient(60% 40% at 15% 0%,rgba(99,102,241,.18),transparent 60%),
@@ -87,7 +88,7 @@ html.light .app::before{background:
   radial-gradient(60% 40% at 15% 0%,rgba(99,102,241,.12),transparent 60%),
   radial-gradient(55% 35% at 100% 8%,rgba(124,58,237,.1),transparent 55%);}
 @media(min-width:470px){
-  .app{height:calc(100dvh - 48px);height:calc(var(--vh-real,100dvh) - 48px);margin:24px 0;border-radius:28px;
+  .app{height:calc(100dvh - 48px);margin:24px 0;border-radius:28px;
     border:1px solid var(--glass-border);
     box-shadow:0 0 0 10px rgba(124,58,237,.04),0 40px 90px -20px rgba(2,6,23,.8)}
 }
@@ -229,7 +230,7 @@ html.light .app::before{background:
 .nav a.active .hl{opacity:1}
 /* Khi bàn phím mở: ẩn thanh điều hướng + FAB để không trôi lên giữa màn hình / không tạo khoảng trống */
 body.kb-open .nav{display:none}
-body.kb-open .fab{display:none}
+body.kb-open .fab{display:none!important}
 body.kb-open .main{padding-bottom:16px}
 
 /* FAB */
@@ -475,42 +476,18 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 </head>
 <body>
 <script>
-// Đo chiều cao HIỂN THỊ THỰC của màn hình, dùng để khoá khung app KHÔNG bao giờ
-// cao hơn vùng nhìn thấy thật (chống khoảng đen) và tự thu nhỏ khi bàn phím ảo mở (chống che nội dung).
-//
-// window.innerHeight là nguồn ĐÁNG TIN CẬY nhất cho việc thanh địa chỉ ẩn/hiện (sự kiện 'resize'
-// luôn bắn khi nó đổi, trên cả iOS lẫn Android). visualViewport CHỈ được dùng để phát hiện bàn phím
-// đang mở (khi nó nhỏ hơn innerHeight một khoảng LỚN, > 80px — bàn phím luôn cao hơn mức đó),
-// tránh trường hợp lấy nhầm một số đo ban đầu bị lỗi/nhỏ bất thường rồi bị "kẹt" mãi ở đó.
+// CHỈ dùng visualViewport để PHÁT HIỆN bàn phím đang mở/đóng (bật/tắt class kb-open để
+// ẩn/hiện thanh điều hướng + FAB). KHÔNG dùng để đo/đổi chiều cao app liên tục — chiều cao
+// app đã giao hoàn toàn cho CSS (100dvh) tự xử lý, trình duyệt lo phần đó tốt hơn JS.
 (function(){
-  function computeH(){
-    var h = window.innerHeight;
-    var kb = false;
-    if(window.visualViewport){
-      var vv = window.visualViewport.height;
-      if(vv > 0 && vv < h - 80){ h = vv; kb = true; } // chênh lệch lớn = bàn phím đang mở → thu nhỏ theo
-    }
-    return { h:h, kb:kb };
+  if(!window.visualViewport) return;
+  function onVVResize(){
+    var vv = window.visualViewport;
+    var kb = vv.height < window.innerHeight - 120; // chênh lệch lớn = bàn phím đang mở
+    document.body.classList.toggle('kb-open', kb);
   }
-  function setVH(){
-    var r = computeH();
-    if(r.h > 200){ document.documentElement.style.setProperty('--vh-real', r.h + 'px'); }
-    // Khi bàn phím mở: đánh dấu để ẩn thanh điều hướng + FAB (tránh chúng trôi lên giữa màn hình)
-    if(document.body){ document.body.classList.toggle('kb-open', r.kb); }
-  }
-  setVH();
-  // Đo lại nhiều lần sau khi tải — một số trình duyệt (đặc biệt webview trong app) báo kích
-  // thước ban đầu chưa ổn định; các lần đo lại này tự sửa nếu số đầu tiên bị sai.
-  [0,50,150,300,600,1000,2000].forEach(function(ms){ setTimeout(setVH, ms); });
-  window.addEventListener('resize', setVH);
-  window.addEventListener('orientationchange', function(){ setTimeout(setVH,60); setTimeout(setVH,300); setTimeout(setVH,700); });
-  window.addEventListener('pageshow', setVH);
-  document.addEventListener('DOMContentLoaded', setVH);
-  document.addEventListener('visibilitychange', function(){ if(!document.hidden) setVH(); });
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', setVH);
-    window.visualViewport.addEventListener('scroll', setVH);
-  }
+  window.visualViewport.addEventListener('resize', onVVResize);
+  onVVResize();
 })();
 </script>
 <div class="app">
@@ -10379,6 +10356,7 @@ const defaultData = () => ({
   mistakes:{},            // { vocabId: count } — "Words I struggle with"
   myWords:[],             // [{id, word, meaningVi, ts}] — từ tự lưu khi luyện
   notes:[],               // [{id, ts, kind:'fix'|'manual', bad, good, reason, sentence, word, text}] — Ghi chú lỗi
+  generatedExercises:{},  // { vocabId: [{promptVi,targetPhrase,difficulty,context,grammarFocus,ts}] } — cache đề AI sinh (chống lặp, giảm gọi AI)
   theme:'dark',
   geminiKey:'',
   geminiModel:'',
@@ -10685,6 +10663,152 @@ function errMsgVi(code){
   })[code] || 'Không thể đánh giá lúc này. Hãy thử lại sau.';
 }
 
+/* ================== HỆ THỐNG ĐỀ LUYỆN TẬP ĐA DẠNG (đặc biệt mức KHÓ) ==================
+   Vấn đề cũ: mỗi từ chỉ có 1 targetExercise cố định cho mỗi mức → học nhiều từ sẽ thấy
+   cấu trúc câu lặp lại, mức Khó chưa thực sự khó (chỉ khác từ mục tiêu).
+   Giải pháp: với mức KHÓ, ngoài câu mẫu cố định trong vocabulary (vẫn dùng làm fallback/pool),
+   AI có thể sinh thêm câu mới đa dạng ngữ cảnh + cấu trúc, lưu cache theo từng từ để tái dùng
+   (không gọi AI mỗi lần), và tránh lặp lại các câu vừa dùng gần đây. */
+const EXERCISE_CONTEXTS = ['Đời sống hằng ngày','Du lịch','Công việc','Kinh doanh','Chăm sóc khách hàng',
+  'Email công việc','Cuộc họp','Thuyết trình','Công nghệ','Môi trường','Giáo dục','Đàm phán','Giải quyết vấn đề'];
+// Hướng dẫn độ khó theo đúng CEFR của từ — tránh biến B1 thành C1 (yêu cầu "level awareness")
+const HARD_LEVEL_GUIDE = {
+  A1:'Vẫn dùng cấu trúc đơn giản (câu ghép ngắn với and/but/because), từ vựng cơ bản, KHÔNG dùng mệnh đề quan hệ hay bị động phức tạp.',
+  A2:'Có thể dùng liên từ (because/although/when), so sánh đơn giản, thì quá khứ/tương lai cơ bản. Chưa dùng bị động phức tạp hay câu điều kiện loại 3.',
+  B1:'Có thể dùng mệnh đề quan hệ đơn giản, câu điều kiện (if/unless), thì hoàn thành, bị động cơ bản, liên từ nguyên nhân-kết quả.',
+  B2:'Có thể dùng mệnh đề phức, bị động, câu điều kiện, thì hoàn thành, modal verbs, ngữ cảnh công việc/kinh doanh tinh tế, nguyên nhân-kết quả nhiều lớp.',
+};
+function vocabRecentPrompts(vid){
+  const arr=(DATA.generatedExercises && DATA.generatedExercises[vid]) || [];
+  return arr.slice(-8).map(e=>e.promptVi).filter(Boolean);
+}
+// So khớp gần đúng để tránh AI trả câu na ná câu vừa dùng (không cần thư viện ngoài)
+function normText(s){ return (s||'').toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N}\s]/gu,'').replace(/\s+/g,' ').trim(); }
+function tooSimilar(a, b){
+  const na=normText(a), nb=normText(b);
+  if(!na || !nb) return false;
+  if(na===nb) return true;
+  const wa=new Set(na.split(' ')), wb=new Set(nb.split(' '));
+  let common=0; wa.forEach(w=>{ if(wb.has(w)) common++; });
+  const overlap = common / Math.max(wa.size, wb.size, 1);
+  return overlap > 0.72; // trùng hơn ~72% số từ → coi là quá giống
+}
+function buildExerciseGenPrompt(vocab, difficulty, recentList){
+  const context = EXERCISE_CONTEXTS[Math.floor(Math.random()*EXERCISE_CONTEXTS.length)];
+  const guide = HARD_LEVEL_GUIDE[vocab.level] || HARD_LEVEL_GUIDE.B1;
+  return `Bạn là giáo viên tiếng Anh cho người Việt. Tạo MỘT câu tiếng Việt để học viên dịch sang tiếng Anh.
+
+TỪ/CỤM MỤC TIÊU: "${vocab.word}"
+CẤP ĐỘ (CEFR) CỦA TỪ: "${vocab.level}"
+NGỮ CẢNH GỢI Ý: "${context}"
+ĐỘ KHÓ: "${difficulty}"
+GIỚI HẠN NGỮ PHÁP THEO CẤP ĐỘ: ${guide}
+
+CÁC CÂU ĐÃ DÙNG GẦN ĐÂY CHO TỪ NÀY (KHÔNG được lặp nội dung hoặc cấu trúc chính giống các câu này):
+${recentList.length? recentList.map(s=>'- '+s).join('\n') : '(chưa có câu nào)'}
+
+YÊU CẦU BẮT BUỘC:
+1. Người học phải có LÝ DO TỰ NHIÊN để dùng "${vocab.word}" khi dịch — không gượng ép.
+2. Không dùng lại ý hoặc cấu trúc câu giống các câu đã liệt kê ở trên.
+3. Câu tiếng Việt phải tự nhiên, đúng ngữ pháp.
+4. Câu tiếng Anh tương ứng (khi học viên dịch đúng) phải tự nhiên như người bản ngữ.
+5. Độ khó phải đúng với giới hạn ngữ pháp theo cấp độ đã nêu — KHÔNG vượt quá.
+6. Với độ khó "hard": dùng cấu trúc phức tạp hơn phù hợp cấp độ (mệnh đề quan hệ/bị động/điều kiện/hoàn thành/modal/nguyên nhân-kết quả/tương phản), có thể 2 mệnh đề, có bối cảnh thực tế cụ thể — KHÔNG biến câu thành bài kiểm tra ngữ pháp thuần túy, phải giống tình huống đời thực.
+7. Không tạo câu dài một cách vô nghĩa (nhồi nhiều ý không liên quan).
+8. Không nhất thiết phải nhắc nguyên văn "${vocab.word}" bằng tiếng Anh trong câu tiếng Việt nếu điều đó làm bài quá dễ đoán.
+9. CHỈ trả về JSON thuần, không markdown, không giải thích thêm.
+
+{"promptVi":"<câu tiếng Việt>","targetPhrase":"${vocab.word}","difficulty":"${difficulty}","context":"${context}","grammarFocus":"<cấu trúc ngữ pháp chính dùng trong câu, vài từ tiếng Việt>"}`;
+}
+// Gọi Gemini với 1 prompt bất kỳ (KHÔNG dùng chung với callGemini/evaluateWithGemini — giữ nguyên
+// 2 hàm đó để không ảnh hưởng logic chấm điểm hiện tại). Có thử lần lượt các model như evaluateWithGemini.
+async function callGeminiRaw(model, promptText){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(DATA.geminiKey.trim())}`;
+  const body = { contents:[{ parts:[{ text: promptText }] }], generationConfig:{ temperature:0.85, responseMimeType:'application/json' } };
+  const ctrl = new AbortController(); const timer = setTimeout(()=>ctrl.abort(), 20000);
+  let res;
+  try{ res = await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), signal:ctrl.signal }); }
+  catch(e){ clearTimeout(timer); throw new Error(e.name==='AbortError'?'TIMEOUT':'NETWORK'); }
+  clearTimeout(timer);
+  if(!res.ok){
+    let emsg=''; try{ const ej=await res.json(); emsg=(ej?.error?.message||ej?.error?.status||'')+''; }catch(_){}
+    const lm=emsg.toLowerCase();
+    if(res.status===404 || lm.includes('not found') || lm.includes('unknown model')){ const er=new Error('MODEL_NOT_FOUND'); er._badModel=true; throw er; }
+    if(res.status===401||res.status===403 || lm.includes('api key') || lm.includes('permission')) throw new Error('BAD_KEY');
+    if(res.status===429 || lm.includes('quota') || lm.includes('rate limit')){ const er=new Error('RATE_LIMIT'); er._perDay=/per day|daily|rpd/.test(lm); throw er; }
+    if(res.status>=500) throw new Error('SERVER');
+    throw new Error('HTTP_'+res.status);
+  }
+  const data = await res.json();
+  let text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  text = text.replace(/```json|```/g,'').trim();
+  let json; try{ json=JSON.parse(text); }catch(e){ const m=text.match(/\{[\s\S]*\}/); if(m) json=JSON.parse(m[0]); else throw new Error('PARSE'); }
+  return json;
+}
+async function generateExerciseWithGemini(promptText){
+  if(!hasKey()) throw new Error('NO_KEY');
+  if(!isOnline()) throw new Error('OFFLINE');
+  const saved = currentModel();
+  const models = [saved, ...GEMINI_MODELS.filter(m=>m!==saved)];
+  let lastErr = new Error('RATE_LIMIT');
+  for(const model of models){
+    try{
+      const json = await callGeminiRaw(model, promptText);
+      DATA.geminiModel = model; try{ save(); }catch(_){}
+      return json;
+    }catch(e){
+      lastErr = e;
+      if(e.message==='BAD_KEY' || e.message==='OFFLINE') throw e;
+      if(e.message==='RATE_LIMIT' && e._perDay) throw new Error('RATE_LIMIT_DAY');
+      continue; // model lỗi/nghẽn → thử model kế
+    }
+  }
+  throw lastErr;
+}
+// Sinh 1 câu "khó" MỚI cho từ, tránh trùng với các câu gần đây (tối đa 2 lần thử lại), lưu cache.
+async function generateHardExercise(vocab){
+  const recentList = vocabRecentPrompts(vocab.id);
+  let lastEx=null;
+  for(let attempt=0; attempt<=2; attempt++){
+    const json = await generateExerciseWithGemini(buildExerciseGenPrompt(vocab, 'hard', recentList));
+    const ex = {
+      promptVi: String(json.promptVi||'').trim(),
+      targetPhrase: String(json.targetPhrase||vocab.word).trim(),
+      difficulty:'hard', level:'hard',
+      context: String(json.context||'').trim(),
+      grammarFocus: String(json.grammarFocus||'').trim(),
+      ts: Date.now(),
+    };
+    if(!ex.promptVi) continue;
+    lastEx = ex;
+    const dup = recentList.some(p=>tooSimilar(p, ex.promptVi));
+    if(!dup) return ex; // đủ khác biệt → dùng luôn
+    // quá giống → thử lại (tối đa 2 lần), vòng sau AI thấy chính câu vừa bị từ chối trong recentList lần tới
+  }
+  if(lastEx) return lastEx; // vẫn còn hơn không, hiếm khi tới đây
+  throw new Error('GEN_FAILED');
+}
+// Lấy 1 đề "khó" để hiển thị: ưu tiên random trong pool có sẵn (câu mẫu + câu đã cache),
+// tránh gọi AI mỗi lần mở lại cùng 1 từ — chỉ generate thêm khi pool còn ít hoặc để tăng đa dạng.
+function hardExercisePool(vocab){
+  const fixed = getExercises(vocab).find(e=>e.level==='hard');
+  const cached = (DATA.generatedExercises && DATA.generatedExercises[vocab.id]) || [];
+  const pool = fixed? [fixed, ...cached] : cached.slice();
+  return pool;
+}
+function pickFromPool(pool, avoidPromptVi){
+  const candidates = pool.filter(e=>e.promptVi!==avoidPromptVi);
+  const list = candidates.length? candidates : pool;
+  return list[Math.floor(Math.random()*list.length)];
+}
+function cacheGeneratedExercise(vid, ex){
+  if(!DATA.generatedExercises) DATA.generatedExercises={};
+  if(!DATA.generatedExercises[vid]) DATA.generatedExercises[vid]=[];
+  DATA.generatedExercises[vid].push(ex);
+  DATA.generatedExercises[vid] = DATA.generatedExercises[vid].slice(-20); // chỉ giữ 20 câu gần nhất/từ
+  save();
+}
+
 const state = { tab:'home', topic:null, deck:[], deckIdx:0, flip:false, search:'',
   practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null,
   fx:{}, fxTab:0,
@@ -10904,8 +11028,8 @@ function practiceInlineHTML(v){
   const exs = getExercises(v);
   if(!exs.length) return '';
   let idx = state.fxTab; if(idx>=exs.length) idx=0;
-  const ex = exs[idx];
   const st = fxGet(v.id, idx);
+  const ex = st.curEx || exs[idx]; // đề đang hiển thị: ưu tiên đề đã đổi/AI-sinh cho từ này, else đề mặc định
   const aiOn = hasKey();
   const doneCount = exs.filter((_,i)=>fxGet(v.id,i).result).length;
 
@@ -10931,39 +11055,6 @@ function practiceInlineHTML(v){
       </div></div>`;
   } else if(st.result){
     resultHTML=miniResultHTML(st.result);
-  }
-
-  // Panel tra từ nhanh (Google Translate free) + lưu vào Từ của tôi
-  let lookupHTML='';
-  if(st.lookupOpen){
-    const q=st.lookupQuery||'';
-    const r=st.lookupResult;
-    let inner='';
-    if(st.lookupLoading){
-      inner=`<div class="loading-wrap" style="padding:10px"><span class="spin"></span><div>Đang tra…</div></div>`;
-    } else if(st.lookupErr){
-      inner=`<div class="card-sub">${escapeHtml(st.lookupErr)}</div>`;
-    } else if(r){
-      const saved=isSaved(r.en);
-      inner=`<div class="lk-result">
-        <div class="lk-pair"><div class="lk-en">${escapeHtml(r.en)}</div>
-          <button class="lk-sound" title="Nghe" onclick="speak('${escq(r.en)}')">${svg(IC.sound,15)}</button></div>
-        <div class="lk-vi">${escapeHtml(r.vi)}</div>
-        <button class="btn ${saved?'btn-ghost':'btn-brand'} btn-sm" style="width:auto;margin-top:10px"
-          onclick="fxSaveLookup('${v.id}',${idx})">${saved?'✓ Đã lưu vào Từ của tôi':'⭐ Lưu vào Từ của tôi'}</button>
-      </div>`;
-    }
-    lookupHTML=`<div class="lookup-panel">
-      <div class="lbl" style="margin-bottom:8px">🔍 Tra từ nhanh (Việt ↔ Anh)</div>
-      <div class="lk-inputrow">
-        <input id="lookupInput" class="lk-input" placeholder="Gõ từ tiếng Việt hoặc tiếng Anh…" value="${escapeHtml(q)}"
-          oninput="fxLookupInput('${v.id}',${idx},this.value)"
-          onkeydown="if(event.key==='Enter'){event.preventDefault();fxDoLookup('${v.id}',${idx});}">
-        <button class="btn btn-brand btn-sm" style="width:auto;flex:none" onclick="fxDoLookup('${v.id}',${idx})">Tra</button>
-      </div>
-      ${inner}
-      <div class="lk-note">Dịch bằng Google Translate — gõ tiếng Việt để tìm từ tiếng Anh bạn quên, rồi lưu lại để học.</div>
-    </div>`;
   }
 
   // Panel gợi ý từ
@@ -10999,7 +11090,12 @@ function practiceInlineHTML(v){
 
     ${exs.length>1?`<div class="ex-tabs">${tabs}</div>`:''}
 
-    <div class="prompt-vi" style="box-shadow:none">
+    ${exs[idx].level==='hard' ? `<div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button class="btn btn-outline btn-sm" style="width:auto" onclick="fxNewHardExercise('${v.id}',${idx})" ${st.exLoading?'disabled':''}>
+        ${st.exLoading?'⏳ Đang tạo thử thách mới…':'🔄 Câu khác'}</button>
+    </div>`:''}
+
+    <div class="prompt-vi" style="box-shadow:none${st.exLoading?';opacity:.5':''}">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <span class="lvl-badge lvl-${ex.level}">${ex.level==='medium'?'🟢':ex.level==='good'?'🟡':'🔴'} ${LEVEL_VI[ex.level]}</span>
         <span class="lbl" style="margin:0">phải dùng "${ex.targetPhrase}"</span>
@@ -11010,16 +11106,14 @@ function practiceInlineHTML(v){
     <textarea class="answer-area" id="fxInput" placeholder="Nhập câu tiếng Anh của bạn..."
       oninput="fxOnInput('${v.id}',${idx},this.value)">${escapeHtml(st.input||'')}</textarea>
 
-    <div style="display:flex;gap:8px;margin-bottom:${(hintHTML||lookupHTML)?'0':'10px'};flex-wrap:wrap">
+    <div style="display:flex;gap:8px;margin-bottom:${hintHTML?'0':'10px'};flex-wrap:wrap">
       <button class="btn btn-outline btn-sm" style="flex:none;width:auto" onclick="fxToggleHints('${v.id}',${idx})">
         ${st.hints||st.hintsLoading?'Ẩn gợi ý':'💡 Gợi ý từ'}</button>
-      <button class="btn btn-outline btn-sm" style="flex:none;width:auto" onclick="fxToggleLookup('${v.id}',${idx})">
-        ${st.lookupOpen?'Ẩn tra từ':'🔍 Tra từ'}</button>
+      <button class="btn btn-outline btn-sm" style="flex:none;width:auto" onclick="openLookupSheet('${v.id}',${idx})">🔍 Tra từ</button>
       <button class="btn btn-brand" style="flex:1;min-width:140px" onclick="fxEvaluate('${v.id}',${idx})">
         ${aiOn&&isOnline()?'✨ Đánh giá bằng AI':'Đánh giá'}${st.result?' lại':''}</button>
     </div>
 
-    ${lookupHTML}
     ${hintHTML}
     ${resultHTML}
   </div>`;
@@ -11586,25 +11680,9 @@ function render(){
   const si=document.getElementById('searchInput');
   if(si && state.search){ si.focus(); si.setSelectionRange(si.value.length,si.value.length); }
 }
-// Khi bàn phím mở (chạm vào ô nhập/textarea), tự cuộn để ô nhập KHÔNG bị bàn phím che khuất.
-// Dùng visualViewport để biết chính xác lúc nào bàn phím đã mở xong rồi mới cuộn (tránh cuộn hụt).
-(function(){
-  let pendingEl = null;
-  document.addEventListener('focusin', function(e){
-    const t = e.target;
-    if(!t || !(t.tagName==='TEXTAREA' || t.tagName==='INPUT')) return;
-    pendingEl = t;
-    const doScroll = ()=>{ if(pendingEl===t){ try{ t.scrollIntoView({block:'center', behavior:'smooth'}); }catch(_){ } } };
-    if(window.visualViewport){
-      const onResize=()=>{ doScroll(); window.visualViewport.removeEventListener('resize', onResize); };
-      window.visualViewport.addEventListener('resize', onResize);
-      setTimeout(()=>{ window.visualViewport.removeEventListener('resize', onResize); doScroll(); }, 400); // dự phòng nếu resize không bắn
-    } else {
-      setTimeout(doScroll, 300);
-    }
-  });
-  document.addEventListener('focusout', function(){ pendingEl=null; });
-})();
+// Bàn phím: KHÔNG can thiệp scroll thủ công (yêu cầu rõ: để trình duyệt tự xử lý).
+// .main có đủ padding-bottom + khi bàn phím mở, nav/FAB tự ẩn (xem body.kb-open ở CSS)
+// nên vùng nhìn thấy luôn đủ chỗ cho ô nhập mà không cần ép scrollIntoView thủ công.
 function go(tab){ state.tab=tab; state.search=''; closeFab(); render(); document.getElementById('main').scrollTop=0; }
 function openTopic(id){ state.topic=id; state.tab='topic'; closeFab(); render(); document.getElementById('main').scrollTop=0; }
 function openTopicAt(topicId,vocabId){ startDeck(topicId,vocabId); }
@@ -11682,9 +11760,31 @@ function rate(known){
 /* ---- Luyện câu inline trong flashcard ---- */
 function fxOnInput(vid, idx, val){ fxSet(vid, idx, {input:val}); } // không render để không mất focus
 function fxTabTo(i){ state.fxTab=i; render(); scrollToPractice(); }
+// Lấy MỘT đề "khó" khác (mức 2 = Khó) — random trong pool có sẵn, hoặc nhờ AI tạo thêm câu mới khi
+// pool còn ít hoặc để tăng đa dạng. Không gọi AI mỗi lần (giảm API calls) — chỉ khi cần.
+async function fxNewHardExercise(vid, idx){
+  const v = findVocab(vid); if(!v) return;
+  const st = fxGet(vid, idx);
+  const curPromptVi = st.curEx?.promptVi || getExercises(v)[idx]?.promptVi;
+  fxSet(vid, idx, {exLoading:true}); render();
+  const pool = hardExercisePool(v);
+  const cachedCount = (DATA.generatedExercises && DATA.generatedExercises[vid] || []).length;
+  // Ưu tiên gọi AI khi: pool còn ít lựa chọn (<3), hoặc ngẫu nhiên ~50% để tăng đa dạng khi đã có AI
+  const wantGenerate = hasKey() && isOnline() && (cachedCount < 3 || Math.random() < 0.5);
+  let ex = null;
+  if(wantGenerate){
+    try{ ex = await generateHardExercise(v); cacheGeneratedExercise(vid, ex); }
+    catch(e){ ex = null; } // lỗi AI (hết quota, offline giữa chừng...) → rơi về pool bên dưới
+  }
+  if(!ex) ex = pickFromPool(pool, curPromptVi);
+  fxSet(vid, idx, {exLoading:false, curEx:ex, input:'', result:null, error:null});
+  render();
+}
 function scrollToPractice(){ setTimeout(()=>{ const el=document.querySelector('.practice-inline'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); },60); }
+// Đề đang thực sự hiển thị cho 1 slot (vid,idx): ưu tiên curEx (đã đổi/AI-sinh), else đề mặc định cố định.
+function fxCurrentEx(v, idx){ return fxGet(v.id, idx).curEx || getExercises(v)[idx]; }
 async function fxEvaluate(vid, idx){
-  const v=findVocab(vid); const ex=getExercises(v)[idx];
+  const v=findVocab(vid); const ex=fxCurrentEx(v, idx);
   const sent=(fxGet(vid,idx).input||'').trim();
   if(!sent){ toast('Hãy nhập câu trước đã'); return; }
   // Không có key hoặc offline → chấm máy luôn (đã có banner báo trước ở UI)
@@ -11701,7 +11801,7 @@ async function fxEvaluate(vid, idx){
   }
 }
 function fxGradeLocalNow(vid, idx){
-  const v=findVocab(vid); const ex=getExercises(v)[idx];
+  const v=findVocab(vid); const ex=fxCurrentEx(v, idx);
   const sent=(fxGet(vid,idx).input||'').trim(); if(!sent) return;
   const r=gradeLocally(sent,v,ex); fxSet(vid,idx,{error:null}); fxFinish(vid,idx,v,r);
 }
@@ -11716,7 +11816,7 @@ function fxFinish(vid, idx, v, r){
 async function fxToggleHints(vid, idx){
   const st=fxGet(vid,idx);
   if(st.hints || st.hintsLoading){ fxSet(vid,idx,{hints:null,hintsLoading:false}); render(); scrollToPractice(); return; }
-  const v=findVocab(vid); const ex=getExercises(v)[idx];
+  const v=findVocab(vid); const ex=fxCurrentEx(v, idx);
   fxSet(vid,idx,{hintsLoading:true}); render(); scrollToPractice();
   let words;
   try{ words=await suggestWordsAI(v,ex); }
@@ -11751,6 +11851,22 @@ function fxSaveWord(en, vi){
   render(); scrollToPractice();
 }
 
+// Lưu từ vào "Từ của tôi" TỪ TRONG SHEET — không render lại màn chính / không cuộn,
+// để khi đóng sheet, người dùng quay lại ĐÚNG vị trí đang xem trước đó (không bị nhảy).
+function fxSaveWordQuiet(en, vi, btnEl){
+  if(!DATA.myWords) DATA.myWords=[];
+  const id=savedKey(en);
+  const exist=DATA.myWords.findIndex(w=>w.id===id);
+  if(exist>=0){ DATA.myWords.splice(exist,1); save(); toast('Đã bỏ khỏi Từ của tôi'); }
+  else { DATA.myWords.push({id, word:en, meaningVi:vi, ts:Date.now()}); save(); toast('⭐ Đã lưu vào Từ của tôi'); }
+  if(btnEl){
+    const saved=isSaved(en);
+    btnEl.textContent = saved? '✓ Đã lưu vào Từ của tôi' : '⭐ Lưu vào Từ của tôi';
+    btnEl.classList.toggle('btn-ghost', saved);
+    btnEl.classList.toggle('btn-brand', !saved);
+  }
+}
+
 /* ---- TRA TỪ NHANH (Google Translate free) ---- */
 // Đoán ngôn ngữ: nếu có ký tự tiếng Việt có dấu → coi là Việt→Anh; ngược lại Anh→Việt.
 function guessDir(text){
@@ -11780,34 +11896,47 @@ async function gtranslate(text, sl, tl){
   }catch(_){}
   throw new Error('FAIL');
 }
-function fxToggleLookup(vid, idx){
-  const st=fxGet(vid,idx);
-  fxSet(vid,idx,{lookupOpen:!st.lookupOpen});
-  render(); scrollToPractice();
-  if(!st.lookupOpen) setTimeout(()=>{ const el=document.getElementById('lookupInput'); if(el) el.focus(); },80);
+// "Tra từ" dạng bottom sheet native — mở/đóng KHÔNG đụng tới scroll position của màn chính phía sau.
+function openLookupSheet(vid, idx){
+  showSheet(`<h2 style="margin-bottom:4px">🔍 Tra từ</h2>
+    <p class="sub" style="margin-bottom:14px">Gõ tiếng Việt hoặc tiếng Anh — dịch nhanh, lưu lại để học.</p>
+    <div class="lk-inputrow">
+      <input id="lookupSheetInput" class="lk-input" placeholder="Gõ từ cần tra…"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();doLookupSheet();}">
+      <button class="btn btn-brand btn-sm" style="width:auto;flex:none" onclick="doLookupSheet()">Tra</button>
+    </div>
+    <div id="lookupSheetResult"></div>`);
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheet').classList.add('show');
+  setTimeout(()=>{ const el=document.getElementById('lookupSheetInput'); if(el) el.focus(); },200);
 }
-function fxLookupInput(vid, idx, val){ fxSet(vid,idx,{lookupQuery:val}); } // không render để giữ focus
-async function fxDoLookup(vid, idx){
-  const el=document.getElementById('lookupInput');
-  const q=(el? el.value : fxGet(vid,idx).lookupQuery||'').trim();
+async function doLookupSheet(){
+  const el=document.getElementById('lookupSheetInput');
+  const box=document.getElementById('lookupSheetResult');
+  const q=(el? el.value : '').trim();
   if(!q){ toast('Hãy gõ từ cần tra'); return; }
-  if(!isOnline()){ fxSet(vid,idx,{lookupErr:'Bạn đang offline. Tra từ cần Internet.',lookupResult:null}); render(); scrollToPractice(); return; }
-  fxSet(vid,idx,{lookupQuery:q,lookupLoading:true,lookupErr:null,lookupResult:null}); render(); scrollToPractice();
+  if(!box) return;
+  if(!isOnline()){ box.innerHTML=`<div class="card-sub" style="margin-top:12px">📴 Bạn đang offline. Tra từ cần Internet.</div>`; return; }
+  box.innerHTML=`<div class="loading-wrap" style="padding:14px"><span class="spin"></span><div>Đang tra…</div></div>`;
   try{
     const dir=guessDir(q);
     let en, vi;
     if(dir==='vi2en'){ en=await gtranslate(q,'vi','en'); vi=q; }
     else { en=q; vi=await gtranslate(q,'en','vi'); }
-    fxSet(vid,idx,{lookupLoading:false,lookupResult:{en:en, vi:vi}});
+    const saved=isSaved(en);
+    box.innerHTML=`<div class="lk-result">
+      <div class="lk-pair"><div class="lk-en">${escapeHtml(en)}</div>
+        <button class="lk-sound" title="Nghe" onclick="speak('${escq(en)}')">${svg(IC.sound,15)}</button></div>
+      <div class="lk-vi">${escapeHtml(vi)}</div>
+      <button class="btn ${saved?'btn-ghost':'btn-brand'} btn-sm" id="lookupSaveBtn" style="width:auto;margin-top:10px"
+        onclick="fxSaveWordQuiet('${escq(en)}','${escq(vi)}',this)">${saved?'✓ Đã lưu vào Từ của tôi':'⭐ Lưu vào Từ của tôi'}</button>
+    </div>`;
   }catch(e){
-    fxSet(vid,idx,{lookupLoading:false,lookupErr:'Không tra được lúc này. Kiểm tra Internet và thử lại.'});
+    box.innerHTML=`<div class="card-sub" style="margin-top:12px">Không tra được lúc này. Kiểm tra Internet và thử lại.</div>`;
   }
-  render(); scrollToPractice();
 }
-function fxSaveLookup(vid, idx){
-  const st=fxGet(vid,idx); const r=st.lookupResult; if(!r) return;
-  fxSaveWord(r.en, r.vi); // đã có render bên trong
-}
+
+
 
 /* ---- GHI CHÚ (sổ tay lỗi theo ngày) ---- */
 function noteFixId(f, sentence){ return 'fx-'+((f.bad||'')+'|'+(f.good||'')+'|'+(sentence||'')).toLowerCase().replace(/[^a-z0-9]+/g,'-').slice(0,80); }
