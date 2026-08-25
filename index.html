@@ -11780,7 +11780,16 @@ function rate(known){
 
 /* ---- Luyện câu inline trong flashcard ---- */
 function fxOnInput(vid, idx, val){ fxSet(vid, idx, {input:val}); } // không render để không mất focus
-function fxTabTo(i){ state.fxTab=i; render(); scrollToPractice(); }
+// Chọn Câu 1/2/3: CHỈ đổi state hiển thị đề, KHÔNG scroll, KHÔNG focus — bàn phím chỉ được mở
+// khi người dùng chủ động chạm vào textarea (theo hành vi mặc định của trình duyệt).
+function fxTabTo(i){
+  state.fxTab=i;
+  render();
+  // Phòng vệ: đảm bảo tuyệt đối không có phần tử nào giữ focus sau khi chọn câu (kể cả trường hợp
+  // trình duyệt/webview có quirk giữ focus từ ô nhập của đề trước đó) — chủ động bỏ focus để chắc
+  // chắn bàn phím không tự mở.
+  if(document.activeElement && document.activeElement.blur) document.activeElement.blur();
+}
 // Lấy MỘT đề "khó" khác (mức 2 = Khó) — random trong pool có sẵn, hoặc nhờ AI tạo thêm câu mới khi
 // pool còn ít hoặc để tăng đa dạng. Không gọi AI mỗi lần (giảm API calls) — chỉ khi cần.
 async function fxNewHardExercise(vid, idx){
