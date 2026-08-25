@@ -59,7 +59,7 @@ html.light{
   color-scheme:light;
 }
 *{box-sizing:border-box;border-color:var(--border);-webkit-tap-highlight-color:transparent}
-html,body{margin:0;overscroll-behavior-y:none}
+html,body{width:100%;margin:0;overscroll-behavior-y:none}
 body{
   background:#0b1020;color:var(--ink);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue","Open Sans",Inter,system-ui,"Segoe UI",Roboto,sans-serif;
@@ -94,7 +94,7 @@ html.light .app::before{background:
 }
 /* Vùng cuộn DUY NHẤT — cố định trong khung, không kéo theo cả trang */
 .main{position:relative;z-index:1;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  overscroll-behavior:contain;padding:calc(20px + env(safe-area-inset-top)) 16px calc(108px + env(safe-area-inset-bottom))}
+  overscroll-behavior:contain;padding:calc(20px + env(safe-area-inset-top)) 16px calc(var(--tabbar-height) + env(safe-area-inset-bottom) + 16px)}
 
 /* Header */
 .phead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px}
@@ -218,31 +218,40 @@ html.light .app::before{background:
 .slabel{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;
   margin:22px 4px 12px}
 
-/* Bottom nav — CỐ ĐỊNH THEO VIEWPORT TRÊN MOBILE (position:fixed, không phải absolute):
-   .app có overflow:hidden về mặt CSS nhưng trên Safari iOS thực tế không đảm bảo tuyệt đối chặn
-   được rubber-band/bounce của cả trang khi cuộn — nếu nav neo theo .app (absolute) nó sẽ bị kéo
-   theo. fixed neo thẳng vào viewport trình duyệt thật nên không bị ảnh hưởng bởi hiệu ứng đó. */
-.nav{position:fixed;left:0;right:0;bottom:calc(12px + env(safe-area-inset-bottom));
-  margin:0 auto;max-width:430px;
-  padding:0 16px;z-index:30}
-@media(min-width:470px){
-  /* Trên desktop, .app là khung điện thoại thu nhỏ có margin riêng — nav phải neo THEO KHUNG
-     đó (absolute trong .app), không phải theo mép trình duyệt, để không bị lệch ra ngoài khung. */
-  .nav{position:absolute}
+/* ===== Bottom tab bar — VIEWPORT-LEVEL, ngoài .app hoàn toàn (xem DOM: <nav> là sibling của .app
+   trong <body>, không phải con của .app/.main). Đây là điều kiện tiên quyết để position:fixed
+   neo đúng viewport tuyệt đối trên MỌI trình duyệt/webview, không phụ thuộc bất kỳ thuộc tính nào
+   của .app (loại trừ hoàn toàn khả năng ancestor tạo containing block hoặc bounce kéo theo). ===== */
+:root{ --tabbar-height:58px; } /* chiều cao PHẦN NỘI DUNG tab bar (chưa gồm safe-area) — đã đo thực tế, xem mục .main bên dưới */
+
+.nav{position:fixed;left:0;right:0;bottom:0;width:100%;z-index:30;
+  background:var(--glass-bg);border-top:1px solid var(--glass-border);
+  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
+  /* Nền kéo dài LIỀN MẠCH xuống hết safe-area (Home Indicator) — không để lộ khoảng trống phía dưới */
+  padding-bottom:env(safe-area-inset-bottom);
 }
-.nav-inner{display:flex;justify-content:space-around;align-items:center;border-radius:22px;padding:6px;box-shadow:0 4px 24px -8px rgba(0,0,0,.35)}
+@media(min-width:470px){
+  /* Desktop: .app là khung điện thoại thu nhỏ có margin:24px riêng — nav căn giữa & khớp bề rộng
+     khung đó để trông liền một khối, KHÔNG còn chạy hết chiều ngang trình duyệt như trên mobile. */
+  .nav{left:50%;right:auto;transform:translateX(-50%);width:100%;max-width:430px;
+    bottom:24px;border-radius:0 0 28px 28px;border:1px solid var(--glass-border);
+    box-shadow:0 24px 60px -20px rgba(2,6,23,.5);padding-bottom:0}
+}
+.nav-inner{display:flex;justify-content:space-around;align-items:center;height:var(--tabbar-height);padding:0 8px}
 .nav a{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;min-height:44px;justify-content:center;
   font-size:10px;font-weight:500;color:var(--muted);border-radius:14px;transition:color .2s}
 .nav a.active{color:var(--brand)}
 .nav a .ico{width:22px;height:22px}
 .nav a .hl{position:absolute;inset:2px 10px;border-radius:14px;background:var(--brand-light);z-index:-1;opacity:0;transition:opacity .25s}
 .nav a.active .hl{opacity:1}
-/* Khi bàn phím mở: ẩn thanh điều hướng + FAB để không trôi lên giữa màn hình / không tạo khoảng trống */
+/* Khi bàn phím mở: ẩn thanh điều hướng + FAB — CSS thuần theo trạng thái class, KHÔNG có JS nào
+   tính toán top/transform/translateY theo scroll hay theo chiều cao bàn phím (đúng yêu cầu mục 12/14):
+   tab bar chỉ ẩn/hiện, không di chuyển, không "chạy theo" visual viewport. */
 body.kb-open .nav{display:none}
 body.kb-open .fab{display:none!important}
 body.kb-open .main{padding-bottom:16px}
 
-/* FAB */
+/* FAB — vẫn trong .app (không thuộc phạm vi yêu cầu chỉnh sửa lần này, chỉ bottom nav) */
 .fab{position:absolute;left:0;right:0;bottom:calc(90px + env(safe-area-inset-bottom));
   z-index:40;pointer-events:none}
 .fab-btn{position:absolute;right:16px;bottom:0;width:56px;height:56px;border-radius:999px;background:var(--brand);
@@ -499,7 +508,7 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
   onVVResize();
 })();
 </script>
-<div class="app">
+<div class="app" id="appShell">
   <main class="main" id="main"></main>
 
   <div class="fab" id="fab">
@@ -515,9 +524,12 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
     </div>
     <button class="fab-btn" onclick="toggleFab()" aria-label="Mở menu hành động"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
   </div>
-
-  <nav class="nav"><div class="nav-inner glass" id="nav" style="background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%)"></div></nav>
 </div>
+
+<!-- Bottom tab bar: SIBLING trực tiếp của .app trong <body>, KHÔNG nằm bên trong .app/.main/bất kỳ
+     scroll container nào — đảm bảo position:fixed neo đúng viewport tuyệt đối, loại bỏ hoàn toàn
+     khả năng bị ancestor (.app) tạo containing block hoặc bị cuốn theo hiệu ứng bounce/scroll. -->
+<nav class="nav" id="mobileTabbar"><div class="nav-inner" id="nav"></div></nav>
 
 <div class="overlay" id="overlay" onclick="closeSheet()"></div>
 <div class="sheet" id="sheet"><div class="handle"></div><div id="sheetBody"></div></div>
