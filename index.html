@@ -489,6 +489,73 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 .natural .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--success);font-weight:600;margin-bottom:6px}
 .natural .txt{font-size:15px;line-height:1.5}
 .struggle{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--border)}
+
+/* ── Active Recall session (mục AB) ── */
+.rv-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.rv-progress{font-size:13px;color:var(--muted);font-weight:600;text-align:center;flex:1}
+.rv-tier{font-size:18px}
+.rv-bar{height:6px;background:var(--surface-2);border-radius:999px;overflow:hidden;margin-bottom:20px}
+.rv-bar>i{display:block;height:100%;background:var(--brand-grad);border-radius:999px;transition:width .4s ease-out}
+.rv-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--sh-card);padding:22px}
+.rv-chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--brand);
+  background:var(--brand-light);border-radius:999px;padding:4px 11px;margin-bottom:18px}
+.rv-prompt{margin-bottom:18px}
+.rv-q-label{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;margin-bottom:10px}
+.rv-q-vi{font-size:26px;font-weight:700;line-height:1.25;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
+.rv-q-en{font-size:30px;font-weight:700;line-height:1.15;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
+.rv-q-ctx{font-size:19px;font-weight:600;line-height:1.5}
+.rv-q-ctxvi{font-size:14px;color:var(--muted);margin-top:8px;font-style:italic}
+.rv-input{width:100%;min-height:52px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:14px;
+  padding:14px 16px;color:var(--ink);font-size:16px;line-height:1.5;resize:none;outline:none;margin-bottom:14px;font-family:inherit}
+.rv-input:focus{border-color:var(--brand)}
+.rv-input::placeholder{color:var(--muted)}
+.rv-tip{font-size:12.5px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
+.rv-sound{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--brand);
+  background:var(--surface-2);border-radius:999px;padding:8px 14px;margin-top:12px;min-height:40px}
+.rv-answer{text-align:center;padding:6px 0 4px}
+.rv-verdict{font-size:14px;font-weight:600;margin-bottom:12px}
+.rv-verdict.ok{color:var(--success)}
+.rv-verdict.no{color:var(--muted)}
+.rv-ans-en{font-size:30px;font-weight:700;color:var(--ink);line-height:1.2;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
+.rv-ans-ipa{font-size:15px;color:var(--muted);margin-top:4px}
+.rv-ans-vi{font-size:24px;font-weight:700;color:var(--brand);line-height:1.25}
+.rv-assess-label{font-size:13px;color:var(--muted);text-align:center;margin:22px 0 12px;font-weight:600}
+.rv-assess{display:flex;gap:8px}
+.rv-a{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:14px 6px;border-radius:14px;
+  background:var(--surface-2);border:1px solid var(--border);font-size:22px;min-height:72px;justify-content:center;
+  transition:transform .15s,border-color .2s}
+.rv-a span{font-size:11.5px;font-weight:600;color:var(--muted)}
+.rv-a:active{transform:scale(.94)}
+.rv-a-no:active{border-color:var(--danger)}
+.rv-a-mid:active{border-color:var(--warn)}
+.rv-a-yes:active{border-color:var(--success)}
+.rv-done{text-align:center;padding:30px 16px}
+.rv-done-emo{font-size:52px;margin-bottom:8px}
+.rv-done h2{font-size:22px;margin-bottom:20px}
+.rv-done-stats{display:flex;gap:14px;justify-content:center;margin-bottom:24px}
+.rv-done-stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 24px;box-shadow:var(--sh-card)}
+.rv-done-stat b{display:block;font-size:30px;line-height:1}
+.rv-done-stat span{font-size:12px;color:var(--muted);margin-top:4px;display:block}
+.rv-done .btn{margin-bottom:10px}
+/* Memory strength trong Progress (mục U) */
+.mem-break{display:flex;gap:10px;margin-top:12px}
+.mem-cell{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;box-shadow:var(--sh-card)}
+.mem-cell b{display:block;font-size:22px;line-height:1;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
+.mem-cell span{font-size:11px;color:var(--muted);margin-top:5px;display:block}
+/* Card "Ôn tập hôm nay" trên Home + Review */
+.review-cta{background:var(--brand-grad);border:none;color:#fff;border-radius:var(--r-card);padding:20px;
+  box-shadow:var(--sh-glow);margin-bottom:16px;width:100%;text-align:left;transition:transform .18s cubic-bezier(.34,1.56,.64,1)}
+.review-cta:active{transform:scale(.97)}
+.review-cta .k{font-size:12px;opacity:.9;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.review-cta .v{font-size:19px;font-weight:700;margin:6px 0 3px;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
+.review-cta .p{font-size:12.5px;opacity:.9}
+.weak-card{background:var(--danger-bg);border:1px solid var(--danger);border-radius:var(--r-card);padding:16px 18px;
+  margin-bottom:16px;width:100%;text-align:left;display:flex;align-items:center;gap:12px;transition:transform .18s}
+.weak-card:active{transform:scale(.98)}
+.weak-card .wc-body{flex:1}
+.weak-card .wc-t{font-size:15px;font-weight:700;color:var(--ink)}
+.weak-card .wc-s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.weak-card .wc-arrow{color:var(--danger);font-size:18px}
 .struggle:last-child{border-bottom:none}
 .struggle .sig{font-size:16px}
 
@@ -558,6 +625,8 @@ const TOPICS = [
   { id:'daily',      name:'Daily Life',  emoji:'☕', level:'A2–B1', desc:'Giao tiếp thường ngày' },
   { id:'mywords',    name:'Từ của tôi',  emoji:'⭐', level:'—',     desc:'Từ bạn đã lưu khi luyện' },
 ];
+const topicEmoji = tid => (TOPICS.find(t=>t.id===tid)||{}).emoji || '📘';
+const topicName  = tid => (TOPICS.find(t=>t.id===tid)||{}).name  || '';
 
 /* Mỗi item đủ trường theo spec: word,type,level,meaningVi,definitionEn,pronunciation,
    exampleEn,exampleVi,collocations,targetExercise */
@@ -10376,7 +10445,7 @@ const VOCAB = [
 const KEY = 'english-coach-v1';
 const todayStr = () => new Date().toISOString().slice(0,10);
 const defaultData = () => ({
-  learned:{},            // { vocabId: {ts, box} }
+  learned:{},            // { vocabId: {ts, box, firstDay} }
   reviewQueue:{},        // { vocabId: nextReviewDate }
   dailyGoal:5,
   progressToday:{ date:todayStr(), count:0 },
@@ -10387,6 +10456,9 @@ const defaultData = () => ({
   myWords:[],             // [{id, word, meaningVi, ts}] — từ tự lưu khi luyện
   notes:[],               // [{id, ts, kind:'fix'|'manual', bad, good, reason, sentence, word, text}] — Ghi chú lỗi
   generatedExercises:{},  // { vocabId: [{promptVi,targetPhrase,difficulty,context,grammarFocus,ts}] } — cache đề AI sinh (chống lặp, giảm gọi AI)
+  // ── KHOA HỌC GHI NHỚ (bổ sung — Active Recall / Smart Review / Memory Strength / Weak Word) ──
+  memory:{},              // { vocabId: {strength 0-100, lastRecall, recallSuccess, recallFail, consecutive, lastPractice, ts} }
+  reviewLimit:5,          // số từ mỗi phiên Ôn tập thông minh (5/10/15, mặc định 5 — mục S)
   theme:'dark',
   geminiKey:'',
   geminiModel:'',
@@ -10444,6 +10516,7 @@ function recordPractice(vocabId, score, passed){
   DATA.practiceScores = (DATA.practiceScores||[]).concat({ ts:Date.now(), score }).slice(-100);
   if(!passed){ DATA.mistakes[vocabId] = (DATA.mistakes[vocabId]||0)+1; }
   else if(DATA.mistakes[vocabId]){ DATA.mistakes[vocabId] = Math.max(0, DATA.mistakes[vocabId]-1); if(!DATA.mistakes[vocabId]) delete DATA.mistakes[vocabId]; }
+  applyPracticeToMemory(vocabId, score, passed); // cập nhật memory strength (mục H) — không đổi logic chấm
   bumpStreak();
   save();
 }
@@ -10454,6 +10527,146 @@ const avgPracticeScore = () => {
 const struggleList = () => Object.entries(DATA.mistakes||{})
   .map(([id,c])=>({ v:findVocab(id), count:c })).filter(x=>x.v)
   .sort((a,b)=>b.count-a.count);
+
+/* =================================================================
+   MEMORY ENGINE — Active Recall, Memory Strength, Smart Review, Weak Words
+   Toàn bộ chạy LOCAL (không gọi Gemini để chọn từ/tính điểm — mục AG).
+   Dữ liệu lưu ở DATA.memory[id]; tự MIGRATION an toàn từ dữ liệu cũ (mục AE).
+================================================================= */
+// Lấy (hoặc khởi tạo lazily) bản ghi trí nhớ cho 1 từ. Nếu chưa có → suy ra strength ban đầu
+// từ dữ liệu cũ (learned.box + mistakes) để người đang dùng không bị "mất trắng" tiến trình.
+function memOf(id){
+  if(!DATA.memory) DATA.memory={};
+  if(!DATA.memory[id]){
+    const learned = DATA.learned[id];
+    const miss = DATA.mistakes[id]||0;
+    let strength = 0;
+    if(learned){
+      // box càng cao = đã ôn/nhớ nhiều lần → strength nền cao hơn; trừ hao theo số lần sai
+      strength = Math.max(10, Math.min(80, (learned.box||1)*18 - miss*10));
+    }
+    DATA.memory[id] = {
+      strength,
+      lastRecall: null,
+      recallSuccess: 0,
+      recallFail: 0,
+      consecutive: 0,
+      lastPractice: learned?.ts || null,
+      ts: Date.now(),
+    };
+  }
+  return DATA.memory[id];
+}
+// Phân tầng strength → nhãn đơn giản (mục G): 🔴 Yếu / 🟡 Đang nhớ / 🟢 Nhớ rõ
+function strengthTier(s){
+  if(s>=75) return {key:'strong', label:'Nhớ rõ', icon:'🟢', color:'var(--success)'};
+  if(s>=40) return {key:'developing', label:'Đang nhớ', icon:'🟡', color:'var(--warn)'};
+  return {key:'weak', label:'Cần ôn', icon:'🔴', color:'var(--danger)'};
+}
+// Cập nhật trí nhớ sau một lần RECALL. level: 0=không nhớ, 1=lờ mờ, 2=nhớ rõ (mục H)
+function applyRecall(id, level){
+  const m = memOf(id);
+  m.lastRecall = Date.now();
+  m.ts = Date.now();
+  if(level>=2){        // nhớ rõ → tăng mạnh
+    m.strength = Math.min(100, m.strength + 14);
+    m.recallSuccess++; m.consecutive++;
+    if(DATA.mistakes[id]){ DATA.mistakes[id]=Math.max(0,DATA.mistakes[id]-1); if(!DATA.mistakes[id]) delete DATA.mistakes[id]; }
+  } else if(level===1){ // lờ mờ → tăng nhẹ, không reset chuỗi hẳn
+    m.strength = Math.min(100, m.strength + 5);
+    m.recallSuccess++; m.consecutive=Math.max(0,m.consecutive);
+  } else {              // không nhớ → giảm mạnh, đánh dấu là từ yếu
+    m.strength = Math.max(0, m.strength - 18);
+    m.recallFail++; m.consecutive=0;
+    DATA.mistakes[id] = (DATA.mistakes[id]||0)+1;
+  }
+  scheduleAdaptive(id);
+  save();
+}
+// Cập nhật trí nhớ sau khi LUYỆN ĐẶT CÂU (dùng điểm chấm sẵn có — không đổi Practice engine, mục W)
+function applyPracticeToMemory(id, score, passed){
+  const m = memOf(id);
+  m.lastPractice = Date.now(); m.ts = Date.now();
+  if(passed && score>=70){ m.strength = Math.min(100, m.strength + 8); m.consecutive++; }
+  else if(score>=50){ m.strength = Math.min(100, m.strength + 2); }
+  else { m.strength = Math.max(0, m.strength - 8); m.consecutive=0; }
+  scheduleAdaptive(id);
+}
+// Khoảng cách ôn thích ứng theo độ nhớ (mục I) — vẫn ghi vào reviewQueue cũ để tương thích.
+function adaptiveInterval(strength){
+  if(strength>=85) return 14 + Math.round(Math.random()*16); // 14–30 ngày
+  if(strength>=75) return 7 + Math.round(Math.random()*7);   // 7–14
+  if(strength>=40) return 2 + Math.round(Math.random()*2);   // 2–4
+  return 1;                                                   // yếu: ôn lại sau 1 ngày
+}
+function scheduleAdaptive(id){
+  const days = adaptiveInterval(memOf(id).strength);
+  DATA.reviewQueue[id] = new Date(Date.now()+days*864e5).toISOString().slice(0,10);
+}
+function daysSinceRecall(id){
+  const m=memOf(id);
+  const base = m.lastRecall || m.lastPractice || DATA.learned[id]?.ts;
+  if(!base) return 999;
+  return Math.floor((Date.now()-base)/864e5);
+}
+// Điểm ưu tiên ôn (mục E/P): từ yếu + quá hạn + lâu chưa gặp + chưa từng recall → điểm cao hơn.
+function reviewPriority(id){
+  const m = memOf(id);
+  const t = todayStr();
+  let score = 0;
+  score += (100 - m.strength) * 1.5;              // càng yếu càng ưu tiên (lớn nhất)
+  const nd = DATA.reviewQueue[id];
+  if(nd){ const overdue = Math.floor((Date.parse(t)-Date.parse(nd))/864e5); if(overdue>0) score += overdue*8; } // quá hạn
+  score += (DATA.mistakes[id]||0) * 12;           // hay sai
+  score += Math.min(daysSinceRecall(id), 30);     // lâu chưa gặp
+  if(!m.lastRecall) score += 15;                  // chưa từng recall bao giờ
+  score -= m.consecutive * 4;                      // nhớ liên tiếp nhiều → giãn ra
+  return score;
+}
+// Trộn để không dồn cùng 1 topic liên tiếp (mục L) — xoay vòng theo topic.
+function interleaveByTopic(list){
+  const byTopic={};
+  list.forEach(v=>{ (byTopic[v.topic]=byTopic[v.topic]||[]).push(v); });
+  const buckets=Object.values(byTopic);
+  const out=[]; let added=true;
+  while(added){ added=false; for(const b of buckets){ if(b.length){ out.push(b.shift()); added=true; } } }
+  return out;
+}
+// Chọn pool ôn thông minh (mục D/M/P): xếp theo priority, lấy limit từ, ưu tiên từ yếu,
+// chèn 1 từ mạnh để kiểm tra duy trì, rồi interleave topic.
+function getSmartReviewPool(limit){
+  limit = limit || DATA.reviewLimit || 5;
+  const learned = allVocab().filter(v=>DATA.learned[v.id]);
+  if(!learned.length) return [];
+  const ranked = learned.map(v=>({v, p:reviewPriority(v.id), s:memOf(v.id).strength}))
+                        .sort((a,b)=>b.p-a.p);
+  // lấy phần lớn từ nhóm ưu tiên cao (yếu/quá hạn), chừa 1 slot cho 1 từ "mạnh" để kiểm tra duy trì
+  const strongOnes = ranked.filter(x=>x.s>=75);
+  let chosen = ranked.slice(0, limit).map(x=>x.v);
+  if(strongOnes.length && limit>=4 && !chosen.some(v=>memOf(v.id).strength>=75)){
+    chosen[chosen.length-1] = strongOnes[Math.floor(Math.random()*strongOnes.length)].v; // thay slot cuối bằng 1 từ mạnh
+  }
+  return interleaveByTopic(chosen);
+}
+// Danh sách "Từ tôi đang yếu" (mục J): kết hợp mistakes + memory strength thấp.
+function weakWordList(){
+  const ids = new Set([
+    ...Object.keys(DATA.mistakes||{}),
+    ...Object.keys(DATA.memory||{}).filter(id=>memOf(id).strength<40),
+  ]);
+  return [...ids].map(id=>({ v:findVocab(id), miss:DATA.mistakes[id]||0, strength:memOf(id).strength }))
+    .filter(x=>x.v && DATA.learned[x.v.id])
+    .sort((a,b)=> (a.strength-b.strength) || (b.miss-a.miss));
+}
+// Thống kê phân tầng trí nhớ cho màn Tiến độ (mục U).
+function memoryBreakdown(){
+  const learned = allVocab().filter(v=>DATA.learned[v.id]);
+  let strong=0, developing=0, weak=0;
+  learned.forEach(v=>{ const t=strengthTier(memOf(v.id).strength).key;
+    if(t==='strong') strong++; else if(t==='developing') developing++; else weak++; });
+  return {total:learned.length, strong, developing, weak};
+}
+function smartReviewReadyCount(){ return getSmartReviewPool(DATA.reviewLimit||5).length; }
 
 /* =================================================================
    SPEECH LAYER — Web Speech API, fail gracefully
@@ -10842,7 +11055,9 @@ function cacheGeneratedExercise(vid, ex){
 const state = { tab:'home', topic:null, deck:[], deckIdx:0, flip:false, search:'',
   practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null,
   fx:{}, fxTab:0,
-  calYear:null, calMonth:null, calSel:null, calWord:null };
+  calYear:null, calMonth:null, calSel:null, calWord:null,
+  rv:{ pool:[], idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart' } };
+// state.rv = phiên Active Recall / Smart Review (mode: vi2en | en2vi | context)
 // fx[vocabId] = { [exIdx]: { input, result, loading, error } }  — luyện câu inline trong flashcard
 function fxGet(vid, idx){ return (state.fx[vid] && state.fx[vid][idx]) || { input:'', result:null, loading:false, error:null }; }
 function fxSet(vid, idx, patch){
@@ -10924,6 +11139,16 @@ function viewHome(){
         ?'<div class="card-sub" style="color:var(--success);margin-top:10px">✓ Hoàn thành mục tiêu hôm nay! Tuyệt vời 🎉</div>'
         :`<div class="card-sub" style="margin-top:10px">${activeToday?'Bạn đã học hôm nay 👍 cố thêm '+(goal-done)+' từ để đạt mục tiêu.':'Chưa học hôm nay — học vài từ để giữ chuỗi 🔥'}</div>`}
     </div>
+
+    ${(()=>{ const rc=smartReviewReadyCount();
+      return rc>0
+        ? `<button class="review-cta" onclick="startSmartReview()">
+             <div class="k">🧠 Ôn tập hôm nay</div>
+             <div class="v">${rc} từ cần ôn</div>
+             <div class="p">Tự nhớ lại trước khi xem đáp án — nhớ lâu hơn ▸</div>
+           </button>`
+        : (learnedCount()>0 ? `<div class="card" style="text-align:center;padding:16px"><div class="card-sub">Hôm nay chưa có từ cần ôn 🎉</div></div>` : '');
+    })()}
 
     <div class="stat-row">
       <div class="stat"><div class="n tabular">${learnedCount()}</div><div class="l">Từ đã học</div></div>
@@ -11227,15 +11452,19 @@ function highlightDiff(orig, corrected){
   }).join(' ');
 }
 function viewDeckDone(){
+  const justLearned = deckJustLearned();
   return `<div class="deck-top"><button class="icon-btn" onclick="exitDeck()">${svg(IC.back,20)}</button>
     <span class="deck-count">Hoàn thành</span><span style="width:40px"></span></div>
     <div class="empty" style="padding-top:60px">
       <div class="e">🎉</div>
       <div style="font-size:19px;font-weight:700;color:var(--ink);margin-bottom:6px">Xong bộ từ này!</div>
       <div style="margin-bottom:22px">Bạn đã ôn qua ${state.deck.length} từ. Giỏi lắm!</div>
-      <button class="btn btn-brand" onclick="exitDeck()">Về danh sách</button>
+      ${justLearned.length>=2?`<button class="btn btn-brand" onclick="startMemoryCheck(deckJustLearned())" style="margin-bottom:10px">🧠 Kiểm tra trí nhớ (${justLearned.length} từ)</button>`:''}
+      <button class="btn ${justLearned.length>=2?'btn-outline':'btn-brand'}" onclick="exitDeck()">Về danh sách</button>
     </div>`;
 }
+// Các từ trong deck vừa học mà đã được đánh dấu learned (để Memory Check ngay sau khi học — mục N)
+function deckJustLearned(){ return (state.deck||[]).filter(v=>v && DATA.learned[v.id]); }
 
 /* ---------- REVIEW = LỊCH TỪ ĐÃ HỌC ---------- */
 // Ngày học của 1 từ: ưu tiên firstDay, else suy từ ts.
@@ -11271,14 +11500,25 @@ function viewReview(){
   const y=state.calYear, m=state.calMonth;
   const today=new Date(); const todayKey=ymd(today.getFullYear(),today.getMonth(),today.getDate());
 
-  // tiêu đề + nút ôn giãn cách (giữ lại, gọn)
+  // tiêu đề + Ôn tập thông minh + Từ yếu (khoa học ghi nhớ)
   let body = header('Từ đã học theo ngày','📅 Ôn tập');
-  if(due.length){
-    body += `<div class="card" style="padding:14px 16px;display:flex;align-items:center;gap:12px">
-      <div style="flex:1"><div class="card-title">🔁 ${due.length} từ cần ôn hôm nay</div>
-        <div class="card-sub" style="margin-top:2px">Ôn đúng lúc giúp nhớ lâu.</div></div>
-      <button class="btn btn-brand btn-sm" style="width:auto;flex:none" onclick="startReview()">Ôn ▸</button>
-    </div>`;
+  const smartCount = smartReviewReadyCount();
+  if(smartCount>0){
+    body += `<button class="review-cta" onclick="startSmartReview()">
+      <div class="k">🧠 Ôn tập hôm nay</div>
+      <div class="v">${smartCount} từ cần ôn</div>
+      <div class="p">Trộn nhiều chủ đề · tự nhớ trước khi xem đáp án ▸</div>
+    </button>`;
+  }
+  const weak=weakWordList();
+  if(weak.length){
+    body += `<button class="weak-card" onclick="startWeakTraining()">
+      <div class="wc-body">
+        <div class="wc-t">🎯 Luyện từ tôi đang yếu</div>
+        <div class="wc-s">${weak.length} từ cần củng cố thêm</div>
+      </div>
+      <span class="wc-arrow">▸</span>
+    </button>`;
   }
 
   // Header tháng + nút chuyển
@@ -11595,6 +11835,17 @@ function viewProgress(){
       <div class="stat"><div class="n tabular">${avgPracticeScore()}%</div><div class="l">Điểm luyện</div></div>
       <div class="stat"><div class="n tabular">${DATA.sentencesPracticed||0}</div><div class="l">Câu đã luyện</div></div>
     </div>
+    ${(()=>{ const mb=memoryBreakdown(); if(!mb.total) return '';
+      return `<div class="card">
+        <div class="card-title" style="margin-bottom:4px">🧠 Sức nhớ từ vựng</div>
+        <div class="card-sub" style="margin-bottom:12px">${mb.total} từ đã học · cập nhật theo kết quả ôn</div>
+        <div class="mem-break">
+          <div class="mem-cell"><b style="color:var(--success)">${mb.strong}</b><span>🟢 Nhớ rõ</span></div>
+          <div class="mem-cell"><b style="color:var(--warn)">${mb.developing}</b><span>🟡 Đang nhớ</span></div>
+          <div class="mem-cell"><b style="color:var(--danger)">${mb.weak}</b><span>🔴 Cần ôn</span></div>
+        </div>
+      </div>`;
+    })()}
     <div class="card">
       <div class="card-title" style="margin-bottom:14px">Từ mới học mỗi ngày</div>
       ${week.map(d=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
@@ -11642,10 +11893,160 @@ function last7Days(){
 }
 
 /* =================================================================
+   ACTIVE RECALL — màn hình phiên ôn (retrieval-first, mục B/C/R/AB)
+================================================================= */
+function contextSentence(v){
+  // Câu context có chỗ trống thay cho target (mục B mode 3) — dùng exampleEn nếu chứa từ, else fallback.
+  const w=v.word;
+  if(v.exampleEn && v.exampleEn.toLowerCase().includes(w.toLowerCase())){
+    const re=new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i');
+    return { sent:v.exampleEn.replace(re,'______'), vi:v.exampleVi||'' };
+  }
+  return { sent:`______ — ${v.meaningVi}`, vi:'' };
+}
+function pickRecallMode(i){ return ['vi2en','en2vi','context'][i%3]; } // xoay vòng 3 mode
+function viewRecall(){
+  const rv=state.rv;
+  if(!rv.pool.length) return header('Ôn tập','') + `<div class="empty" style="padding:40px 12px"><div class="e">🎉</div>Không có từ để ôn.</div>`;
+  if(rv.idx>=rv.pool.length) return recallSummary();
+  const v=rv.pool[rv.idx];
+  const mode=rv.mode;
+  const tier=strengthTier(memOf(v.id).strength);
+  const srcLabel = rv.source==='weak'?'Luyện từ yếu' : rv.source==='check'?'Kiểm tra trí nhớ' : 'Ôn tập hôm nay';
+
+  // Đề bài theo mode — RETRIEVAL FIRST: chưa lộ đáp án
+  let prompt='', hint='', answerFace='';
+  if(mode==='vi2en'){
+    prompt=`<div class="rv-q-label">Nhớ từ tiếng Anh của:</div><div class="rv-q-vi">${escapeHtml(v.meaningVi)}</div>`;
+    answerFace=`<div class="rv-ans-en">${escapeHtml(v.word)}</div><div class="rv-ans-ipa">${escapeHtml(v.pronunciation||'')}</div>`;
+  } else if(mode==='en2vi'){
+    prompt=`<div class="rv-q-label">Nghĩa tiếng Việt là gì?</div><div class="rv-q-en">${escapeHtml(v.word)}</div>
+      <button class="rv-sound" onclick="speak('${escq(v.word)}')">${svg(IC.sound,16)} Nghe</button>`;
+    answerFace=`<div class="rv-ans-vi">${escapeHtml(v.meaningVi)}</div>`;
+  } else {
+    const c=contextSentence(v);
+    prompt=`<div class="rv-q-label">Điền từ còn thiếu:</div><div class="rv-q-ctx">${escapeHtml(c.sent)}</div>${c.vi?`<div class="rv-q-ctxvi">${escapeHtml(c.vi)}</div>`:''}`;
+    answerFace=`<div class="rv-ans-en">${escapeHtml(v.word)}</div><div class="rv-ans-vi" style="margin-top:4px">${escapeHtml(v.meaningVi)}</div>`;
+  }
+
+  let body = `<div class="rv-top">
+    <button class="icon-btn" onclick="quitRecall()" aria-label="Thoát">${svg(IC.back,18)}</button>
+    <div class="rv-progress"><span>${srcLabel}</span> · ${rv.idx+1}/${rv.pool.length}</div>
+    <div class="rv-tier" style="color:${tier.color}">${tier.icon}</div>
+  </div>
+  <div class="rv-bar"><i style="width:${Math.round(rv.idx/rv.pool.length*100)}%"></i></div>`;
+
+  body += `<div class="rv-card">
+    <div class="rv-chip">${topicEmoji(v.topic)} ${topicName(v.topic)}</div>
+    <div class="rv-prompt">${prompt}</div>`;
+
+  if(!rv.revealed){
+    // Ô nhập KHÔNG bắt buộc (mục C) + KHÔNG auto-focus (mục AA). Chỉ mode vi2en/context mới có ô nhập.
+    if(mode!=='en2vi'){
+      body += `<textarea class="rv-input" id="rvInput" rows="1" placeholder="Nhập đáp án (không bắt buộc)…"
+        oninput="rvOnInput(this.value)">${escapeHtml(rv.input||'')}</textarea>`;
+    }
+    body += `<button class="btn btn-brand" onclick="revealRecall()">Xem đáp án</button>`;
+    body += `<div class="rv-tip">💡 Cố nhớ trong đầu trước — rồi mới xem đáp án.</div>`;
+  } else {
+    // Đã lộ đáp án → tự đánh giá (self-assessment, mục Q)
+    let verdict='';
+    if(mode!=='en2vi' && (rv.input||'').trim()){
+      const ok=levSimple((rv.input||'').trim().toLowerCase(), v.word.toLowerCase());
+      verdict = ok ? `<div class="rv-verdict ok">✅ Khớp với đáp án</div>` : `<div class="rv-verdict no">🔍 So sánh với đáp án bên dưới</div>`;
+    }
+    body += `<div class="rv-answer">${verdict}${answerFace}
+      <button class="rv-sound" onclick="speak('${escq(v.word)}')">${svg(IC.sound,16)} Nghe</button></div>`;
+    body += `<div class="rv-assess-label">Bạn nhớ từ này thế nào?</div>
+      <div class="rv-assess">
+        <button class="rv-a rv-a-no" onclick="answerRecall(0)">🔴<span>Không nhớ</span></button>
+        <button class="rv-a rv-a-mid" onclick="answerRecall(1)">🟡<span>Lờ mờ</span></button>
+        <button class="rv-a rv-a-yes" onclick="answerRecall(2)">🟢<span>Nhớ rõ</span></button>
+      </div>`;
+  }
+  body += `</div>`;
+  return body;
+}
+function recallSummary(){
+  const rv=state.rv;
+  const remembered = rv.results.filter(r=>r>=1).length;
+  const needWork = rv.results.filter(r=>r===0).length;
+  let body = `<div class="rv-top"><div style="width:44px"></div>
+    <div class="rv-progress">Hoàn thành</div><div style="width:44px"></div></div>`;
+  body += `<div class="rv-done">
+    <div class="rv-done-emo">🎉</div>
+    <h2>Đã ôn xong ${rv.pool.length} từ!</h2>
+    <div class="rv-done-stats">
+      <div class="rv-done-stat"><b style="color:var(--success)">${remembered}</b><span>đã nhớ</span></div>
+      <div class="rv-done-stat"><b style="color:var(--danger)">${needWork}</b><span>cần ôn thêm</span></div>
+    </div>`;
+  const weak=weakWordList();
+  if(weak.length){
+    // Bước 2+3 của luyện từ yếu (Use + Challenge): dẫn sang Practice engine sẵn có
+    if(rv.source==='weak'){
+      body += `<button class="btn btn-brand" onclick="practiceWeakWord()">✍️ Đặt câu với từ yếu (Bước 2–3)</button>`;
+      body += `<button class="btn btn-outline" onclick="startWeakTraining()" style="margin-top:8px">🎯 Nhớ lại từ yếu lần nữa</button>`;
+    } else {
+      body += `<button class="btn btn-brand" onclick="startWeakTraining()">🎯 Luyện lại từ yếu (${weak.length})</button>`;
+    }
+  }
+  body += `<button class="btn btn-outline" onclick="quitRecall()" style="margin-top:8px">Xong</button></div>`;
+  return body;
+}
+function rvOnInput(val){ state.rv.input=val; } // không render — giữ focus, không nhảy layout
+function revealRecall(){ state.rv.revealed=true; render(); }
+function answerRecall(level){
+  const rv=state.rv; const v=rv.pool[rv.idx];
+  applyRecall(v.id, level);          // cập nhật memory strength + lịch ôn thích ứng
+  rv.results.push(level);
+  rv.idx++; rv.revealed=false; rv.input=''; rv.mode=pickRecallMode(rv.idx);
+  render(); document.getElementById('main').scrollTop=0;
+}
+function quitRecall(){ state.tab='review'; state.rv={pool:[],idx:0,mode:'vi2en',revealed:false,input:'',results:[],source:'smart'}; render(); }
+// So khớp gần đúng (Levenshtein đơn giản) để chấm ô nhập tự nguyện
+function levSimple(a,b){
+  if(a===b) return true;
+  if(!a||!b) return false;
+  const d=[]; for(let i=0;i<=a.length;i++){d[i]=[i];} for(let j=0;j<=b.length;j++){d[0][j]=j;}
+  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++){
+    d[i][j]=Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+  }
+  return d[a.length][b.length] <= Math.max(1, Math.floor(b.length*0.2)); // sai ≤20% ký tự = chấp nhận
+}
+// ── Các điểm khởi động phiên ──
+function startSmartReview(){
+  const pool=getSmartReviewPool(DATA.reviewLimit||5);
+  if(!pool.length){ toast('Hôm nay chưa có từ cần ôn 🎉'); return; }
+  state.rv={pool, idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart'};
+  state.tab='recall'; closeFab(); render(); document.getElementById('main').scrollTop=0;
+}
+function startWeakTraining(){
+  const weak=weakWordList().slice(0, Math.max(5, DATA.reviewLimit||5)).map(x=>x.v);
+  if(!weak.length){ toast('Chưa có từ yếu nào — làm tốt lắm! 🎉'); return; }
+  state.rv={pool:interleaveByTopic(weak), idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'weak'};
+  state.tab='recall'; closeFab(); render(); document.getElementById('main').scrollTop=0;
+}
+// Bước USE + CHALLENGE của luyện từ yếu (mục K): dùng lại Practice engine sẵn có (Câu 1 = Use, Câu 3 = Challenge),
+// KHÔNG tạo màn hình mới, KHÔNG đổi Practice engine (mục W). Mở Practice cho từ yếu nhất.
+function practiceWeakWord(){
+  const list=weakWordList();
+  const v = list.length? list[0].v : pickPracticeVocab();
+  if(!v){ toast('Chưa có từ yếu để luyện.'); return; }
+  state.practiceVocab=v; state.practiceInput=''; state.practiceResult=null;
+  closeFab(); state.tab='practice'; render(); document.getElementById('main').scrollTop=0;
+}
+function startMemoryCheck(vocabList){
+  const pool=(vocabList||[]).filter(v=>v);
+  if(pool.length<2) return;
+  state.rv={pool:interleaveByTopic(pool.slice()), idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'check'};
+  state.tab='recall'; closeFab(); render(); document.getElementById('main').scrollTop=0;
+}
+
+/* =================================================================
    ACTIONS / ROUTER
 ================================================================= */
-const VIEWS = { home:viewHome, learn:viewLearn, topic:viewTopic, flash:viewFlash, review:viewReview, progress:viewProgress, practice:viewPractice, result:viewResult, notes:viewNotes };
-const HIDE_FAB = new Set(['flash','practice','result']);
+const VIEWS = { home:viewHome, learn:viewLearn, topic:viewTopic, flash:viewFlash, review:viewReview, progress:viewProgress, practice:viewPractice, result:viewResult, notes:viewNotes, recall:viewRecall };
+const HIDE_FAB = new Set(['flash','practice','result','recall']);
 function viewNotes(){
   const groups=groupNotesByDay();
   const total=(DATA.notes||[]).length;
@@ -12143,6 +12544,14 @@ function openSettings(){
     </div>
 
     <div class="card" style="margin:0 0 12px">
+      <div class="card-title" style="margin-bottom:4px">Số từ mỗi phiên ôn tập</div>
+      <div class="card-sub" style="margin-bottom:10px">Phiên ngắn giúp học đều mỗi ngày trong ~5 phút.</div>
+      <div style="display:flex;gap:8px">
+        ${[5,10,15].map(n=>`<button class="btn ${(DATA.reviewLimit||5)===n?'btn-brand':'btn-ghost'} btn-sm" onclick="setReviewLimit(${n})">${n} từ</button>`).join('')}
+      </div>
+    </div>
+
+    <div class="card" style="margin:0 0 12px">
       <div class="card-title" style="margin-bottom:6px">Giao diện</div>
       <div style="display:flex;gap:8px">
         <button class="btn ${DATA.theme==='dark'?'btn-brand':'btn-ghost'} btn-sm" onclick="setTheme('dark')">🌙 Tối</button>
@@ -12176,6 +12585,7 @@ function openSettings(){
   showSheet(body);
 }
 function setGoal(n){ DATA.dailyGoal=n; save(); openSettings(); render(); }
+function setReviewLimit(n){ DATA.reviewLimit=n; save(); openSettings(); render(); }
 function setTheme(t){ DATA.theme=t; save(); openSettings(); render(); }
 function saveGeminiKey(){
   const el=document.getElementById('geminiKeyInput'); const k=(el?.value||'').trim();
