@@ -542,6 +542,29 @@ html.light .bar-mini{background:rgba(0,0,0,.08)}
 .mem-cell{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 10px;text-align:center;box-shadow:var(--sh-card)}
 .mem-cell b{display:block;font-size:22px;line-height:1;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
 .mem-cell span{font-size:11px;color:var(--muted);margin-top:5px;display:block}
+
+/* ===== Sổ tay lỗi — Error Review Deck (mục 3-10) ===== */
+.err-summary{text-align:center;padding:22px 18px}
+.err-summary-n{font-size:19px;font-weight:700;margin-bottom:12px}
+.err-summary-tiers{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.err-tier-chip{font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px;background:var(--surface-2);color:var(--ink)}
+.err-tier-chip.weak{background:var(--danger-bg);color:var(--danger)}
+.err-tier-chip.dev{background:var(--warn-bg);color:var(--warn)}
+.err-tier-chip.strong{background:var(--success-bg);color:var(--success)}
+.err-you-wrote{font-size:13px;color:var(--muted);margin-top:4px}
+.err-bad-big{font-size:22px;font-weight:700;color:var(--danger);margin-top:8px;line-height:1.35;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
+.err-good-big{font-size:22px;font-weight:700;color:var(--success);line-height:1.35;margin-bottom:12px;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Poppins",sans-serif}
+.err-mynote{background:var(--brand-light);border:1px solid var(--brand);border-radius:14px;padding:12px 14px;margin:10px 0}
+.err-mynote-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--brand);font-weight:700;margin-bottom:5px}
+.err-mynote-txt{font-size:15px;line-height:1.5;color:var(--ink);margin-bottom:8px}
+.err-mini{background:var(--surface-2);border-radius:14px;padding:14px;margin-top:16px}
+.err-mini-lbl{font-size:13px;font-weight:700;margin-bottom:4px}
+.err-mini-hint{font-size:12.5px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.err-mini-result{font-size:13px;font-weight:600;margin-top:8px;padding:8px 10px;border-radius:10px}
+.err-mini-result.ok{background:var(--success-bg);color:var(--success)}
+.err-mini-result.no{background:var(--surface);color:var(--muted)}
 /* Card "Ôn tập hôm nay" trên Home + Review */
 .review-cta{background:var(--brand-grad);border:none;color:#fff;border-radius:var(--r-card);padding:20px;
   box-shadow:var(--sh-glow);margin-bottom:16px;width:100%;text-align:left;transition:transform .18s cubic-bezier(.34,1.56,.64,1)}
@@ -10669,6 +10692,71 @@ function memoryBreakdown(){
 function smartReviewReadyCount(){ return getSmartReviewPool(DATA.reviewLimit||5).length; }
 
 /* =================================================================
+   ERROR NOTEBOOK MEMORY ENGINE — "Sổ tay lỗi" Active Recall Deck
+   Lưu chỉ số ghi nhớ TRỰC TIẾP trên từng note (notes vốn đã là mảng có thể sửa,
+   khác VOCAB cố định) — đơn giản, không cần map riêng, save() tự serialize đúng.
+   Fields mới (lazy, backward-compatible — note cũ không có thì tự khởi tạo an toàn):
+   errStrength, errorReviewCount, errorRecallSuccess, errorRecallFail, lastErrorReview
+================================================================= */
+const fixNotes = () => (DATA.notes||[]).filter(n=>n.kind==='fix');
+function errMemOf(n){
+  if(n.errStrength==null){
+    n.errStrength = 20;            // lỗi mới lưu → coi như còn yếu, cần ôn sớm
+    n.errorReviewCount = 0;
+    n.errorRecallSuccess = 0;
+    n.errorRecallFail = 0;
+    n.lastErrorReview = null;
+  }
+  return n;
+}
+function errTier(n){
+  errMemOf(n);
+  if(n.errStrength>=75) return {key:'strong', label:'Đã nhớ', emoji:'🟢', color:'var(--success)'};
+  if(n.errStrength>=40) return {key:'developing', label:'Đang học', emoji:'🟡', color:'var(--warn)'};
+  return {key:'weak', label:'Cần nhớ', emoji:'🔴', color:'var(--danger)'};
+}
+// Cập nhật sau 1 lần tự đánh giá trong Error Deck. level: 0=chưa nhớ,1=lờ mờ,2=nhớ rồi
+function applyErrorRecall(n, level){
+  errMemOf(n);
+  n.lastErrorReview = Date.now();
+  n.errorReviewCount++;
+  if(level>=2){ n.errStrength=Math.min(100,n.errStrength+18); n.errorRecallSuccess++; }
+  else if(level===1){ n.errStrength=Math.min(100,n.errStrength+6); n.errorRecallSuccess++; }
+  else { n.errStrength=Math.max(0,n.errStrength-20); n.errorRecallFail++; }
+  save();
+}
+// Ưu tiên ôn (mục 12): sai nhiều lần (cùng bad/good lặp ở nhiều note) > chưa từng review > mới sai gần đây > memory yếu
+function errorPriority(n){
+  errMemOf(n);
+  let score = (100 - n.errStrength) * 1.3;                 // càng yếu càng ưu tiên
+  if(!n.lastErrorReview) score += 28;                       // chưa từng ôn
+  const repeatCount = fixNotes().filter(x=>x.bad===n.bad && x.good===n.good).length;
+  score += Math.min(30, (repeatCount-1)*15);                // lặp lại nhiều lần
+  const daysSince = n.ts? Math.floor((Date.now()-n.ts)/864e5) : 99;
+  if(daysSince<=2) score += 10;                             // mới sai gần đây
+  return score;
+}
+function errorSummaryStats(){
+  const list = fixNotes();
+  let weak=0, dev=0, strong=0;
+  list.forEach(n=>{ const k=errTier(n).key; if(k==='weak')weak++; else if(k==='developing')dev++; else strong++; });
+  return { total:list.length, weak, developing:dev, strong };
+}
+function todayErrorCount(){
+  const t0 = new Date(); t0.setHours(0,0,0,0);
+  return fixNotes().filter(n=>n.ts>=t0.getTime()).length;
+}
+// Chọn tối đa `limit` lỗi để ôn, sắp theo ưu tiên giảm dần (mục 9: session 3–10 lỗi)
+const ERR_SESSION_SIZE = 10;
+function getErrorReviewPool(limit){
+  limit = limit || ERR_SESSION_SIZE;
+  const list = fixNotes();
+  if(!list.length) return [];
+  return list.map(n=>({n,p:errorPriority(n)})).sort((a,b)=>b.p-a.p).slice(0,limit).map(x=>x.n);
+}
+
+
+/* =================================================================
    SPEECH LAYER — Web Speech API, fail gracefully
 ================================================================= */
 function speak(text){
@@ -11056,7 +11144,9 @@ const state = { tab:'home', topic:null, deck:[], deckIdx:0, flip:false, search:'
   practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null,
   fx:{}, fxTab:0,
   calYear:null, calMonth:null, calSel:null, calWord:null,
-  rv:{ pool:[], idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart' } };
+  rv:{ pool:[], idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart' },
+  erv:null,          // Error Deck: { pool:[note], idx, revealed, results:[level], miniInput, miniChecked, miniOk }
+  notesListMode:false }; // false = summary+CTA (mặc định, mục 3), true = xem tất cả (list cũ giữ nguyên)
 // state.rv = phiên Active Recall / Smart Review (mode: vi2en | en2vi | context)
 // fx[vocabId] = { [exIdx]: { input, result, loading, error } }  — luyện câu inline trong flashcard
 function fxGet(vid, idx){ return (state.fx[vid] && state.fx[vid][idx]) || { input:'', result:null, loading:false, error:null }; }
@@ -12043,30 +12133,166 @@ function startMemoryCheck(vocabList){
 }
 
 /* =================================================================
+   ERROR REVIEW DECK — "Sổ tay lỗi" dạng flashcard Active Recall
+   Flow (mục 20): LỖI → RECALL → REVEAL → AI EXPLANATION → MY NOTE → MINI PRACTICE → SELF-ASSESS → NEXT
+================================================================= */
+function startErrorReview(){
+  const pool = getErrorReviewPool(ERR_SESSION_SIZE);
+  if(!pool.length){ toast('Chưa có lỗi nào để ôn 🎉'); return; }
+  state.erv = { pool, idx:0, revealed:false, results:[], miniInput:'', miniChecked:false, miniOk:false };
+  state.tab='errdeck'; closeFab(); render(); document.getElementById('main').scrollTop=0;
+}
+function quitErrorReview(){ state.erv=null; go('notes'); }
+function errRevealCard(){ if(state.erv) state.erv.revealed=true; render(); }
+function errPrevCard(){
+  const e=state.erv; if(!e || e.idx<=0) return;
+  e.idx--; e.revealed=false; e.miniInput=''; e.miniChecked=false; render();
+}
+function errMiniInput(val){ if(state.erv) state.erv.miniInput=val; } // không render — giữ focus
+// Local check đơn giản (không cần Gemini, mục 10): đúng nếu câu chứa đúng phần "good" (không phân biệt hoa/thường)
+function errMiniCheck(){
+  const e=state.erv; if(!e) return;
+  const n=e.pool[e.idx];
+  const typed=(e.miniInput||'').trim().toLowerCase();
+  const target=(n.good||'').trim().toLowerCase();
+  e.miniChecked=true;
+  e.miniOk = !!typed && !!target && typed.includes(target);
+  render();
+}
+function errAnswerRecall(level){
+  const e=state.erv; if(!e) return;
+  const n=e.pool[e.idx];
+  applyErrorRecall(n, level);
+  e.results.push(level);
+  e.idx++; e.revealed=false; e.miniInput=''; e.miniChecked=false; e.miniOk=false;
+  render(); document.getElementById('main').scrollTop=0;
+}
+function viewErrorDeck(){
+  const e=state.erv;
+  if(!e) return '';
+  if(e.idx>=e.pool.length) return errorDeckSummary();
+  const n=e.pool[e.idx];
+  const tier=errTier(n);
+  const total=e.pool.length, cur=e.idx+1;
+
+  let head=`<div class="rv-top">
+    ${e.idx>0?`<button class="icon-btn" onclick="errPrevCard()" aria-label="Lỗi trước">‹</button>`:`<button class="icon-btn" onclick="quitErrorReview()" aria-label="Thoát">${svg(IC.back,18)}</button>`}
+    <div class="rv-progress">${cur} / ${total}</div>
+    <div class="rv-tier" style="color:${tier.color}">${tier.emoji}</div>
+  </div>
+  <div class="rv-bar"><i style="width:${Math.round(e.idx/total*100)}%"></i></div>`;
+
+  let body = `<div class="rv-card">
+    ${n.tag?`<span class="fix-tag" style="margin-bottom:10px">${tagIcon(n.tag)} ${escapeHtml(n.tag)}</span>`:''}
+    <div class="err-you-wrote">Bạn đã viết:</div>
+    <div class="err-bad-big">❌ ${escapeHtml(n.bad)}</div>`;
+
+  if(!e.revealed){
+    body += `<button class="btn btn-brand" style="margin-top:18px" onclick="errRevealCard()">Chạm để xem đáp án</button>
+      <div class="rv-tip">💡 Cố nhớ cách sửa trong đầu trước.</div>`;
+  } else {
+    // AI EXPLANATION — LỖI GÌ / SỬA GÌ / NHỚ THẾ NÀO / VÍ DỤ (mục 7), không đổi dữ liệu AI cũ
+    body += `<div class="rv-answer" style="text-align:left">
+      <div class="err-good-big">✅ ${escapeHtml(n.good)}</div>
+      ${n.myNote
+        ? `<div class="err-mynote"><div class="err-mynote-lbl">📝 Cách tôi nhớ</div>
+             <div class="err-mynote-txt">${escapeHtml(n.myNote)}</div>
+             <button class="dw-note-edit" onclick="editMyNote('${n.id}')">✏️ Chỉnh sửa</button></div>`
+        : (n.reason?`<div class="fix-tip">💡 Nhớ: <b>${escapeHtml(n.reason)}</b></div>`:'')
+      }
+      ${!n.myNote?`<button class="dw-note-edit" onclick="editMyNote('${n.id}')">📝 Thêm cách nhớ của bạn</button>`:''}
+      ${n.example?`<div class="fix-example">✏️ VD: <i>${escapeHtml(n.example)}</i></div>`:''}
+      ${n.sentence?`<div class="note-sent">Câu gốc: "${escapeHtml(n.sentence)}"</div>`:''}
+    </div>`;
+
+    // MINI PRACTICE (mục 10) — local check, không gọi Gemini
+    body += `<div class="err-mini">
+      <div class="err-mini-lbl">✍️ Thử áp dụng lại</div>
+      <div class="err-mini-hint">Viết một câu ngắn có dùng "<b>${escapeHtml(n.good)}</b>":</div>
+      <textarea class="rv-input" id="errMiniInput" rows="2" placeholder="Nhập câu của bạn…"
+        oninput="errMiniInput(this.value)">${escapeHtml(e.miniInput||'')}</textarea>
+      ${!e.miniChecked
+        ? `<button class="btn btn-outline btn-sm" style="width:auto;margin-top:8px" onclick="errMiniCheck()">Kiểm tra</button>`
+        : `<div class="err-mini-result ${e.miniOk?'ok':'no'}">${e.miniOk?'✅ Tốt! Bạn đã dùng đúng cụm từ.':'🔍 Chưa thấy "'+escapeHtml(n.good)+'" — thử lại hoặc bỏ qua.'}</div>`}
+    </div>`;
+
+    body += `<div class="rv-assess-label">Bạn nhớ lỗi này thế nào?</div>
+      <div class="rv-assess">
+        <button class="rv-a rv-a-no" onclick="errAnswerRecall(0)">🔴<span>Chưa nhớ</span></button>
+        <button class="rv-a rv-a-mid" onclick="errAnswerRecall(1)">🟡<span>Lờ mờ</span></button>
+        <button class="rv-a rv-a-yes" onclick="errAnswerRecall(2)">🟢<span>Nhớ rồi</span></button>
+      </div>`;
+  }
+  body += `</div>`;
+  return head+body;
+}
+function errorDeckSummary(){
+  const e=state.erv;
+  const good = e.results.filter(r=>r>=2).length;
+  const mid = e.results.filter(r=>r===1).length;
+  const bad = e.results.filter(r=>r===0).length;
+  const stillWeak = getErrorReviewPool(999).filter(n=>errTier(n).key==='weak').length;
+  return `<div class="rv-done">
+    <div class="rv-done-emo">🎉</div>
+    <h2>Review complete</h2>
+    <div class="rv-done-stats">
+      <div class="rv-done-stat"><b style="color:var(--success)">${good}</b><span>✓ nhớ tốt</span></div>
+      <div class="rv-done-stat"><b style="color:var(--warn)">${mid}</b><span>~ lờ mờ</span></div>
+      <div class="rv-done-stat"><b style="color:var(--danger)">${bad}</b><span>↻ cần ôn lại</span></div>
+    </div>
+    ${stillWeak?`<button class="btn btn-brand" onclick="startErrorReview()">Ôn lại lỗi yếu (${stillWeak}) ▸</button>`:''}
+    <button class="btn btn-outline" onclick="quitErrorReview()">Hoàn thành</button>
+  </div>`;
+}
+
+/* =================================================================
    ACTIONS / ROUTER
 ================================================================= */
-const VIEWS = { home:viewHome, learn:viewLearn, topic:viewTopic, flash:viewFlash, review:viewReview, progress:viewProgress, practice:viewPractice, result:viewResult, notes:viewNotes, recall:viewRecall };
-const HIDE_FAB = new Set(['flash','practice','result','recall']);
+const VIEWS = { home:viewHome, learn:viewLearn, topic:viewTopic, flash:viewFlash, review:viewReview, progress:viewProgress, practice:viewPractice, result:viewResult, notes:viewNotes, recall:viewRecall, errdeck:viewErrorDeck };
+const HIDE_FAB = new Set(['flash','practice','result','recall','errdeck']);
 function viewNotes(){
-  const groups=groupNotesByDay();
-  const total=(DATA.notes||[]).length;
+  const total=fixNotes().length;
+  const manualCount=(DATA.notes||[]).filter(n=>n.kind==='manual').length;
   let body = header('Sổ tay lỗi của bạn','📓 Ghi chú');
-  // Ô tự viết ghi chú
+  // Ô tự viết ghi chú — giữ nguyên, luôn hiện
   body += `<div class="card">
     <div class="card-title" style="margin-bottom:8px">✍️ Tự viết ghi chú</div>
     <textarea class="answer-area" id="manualNoteInput" style="min-height:80px" placeholder="Ví dụ: nhớ dùng 'a/an' trước danh từ đếm được số ít..."></textarea>
     <button class="btn btn-brand btn-sm" style="width:auto;margin-top:10px" onclick="addManualNote()">${svg(IC.plus,16)} Thêm ghi chú</button>
   </div>`;
 
-  if(!total){
+  if(!total && !manualCount){
     body += `<div class="card" style="text-align:center;padding:30px 18px">
       <div style="font-size:34px;margin-bottom:8px">📝</div>
       <div class="card-title">Chưa có ghi chú nào</div>
-      <div class="card-sub" style="margin-top:6px">Khi AI chấm câu và chỉ ra lỗi, bấm <b>📌 Lưu</b> ở lỗi đó để lưu vào đây ôn lại theo ngày.</div>
+      <div class="card-sub" style="margin-top:6px">Khi AI chấm câu và chỉ ra lỗi, bấm <b>📌 Lưu</b> ở lỗi đó để lưu vào đây ôn lại.</div>
     </div>`;
     return body;
   }
 
+  if(!state.notesListMode){
+    // ==== MẶC ĐỊNH: summary + "Ôn ngay" (mục 3) — KHÔNG hiện list dài ====
+    if(total){
+      const s=errorSummaryStats(); const today=todayErrorCount();
+      body += `<div class="card err-summary">
+        <div class="err-summary-n">${s.total} lỗi đã lưu</div>
+        <div class="err-summary-tiers">
+          <span class="err-tier-chip weak">🔴 ${s.weak} cần nhớ</span>
+          <span class="err-tier-chip dev">🟡 ${s.developing} đang học</span>
+          <span class="err-tier-chip strong">🟢 ${s.strong} đã nhớ</span>
+        </div>
+        ${today?`<div class="card-sub" style="margin:10px 0 0">🕐 Hôm nay: ${today} lỗi mới</div>`:''}
+        <button class="btn btn-brand" style="margin-top:14px" onclick="startErrorReview()">🔁 Ôn ngay</button>
+      </div>`;
+    }
+    body += `<button class="btn btn-outline" style="margin-bottom:10px" onclick="toggleNotesListMode(true)">
+      📋 Xem tất cả${total?` (${total} lỗi${manualCount?` + ${manualCount} ghi chú`:''})`:` (${manualCount} ghi chú)`}</button>`;
+    return body;
+  }
+
+  // ==== "Xem tất cả" — list đầy đủ theo ngày, GIỮ NGUYÊN 100% code cũ ====
+  body += `<button class="btn btn-ghost btn-sm" style="width:auto;margin-bottom:14px" onclick="toggleNotesListMode(false)">‹ Quay lại tóm tắt</button>`;
+  const groups=groupNotesByDay();
   for(const g of groups){
     body += `<div class="note-day">
       <div class="note-day-label">${g.label} · ${g.items.length} ghi chú</div>
@@ -12100,6 +12326,7 @@ function viewNotes(){
   }
   return body;
 }
+function toggleNotesListMode(v){ state.notesListMode=v; render(); document.getElementById('main').scrollTop=0; }
 function render(){
   document.getElementById('main').innerHTML = `<div class="fade">${VIEWS[state.tab]()}</div>`;
   document.getElementById('nav').innerHTML = navHTML();
