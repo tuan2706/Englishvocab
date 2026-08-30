@@ -11187,12 +11187,19 @@ function icBtn(name, onclick, label, size=20){
 }
 function navHTML(){
   const items=[['home','Trang chủ'],['learn','Học'],['review','Ôn tập'],['progress','Tiến độ']];
-  return items.map(([id,label])=>`
-    <a class="${state.tab===id?'active':''}" onclick="go('${id}')">
+  // Các màn hình con của "Học" (chọn chủ đề → xem từ → flashcard → luyện câu) đều thuộc tab Học,
+  // để chấm active đúng ngay cả khi đang resume vào flashcard chứ không phải danh sách chủ đề.
+  const learnSubTabs = new Set(['learn','topic','flash','practice','result']);
+  return items.map(([id,label])=>{
+    const isActive = id==='learn' ? learnSubTabs.has(state.tab) : state.tab===id;
+    const onclick = id==='learn' ? 'goLearnTab()' : `go('${id}')`;
+    return `
+    <a class="${isActive?'active':''}" onclick="${onclick}">
       <span class="hl"></span>
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[id]}"/></svg>
       ${label}
-    </a>`).join('');
+    </a>`;
+  }).join('');
 }
 
 function header(desc,title){
@@ -12342,6 +12349,16 @@ function render(){
 // .main có đủ padding-bottom + khi bàn phím mở, nav/FAB tự ẩn (xem body.kb-open ở CSS)
 // nên vùng nhìn thấy luôn đủ chỗ cho ô nhập mà không cần ép scrollIntoView thủ công.
 function go(tab){ state.tab=tab; state.search=''; closeFab(); render(); document.getElementById('main').scrollTop=0; }
+// Riêng cho tab "Học" ở thanh điều hướng dưới: nếu đang có phiên Flashcard dở dang (lỡ bấm nhầm
+// tab khác rồi quay lại), quay về ĐÚNG chỗ đang học thay vì luôn về danh sách chủ đề (mất tiến độ).
+// Các nút "Học từ mới" khác (FAB, Quick actions) vẫn gọi go('learn') như cũ vì đó là hành động
+// CHỦ ĐỘNG muốn bắt đầu chọn chủ đề mới, không phải điều hướng nhầm.
+function goLearnTab(){
+  if(state.deck && state.deck.length && state.deckIdx < state.deck.length){
+    state.tab='flash'; closeFab(); render(); document.getElementById('main').scrollTop=0; return;
+  }
+  go('learn');
+}
 function openTopic(id){ state.topic=id; state.tab='topic'; closeFab(); render(); document.getElementById('main').scrollTop=0; }
 function openTopicAt(topicId,vocabId){ startDeck(topicId,vocabId); }
 function onSearch(v){ state.search=v; render(); }
@@ -12375,7 +12392,9 @@ function startReview(){
   if(!deck.length){ toast('Chưa có từ nào để ôn — học từ mới trước nhé!'); go('learn'); return; }
   state.deck=deck; state.deckIdx=0; state.flip=false; state.tab='flash'; closeFab(); render();
 }
-function exitDeck(){ state.tab = state.topic? 'topic':'learn'; render(); }
+// Thoát CHỦ ĐỘNG khỏi Flashcard (nút back trong màn hình) — coi như đã xong phiên này,
+// dọn state.deck để lần sau bấm tab "Học" không cố resume lại phiên đã chủ động rời đi.
+function exitDeck(){ state.deck=[]; state.deckIdx=0; state.tab = state.topic? 'topic':'learn'; render(); }
 
 /* Practice actions */
 function startPractice(){
@@ -12744,7 +12763,11 @@ function closeFab(){ document.getElementById('fab').classList.remove('open'); }
 /* Sheet: Settings + Export/Import (đưa lên sớm vì dữ liệu ở local) */
 function openSettings(){
   const keySet = hasKey();
-  const body=`<h2>⚙️ Cài đặt</h2><p class="sub">Ứng dụng cá nhân — dữ liệu lưu trên máy bạn.</p>
+  const body=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+      <h2 style="margin-bottom:0">⚙️ Cài đặt</h2>
+      <button class="icon-btn" onclick="closeSheet()" aria-label="Đóng" style="width:36px;height:36px">${svg(IC.close,18)}</button>
+    </div>
+    <p class="sub">Ứng dụng cá nhân — dữ liệu lưu trên máy bạn.</p>
 
     <div class="card" style="margin:0 0 12px;border-color:${keySet?'var(--success)':'var(--border)'}">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
@@ -12808,7 +12831,8 @@ function openSettings(){
         Ứng dụng cá nhân, dữ liệu ở máy bạn, không tài khoản, không quảng cáo.</div>
     </div>
 
-    <button class="btn btn-outline btn-sm" style="color:var(--danger)" onclick="resetAll()">🗑️ Xóa toàn bộ tiến độ</button>`;
+    <button class="btn btn-outline btn-sm" style="color:var(--danger)" onclick="resetAll()">🗑️ Xóa toàn bộ tiến độ</button>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="closeSheet()">Đóng</button>`;
   showSheet(body);
 }
 function setGoal(n){ DATA.dailyGoal=n; save(); openSettings(); render(); }
