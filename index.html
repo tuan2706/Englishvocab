@@ -17649,9 +17649,10 @@ function cacheGeneratedExercise(vid, ex){
 
 const state = { tab:'home', topic:null, deck:[], deckIdx:0, flip:false, search:'',
   practiceVocab:null, practiceInput:'', practiceResult:null, practiceLoading:false, practiceError:null,
+  practiceRecallRevealed:false, practiceRecallInput:'', // bước "nhớ nghĩa tiếng Việt" phía trên phần luyện đặt câu (chỉ dùng khi đang ôn tập)
   fx:{}, fxTab:0,
   calYear:null, calMonth:null, calSel:null, calWord:null,
-  rv:{ pool:[], idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart' },
+  rv:{ pool:[], idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart', active:false },
   erv:null,          // Error Deck: { pool:[note], idx, revealed, results:[level], miniInput, miniChecked, miniOk }
   notesListMode:false }; // false = summary+CTA (mặc định, mục 3), true = xem tất cả (list cũ giữ nguyên)
 // state.rv = phiên Active Recall / Smart Review (mode: vi2en | en2vi | context)
@@ -17692,14 +17693,27 @@ const IC = {
 function icBtn(name, onclick, label, size=20){
   return `<button class="icon-btn" onclick="${onclick}" aria-label="${label}" title="${label}">${svg(IC[name],size)}</button>`;
 }
+// Riêng cho tab "Ôn tập" ở thanh điều hướng dưới: nếu đang dở phiên ôn (Ôn tập hôm nay/Luyện từ yếu)
+// mà lỡ bấm nhầm tab khác, quay lại đúng thẻ đang làm dở thay vì mất tiến độ và tạo phiên mới.
+function goReviewTab(){
+  const rv=state.rv;
+  if(rv && rv.active && rv.pool.length && rv.idx < rv.pool.length){
+    state.tab='practice'; render(); document.getElementById('main').scrollTop=0; return;
+  }
+  go('review');
+}
 function navHTML(){
   const items=[['home','Trang chủ'],['learn','Học'],['review','Ôn tập'],['progress','Tiến độ']];
   // Các màn hình con của "Học" (chọn chủ đề → xem từ → flashcard → luyện câu) đều thuộc tab Học,
   // để chấm active đúng ngay cả khi đang resume vào flashcard chứ không phải danh sách chủ đề.
-  const learnSubTabs = new Set(['learn','topic','flash','practice','result']);
+  // NGOẠI LỆ: nếu đang trong phiên "Ôn tập hôm nay"/"Luyện từ yếu" (state.rv.active) thì màn
+  // practice/result lúc này thuộc về tab "Ôn tập", không phải "Học".
+  const inReviewChain = !!(state.rv && state.rv.active);
+  const learnSubTabs = new Set(['learn','topic','flash', ...(inReviewChain? [] : ['practice','result'])]);
+  const reviewSubTabs = new Set(['review', ...(inReviewChain? ['practice','result','recall'] : [])]);
   return items.map(([id,label])=>{
-    const isActive = id==='learn' ? learnSubTabs.has(state.tab) : state.tab===id;
-    const onclick = id==='learn' ? 'goLearnTab()' : `go('${id}')`;
+    const isActive = id==='learn' ? learnSubTabs.has(state.tab) : id==='review' ? reviewSubTabs.has(state.tab) : state.tab===id;
+    const onclick = id==='learn' ? 'goLearnTab()' : id==='review' ? 'goReviewTab()' : `go('${id}')`;
     return `
     <a class="${isActive?'active':''}" onclick="${onclick}">
       <span class="hl"></span>
@@ -18225,6 +18239,7 @@ function pickPracticeVocab(){
 }
 function viewPractice(){
   const v = state.practiceVocab;
+  const rv = state.rv, inReview = !!(rv && rv.active);
   if(!v) return `<div class="empty"><div class="e">✎</div>Chưa chọn từ để luyện.</div>`;
   if(state.practiceLoading) return `<div class="deck-top">
       <span style="width:40px"></span><span class="deck-count">Đang chấm...</span><span style="width:40px"></span></div>
@@ -18233,15 +18248,31 @@ function viewPractice(){
       <div class="card-sub">Thường mất vài giây</div></div>`;
   const ex = getExercises(v)[0] || {promptVi:'', targetPhrase:v.word};
   const aiOn = hasKey();
+  const srcLabel = inReview ? (rv.source==='weak'?'Luyện từ yếu':'Ôn tập hôm nay') : '';
   return `<div class="deck-top">
       <button class="icon-btn" onclick="exitPractice()">${svg(IC.back,20)}</button>
-      <span class="deck-count">Luyện đặt câu</span>
+      <span class="deck-count">${inReview? `${srcLabel} · ${rv.idx+1}/${rv.pool.length}` : 'Luyện đặt câu'}</span>
       <button class="icon-btn" onclick="toggleTheme()" aria-label="Đổi giao diện sáng/tối">${svg(DATA.theme==='light'?IC.moon:IC.sun,20)}</button>
     </div>
+    ${inReview?`<div class="rv-bar" style="margin:0 0 14px"><i style="width:${Math.round(rv.idx/rv.pool.length*100)}%"></i></div>`:''}
 
     ${!isOnline()?`<div class="banner">📴 Bạn đang offline — sẽ chấm tạm bằng máy. AI cần Internet.</div>`:''}
     ${(isOnline()&&!aiOn)?`<div class="banner">💡 Bật <b>AI chấm thông minh</b> (miễn phí) trong Cài đặt để có nhận xét chi tiết. Giờ đang dùng chấm cơ bản.
       <button class="link" style="background:none;border:none" onclick="openSettings()">Mở Cài đặt</button></div>`:''}
+
+    ${inReview?`<div class="rv-card" style="margin-bottom:16px">
+      <div class="rv-q-label">Từ này nghĩa là gì?</div>
+      <div class="rv-q-en">${escapeHtml(v.word)}</div>
+      <button class="rv-sound" onclick="speak('${escq(v.word)}')">${svg(IC.sound,16)} Nghe</button>
+      ${!state.practiceRecallRevealed ? `
+        <textarea class="rv-input" rows="1" placeholder="Nhập nghĩa tiếng Việt (không bắt buộc)…"
+          oninput="practiceRecallInputFn(this.value)">${escapeHtml(state.practiceRecallInput||'')}</textarea>
+        <button class="btn btn-outline btn-sm" style="width:auto;margin-top:10px" onclick="revealPracticeRecall()">Xem nghĩa</button>
+      ` : `
+        <div class="rv-answer"><div class="rv-ans-vi">${escapeHtml(v.meaningVi)}</div></div>
+      `}
+    </div>
+    <div class="slabel" style="margin-bottom:10px">✍️ Luyện đặt câu</div>`:''}
 
     <div class="target-box">
       <div class="lbl">Bắt buộc dùng từ / cụm từ</div>
@@ -18259,7 +18290,7 @@ function viewPractice(){
 
     <button class="btn btn-brand" onclick="evaluateAnswer()">
       ${aiOn&&isOnline()?'✨ Đánh giá bằng AI ▸':'Đánh giá ▸'}</button>
-    <button class="btn btn-ghost" style="margin-top:10px" onclick="nextPractice()">Bỏ qua, từ khác ↻</button>`;
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="${inReview?'skipReviewCard()':'nextPractice()'}">${inReview?'Bỏ qua từ này ↻':'Bỏ qua, từ khác ↻'}</button>`;
 }
 
 /* Bộ chấm CỤC BỘ (Phase 2 — chưa AI). Trả về JSON cùng format Phase 3 sẽ dùng,
@@ -18367,6 +18398,8 @@ function viewResult(){
       <button class="btn btn-ghost" style="margin-top:10px" onclick="retryPractice()">‹ Quay lại viết câu</button>`;
   }
   if(!r) return viewPractice();
+  const rv = state.rv, inReview = !!(rv && rv.active);
+  const isLastCard = inReview && rv.idx>=rv.pool.length-1;
   const color = r.score>=90?'var(--success)':r.score>=70?'var(--brand)':'var(--warn)';
   const verdict = r.score>=90?'Excellent! 🎉':r.score>=70?'Tốt lắm! 👍':'Cần luyện thêm 💪';
   const badge = r._local
@@ -18380,7 +18413,7 @@ function viewResult(){
   ];
   return `<div class="deck-top">
       <button class="icon-btn" onclick="exitPractice()">${svg(IC.back,20)}</button>
-      <span class="deck-count">Kết quả</span><span style="width:40px"></span></div>
+      <span class="deck-count">${inReview? `Kết quả · ${rv.idx+1}/${rv.pool.length}` : 'Kết quả'}</span><span style="width:40px"></span></div>
 
     <div style="text-align:center;margin-bottom:12px">${badge}</div>
 
@@ -18424,7 +18457,7 @@ function viewResult(){
 
     <div style="display:flex;gap:10px;margin-top:14px">
       <button class="btn btn-outline" onclick="retryPractice()">Sửa lại</button>
-      <button class="btn btn-brand" onclick="nextPractice()">Từ tiếp theo ▸</button>
+      <button class="btn btn-brand" onclick="${inReview?'continueReviewChainFromResult()':'nextPractice()'}">${isLastCard?'Hoàn thành ôn tập ✓':'Từ tiếp theo ▸'}</button>
     </div>`;
 }
 
@@ -18623,15 +18656,47 @@ function levSimple(a,b){
 function startSmartReview(){
   const pool=getSmartReviewPool(DATA.reviewLimit||5);
   if(!pool.length){ toast('Hôm nay chưa có từ cần ôn 🎉'); return; }
-  state.rv={pool, idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart'};
-  state.tab='recall'; closeFab(); render(); document.getElementById('main').scrollTop=0;
+  // Đổi theo yêu cầu: ôn = tiếng Việt → viết 1 câu tiếng Anh có từ đó → xem kết quả
+  // (không còn chế độ Anh→Việt hay điền chỗ trống). Dùng lại đúng engine Luyện câu (Practice) đã có sẵn.
+  state.rv={pool, idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'smart', active:true};
+  closeFab(); enterReviewPracticeCard();
 }
 function startWeakTraining(){
   const weak=weakWordList().slice(0, Math.max(5, DATA.reviewLimit||5)).map(x=>x.v);
   if(!weak.length){ toast('Chưa có từ yếu nào — làm tốt lắm! 🎉'); return; }
-  state.rv={pool:interleaveByTopic(weak), idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'weak'};
-  state.tab='recall'; closeFab(); render(); document.getElementById('main').scrollTop=0;
+  state.rv={pool:interleaveByTopic(weak), idx:0, mode:'vi2en', revealed:false, input:'', results:[], source:'weak', active:true};
+  closeFab(); enterReviewPracticeCard();
 }
+// Nạp từ tiếp theo trong phiên ôn (hoặc chuyển sang màn tổng kết nếu đã hết) vào Practice.
+function enterReviewPracticeCard(){
+  const rv=state.rv;
+  if(!rv || !rv.active || rv.idx>=rv.pool.length){ state.tab='recall'; render(); document.getElementById('main').scrollTop=0; return; }
+  const v=rv.pool[rv.idx];
+  state.practiceVocab=v; state.practiceInput=''; state.practiceResult=null; state.practiceError=null;
+  state.practiceRecallRevealed=false; state.practiceRecallInput='';
+  state.tab='practice'; render(); document.getElementById('main').scrollTop=0;
+}
+// Sau khi xem kết quả AI chấm, bấm "Từ tiếp theo" trong lúc đang ôn tập -> ghi nhận mức nhớ (suy ra
+// từ điểm AI, cùng thang 0/1/2 với tự-đánh-giá cũ) rồi nạp từ kế tiếp.
+function continueReviewChainFromResult(){
+  const rv=state.rv; if(!rv || !rv.active) return;
+  const r=state.practiceResult;
+  const level = r ? (r.score>=85?2:(r.score>=60?1:0)) : 0;
+  rv.results.push(level);
+  rv.idx++;
+  state.practiceResult=null;
+  enterReviewPracticeCard();
+}
+// Bỏ qua 1 từ trong phiên ôn (không tính vào thống kê nhớ/chưa nhớ) -> sang từ kế tiếp.
+function skipReviewCard(){
+  const rv=state.rv; if(!rv || !rv.active) return;
+  rv.idx++;
+  enterReviewPracticeCard();
+}
+// Bước "nhớ nghĩa tiếng Việt" phía trên phần luyện đặt câu (chỉ hiện khi đang ôn tập — mục yêu cầu mới):
+// hiện từ tiếng Anh -> người học tự nhớ/gõ nghĩa tiếng Việt -> bấm xem đáp án để tự đối chiếu.
+function practiceRecallInputFn(val){ state.practiceRecallInput=val; } // không render — giữ focus khi gõ
+function revealPracticeRecall(){ state.practiceRecallRevealed=true; render(); }
 // Bước USE + CHALLENGE của luyện từ yếu (mục K): dùng lại Practice engine sẵn có (Câu 1 = Use, Câu 3 = Challenge),
 // KHÔNG tạo màn hình mới, KHÔNG đổi Practice engine (mục W). Mở Practice cho từ yếu nhất.
 function practiceWeakWord(){
@@ -18930,7 +18995,11 @@ function gradeNowLocal(){
   const r=gradeLocally(sent,v); finishEvaluation(v,r);
 }
 function retryAIEval(){ state.practiceError=null; state.tab='practice'; render(); setTimeout(()=>evaluateAnswer(),50); }
-function exitPractice(){ state.practiceResult=null; go('review'); }
+function exitPractice(){
+  state.practiceResult=null;
+  if(state.rv && state.rv.active){ state.rv.active=false; state.rv.pool=[]; } // thoát giữa phiên ôn -> dọn sạch, không để dở dang
+  go('review');
+}
 function flip(){ state.flip=!state.flip; state.fxTab=0; render(); }
 function rate(known){
   const v=state.deck[state.deckIdx]; if(!v) return;
